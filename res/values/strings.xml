@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Ofbiz, login page</string>
+    <string name="app_name">ClientOfbiz</string>
+    <string name="tvUser">Username:</string>
+    <string name="tvPwd">Password:</string>
+    <string name="btnLogin">Login</string>
+	<string-array name="spinner_settings">
+	    <item >No saved setting</item>
+	</string-array>
+</resources>
