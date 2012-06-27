@@ -1,25 +1,10 @@
 package org.ofbiz.smartphone;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-import java.net.URL;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Properties;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,27 +18,33 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 public class ClientOfbizActivity extends Activity {
-	
-	private Socket s=null;
-	private URL url = null;
-	private HttpsURLConnection httpsUrlConn = null;
+
+
 	private Button btnConnect=null;
-	private Properties loginSettings;
-	private ArrayList<Hashtable<String,String>> settings;
-	private File loginSetting=new File("loginsettings.property");
-	
+	private EditText etUser=null;
+	private EditText etPwd=null;
+	private Spinner spinner=null;
+	private ArrayAdapter<String> spinnerAdapter=null;
+	private DatabaseHelper dbHelper=null;	
+	private Cursor cursor=null;
+	private final int REQUEST_NEWPROFILE=1;
     /** Called when the activity is first created. */
     @SuppressWarnings("unchecked")
 	@Override
@@ -61,46 +52,82 @@ public class ClientOfbizActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        Spinner spinner=(Spinner)findViewById(R.id.spinnerSetting);
-         
-        		//new Hashtable<String,Hashtable<String,String>>(); 
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
-        //Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        
-        
-        if(loginSetting.exists())
-        {
-	        try 
-	        {
-	        	ObjectInputStream in = new ObjectInputStream(new FileInputStream(loginSetting));
-				settings=(ArrayList<Hashtable<String, String>>) in.readObject();
-				in.close();
-				for(Hashtable<String, String> ht:settings)
-				{
-					adapter.add(ht.get("settingname"));
-				}
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        
-        }
-        else
-        {
-        	adapter.add("No saved setting");
-//        	ObjectOutput out = new ObjectOutputStream(new FileOutputStream("loginsettings.property"));
-//				out.writeObject(adapter);
-//				out.close();
-        }
-        
         btnConnect = (Button)findViewById(R.id.btnLogin);
-        //tvContent = (TextView)findViewById(R.id.tvContent);
         btnConnect.setOnClickListener(btnConnectListener);
+        etUser=(EditText)findViewById(R.id.etUser);
+        etPwd=(EditText)findViewById(R.id.etPwd);
+        
+        dbHelper=new DatabaseHelper(this);
+        cursor=dbHelper.queryAll();
+        int rowcount=cursor.getCount();
+        if(rowcount==0)
+        {
+        	Intent intent=new Intent(this, ProfileManagementActivity.class);
+        	intent.putExtra("isNewProfile", true);
+        	this.startActivityForResult(intent, REQUEST_NEWPROFILE);
+        	return;
+        }
+        
+        spinner=(Spinner)findViewById(R.id.spinnerSetting);
+        spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        reloadSpinner();
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				loadProfile(spinner.getSelectedItemPosition());
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    }
+    @Override
+    public void onResume()
+    {
+    	super.onResume();
     }
     
+    public void onPause()
+    {
+    	super.onPause();
+    }
+    public void onDestroy()
+    {
+    	cursor.close();
+    	dbHelper.close();
+    	super.onPause();
+    }
+    private void reloadSpinner()
+    {
+    	//dbHelper=new DatabaseHelper(this);
+        cursor = dbHelper.queryAll();
+    	int rowcount=cursor.getCount();
+        System.out.println(rowcount);
+        if(rowcount<=0)return;
+    	cursor.moveToFirst();
+    	if(spinnerAdapter==null)
+    	{
+    		spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    	}
+    	spinnerAdapter.clear();
+        for (int index = 0; index < rowcount; index++) {
+    		System.out.println("index=" + index + ";" + cursor.getString(1));
+    		spinnerAdapter.add(cursor.getString(1));
+    		if (cursor.getInt(5)==1)
+    		{
+				spinner.setSelection(index);
+    		}
+    		cursor.moveToNext();
+    	}
+    	 
+    }
     private OnClickListener btnConnectListener = new OnClickListener() {
 			
 			@Override
@@ -123,35 +150,7 @@ public class ClientOfbizActivity extends Activity {
 		private DialogInterface.OnClickListener dialogPositiveButtonListener = new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
-				//Save current setting
-				CheckBox cb=(CheckBox)findViewById(R.id.chkSaveSetting);
 				
-				if(cb.isChecked())
-				{
-					if(settings==null)
-						settings=new ArrayList<Hashtable<String,String>>();
-					Hashtable<String,String> currentSetting=new Hashtable<String, String>();
-					TextView tvUser=(TextView)findViewById(R.id.etSettingName);
-					TextView tvPwd=(TextView)findViewById(R.id.etPwd);
-					TextView tvSettingName=(TextView)findViewById(R.id.etSettingName);
-					currentSetting.put("settingname", tvSettingName.getText().toString());
-					currentSetting.put("username", tvUser.getText().toString());
-					currentSetting.put("password", tvPwd.getText().toString());
-					settings.add(currentSetting);
-					try {
-						
-						ObjectOutputStream oos=new ObjectOutputStream(
-								openFileOutput("loginsettings.property", Context.MODE_PRIVATE));
-						oos.writeObject(settings);
-						oos.close();
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
 				//continue the operation
 				Thread connect=new Thread(){
 					public void run()
@@ -220,4 +219,52 @@ public class ClientOfbizActivity extends Activity {
 			
 		}
 		
+		private void loadProfile(int index)
+		{
+			cursor.moveToPosition(index);
+			etUser.setText(cursor.getString(3));
+			etPwd.setText(cursor.getString(4));
+		}
+		
+		protected void onActivityResult(int requestCode, int resultCode,
+	             Intent data) {
+	         if (requestCode == REQUEST_NEWPROFILE) {
+	             if (resultCode == RESULT_OK) {
+	            	 reloadSpinner();
+	                 spinner.setSelection(spinner.getCount()-1);
+	             }
+	         }
+	     }
+		
+	    //Méthode qui se déclenchera lorsque vous appuierez sur le bouton menu du téléphone
+	    public boolean onCreateOptionsMenu(Menu menu) {
+	 
+	        //Création d'un MenuInflater qui va permettre d'instancier un Menu XML en un objet Menu
+	        MenuInflater inflater = getMenuInflater();
+	        //Instanciation du menu XML spécifier en un objet Menu
+	        inflater.inflate(R.layout.menu_login, menu);
+	 
+	        //Il n'est pas possible de modifier l'icône d'entête du sous-menu via le fichier XML on le fait donc en JAVA
+	    	//menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.option_white);
+	 
+	        return true;
+	     }
+	 
+	       //Méthode qui se déclenchera au clic sur un item
+	      public boolean onOptionsItemSelected(MenuItem item) 
+	      {
+	         //On regarde quel item a été cliqué grâce à son id et on déclenche une action
+	         switch (item.getItemId()) {
+	            case R.id.menuProfile:
+	            	Intent intent=new Intent(this, ProfileManagementActivity.class);
+	            	intent.putExtra("isNewProfile", false);
+	            	this.startActivityForResult(intent, REQUEST_NEWPROFILE);
+	                return true;
+	           case R.id.quitter:
+	               //Pour fermer l'application il suffit de faire finish()
+	               finish();
+	               return true;
+	         }
+	         return false;
+	      }
 }

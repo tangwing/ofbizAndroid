@@ -7,10 +7,11 @@
   <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:background="#454545">
+        android:background="#454545"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip" >
         
         <!--  Header  Starts-->
-
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
@@ -43,11 +44,10 @@
 		    android:orientation="vertical"
 		    android:layout_below="@id/header" >
 		
-            <Spinner 
+            <Spinner
                 android:id="@+id/spinnerSetting"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content" />
-
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             
 		    <TextView 
 				android:layout_width="wrap_content"
@@ -56,8 +56,9 @@
 
 		    <EditText
 		        android:id="@+id/etUser"
-		        android:layout_width="313dp"
-		        android:layout_height="wrap_content" >
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:hint="Enter your username here..." >
 
 		        <requestFocus />
 	    	</EditText>
@@ -70,40 +71,20 @@
 
 		    <EditText
 		        android:id="@+id/etPwd"
-		        android:layout_width="311dp"
+		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
+		        android:hint="........"
 		        android:inputType="textPassword" />
 		
 		    <Button 
+		        android:layout_marginTop="10dip"
 		        android:id="@+id/btnLogin"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_gravity="center_horizontal"
 		        android:layout_marginTop="5dip"
 		        android:text="@string/btnLogin"  />
-<!-- 		    <TextView  -->
-<!-- 		        android:id="@+id/tvContent" -->
-<!-- 		        android:layout_width="match_parent" -->
-<!-- 		        android:layout_height="wrap_content"/> -->
-			<!-- parameter part -->
-			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal"
-		    android:layout_below="@id/header" >
-				<CheckBox 
-			       android:id="@+id/chkSaveSetting"
-			       android:layout_width="wrap_content"
-	        	   android:layout_height="wrap_content"
-			       android:text="Save this setting with name :"/>
-				<EditText
-			        android:id="@+id/etSettingName"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        />
-			</LinearLayout>
 		</LinearLayout>
-		
 
   </RelativeLayout>
 </ScrollView>

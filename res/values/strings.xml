@@ -9,4 +9,9 @@
 	<string-array name="spinner_settings">
 	    <item >No saved setting</item>
 	</string-array>
+	<string name="tvProfileName">Profile name</string>
+	<string name="btnSaveProfile">Save</string>
+	<string name="tvServerAddress">Server address</string>
+	<string name="btnCancelProfile">Cancel</string>
+
 </resources>

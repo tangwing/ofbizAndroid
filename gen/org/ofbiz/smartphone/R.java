@@ -19,22 +19,39 @@ public final class R {
         public static final int logo=0x7f020002;
     }
     public static final class id {
+        public static final int btnCancelProfile=0x7f060010;
         public static final int btnLogin=0x7f060004;
-        public static final int chkSaveSetting=0x7f060005;
+        public static final int btnSaveProfile=0x7f06000f;
+        public static final int chkIsDefaultProfile=0x7f06000e;
+        public static final int etProfileName=0x7f06000b;
         public static final int etPwd=0x7f060003;
-        public static final int etSettingName=0x7f060006;
+        public static final int etServerAddress=0x7f06000d;
         public static final int etUser=0x7f060002;
         public static final int header=0x7f060000;
+        public static final int menuAddProfile=0x7f060007;
+        public static final int menuDelProfile=0x7f060008;
+        public static final int menuProfile=0x7f060005;
+        public static final int quitter=0x7f060006;
+        public static final int spinnerProfiles=0x7f060009;
         public static final int spinnerSetting=0x7f060001;
+        public static final int tvProfileName=0x7f06000a;
+        public static final int tvServerAddress=0x7f06000c;
     }
     public static final class layout {
         public static final int main=0x7f030000;
+        public static final int menu_login=0x7f030001;
+        public static final int menu_profile=0x7f030002;
+        public static final int profile=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
+        public static final int btnCancelProfile=0x7f040008;
         public static final int btnLogin=0x7f040004;
+        public static final int btnSaveProfile=0x7f040006;
         public static final int hello=0x7f040000;
+        public static final int tvProfileName=0x7f040005;
         public static final int tvPwd=0x7f040003;
+        public static final int tvServerAddress=0x7f040007;
         public static final int tvUser=0x7f040002;
     }
 }
