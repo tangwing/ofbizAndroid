@@ -27,10 +27,11 @@ class DatabaseHelper extends SQLiteOpenHelper {
         @Override
         public void onCreate(SQLiteDatabase db) {
                 Log.d(TAG, "DatabaseHelper onCreate called");
-                db.execSQL("CREATE TABLE "+ TABLE_PROFILE
+                db.execSQL("CREATE TABLE IF NOT EXISTS "+ TABLE_PROFILE
                                 + "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                 + "profilename TEXT,"
                                 + "serveraddress TEXT,"
+                                + "port INTEGER NULL,"
                                 + "username TEXT,"
                                 + "password TEXT,"
                                 + "isdefault INTEGER"

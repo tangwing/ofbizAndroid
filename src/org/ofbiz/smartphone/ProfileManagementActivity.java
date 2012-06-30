@@ -1,14 +1,18 @@
 package org.ofbiz.smartphone;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -24,6 +28,8 @@ public class ProfileManagementActivity extends Activity {
 	private Spinner spinner=null;
 	private EditText etProfileName=null;
 	private EditText etServerAddress=null;
+	private TextView tvPort=null;
+	private EditText etPort=null;
 	private EditText etUser=null;
 	private EditText etPwd=null;
 	private CheckBox chkIsDefault=null;
@@ -31,37 +37,45 @@ public class ProfileManagementActivity extends Activity {
 	private Button btnCancelProfile=null;
 	private TextView tvProfileName=null;
 	private TextView tvServerAddress=null;
-	//
+	
+	private final int PORT_NULL=-1;
 	private boolean isNewProfile=false;
 	private ArrayAdapter<String> spinnerAdapter=null; 
 	private DatabaseHelper dbHelper=null;
 	private Cursor cursor=null;
 	private ContentValues profileValues=null;
+	private final String TAG="ProfileManagementActivity";
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
+        
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent intent=this.getIntent();
         isNewProfile=intent.getBooleanExtra("isNewProfile", false);
         spinner=(Spinner)findViewById(R.id.spinnerProfiles);
         spinnerAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item);
         tvProfileName=(TextView)findViewById(R.id.tvProfileName);
         tvServerAddress=(TextView)findViewById(R.id.tvServerAddress);
+        tvPort=(TextView)findViewById(R.id.tvPort);
         etProfileName=(EditText)findViewById(R.id.etProfileName);
         etServerAddress=(EditText)findViewById(R.id.etServerAddress);
+        etPort=(EditText)findViewById(R.id.etPort);
         etUser=(EditText)findViewById(R.id.etUser);
         etPwd=(EditText)findViewById(R.id.etPwd);
         chkIsDefault=(CheckBox)findViewById(R.id.chkIsDefaultProfile);
         btnSaveProfile=(Button)findViewById(R.id.btnSaveProfile);
         btnCancelProfile=(Button)findViewById(R.id.btnCancelProfile);
          
-        
         //TODO set the value of isNewProfile
         dbHelper=new DatabaseHelper(this);
         profileValues=new ContentValues();
         //
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
+        if(cursor!=null)
+			cursor.close();
         cursor = dbHelper.queryAll();
         int rowcount=cursor.getCount();
         if(rowcount==0)
@@ -98,6 +112,11 @@ public class ProfileManagementActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				
+				if(checkUserInput()==false)
+				{
+					return;
+				}
+				
 				profileValues.put("serveraddress", etServerAddress.getText().toString());
 				profileValues.put("username", etUser.getText().toString());
 				profileValues.put("password", etPwd.getText().toString());
@@ -109,22 +128,40 @@ public class ProfileManagementActivity extends Activity {
 				{
 					profileValues.put("isdefault", 0);
 				}
-				
-				if(isContentValuesLegal(profileValues)==false)
+				String port = etPort.getText().toString();
+				if (port.length()!=0)
 				{
-					//TODO Alert
-					return;
+					try{
+						int portInt=Integer.parseInt(port);
+						if( portInt>0 )
+						{
+							profileValues.put("port", portInt);
+						}
+					}catch(NumberFormatException e){
+						Log.i(TAG, "NumberFormatException");
+					}
 				}
+				else
+				{
+					profileValues.put("port", PORT_NULL);
+				}
+
 				//If this is a new profile, insert it; else update it
 				if(isNewProfile==true)
 				{
 					profileValues.put("profilename", etProfileName.getText().toString());
 					dbHelper.insertProfile(profileValues);
+					if(cursor!=null)
+						cursor.close();
+					cursor=dbHelper.queryAll();
 				}
 				else
 				{
 					cursor.moveToPosition(spinner.getSelectedItemPosition());
-					dbHelper.updateProfile(cursor.getInt(0), profileValues);
+					dbHelper.updateProfile(cursor.getInt(cursor.getColumnIndex("id")), profileValues);
+					if(cursor!=null)
+						cursor.close();
+					cursor=dbHelper.queryAll();
 				}
 				
 				setResult(RESULT_OK);
@@ -141,73 +178,111 @@ public class ProfileManagementActivity extends Activity {
 		});
 	}
 	
-
-	
-    @Override
-    public void onDestroy()
-    {
-    	cursor.close();
-    	dbHelper.close();
-    	super.onDestroy();
-    }
-    
-    @Override
-    public void onResume()
-    {
-    	
-    	super.onResume();
-    }
-    
-	private boolean isContentValuesLegal(ContentValues cv)
-	{
-		return true;
-	}
-	
-	private void loadProfile(int index)
-	{
-		cursor.moveToPosition(index);
-		if(etProfileName.isEnabled())
-			etProfileName.setText(cursor.getString(1));
-		etServerAddress.setText(cursor.getString(2));
-		etUser.setText(cursor.getString(3));
-		etPwd.setText(cursor.getString(4)); 
-		chkIsDefault.setChecked(cursor.getInt(5)>0);
-	}
-	
 	private void reloadSpinner()
     {
-    	//dbHelper=new DatabaseHelper(this);
-		cursor.close();
+		if(cursor!=null)
+			cursor.close();
         cursor = dbHelper.queryAll();
     	int rowcount=cursor.getCount();
         System.out.println(rowcount);
-        if(rowcount<=0)return;
+        if(rowcount<=0)
+    	{
+        	startActivity(getIntent()); 
+        	finish();
+        	return;
+    	}
     	cursor.moveToFirst();
     	spinnerAdapter.clear();
     	
         for (int index = 0; index < rowcount; index++) {
-    		System.out.println("index=" + index + ";" + cursor.getString(1));
-    		spinnerAdapter.add(cursor.getString(1));
-    		if (cursor.getInt(5)==1)
+    		//System.out.println("index=" + index + ";" + cursor.getString(1));
+    		spinnerAdapter.add(cursor.getString(cursor.getColumnIndex("profilename")));
+    		spinner.setSelection(index);
+    		if (cursor.getInt(cursor.getColumnIndex("isdefault"))==1)
     		{
 				spinner.setSelection(index);
     		}
     		cursor.moveToNext();
     	}
-    	 
+        loadProfile(spinner.getSelectedItemPosition()); 
     }
+	private void loadProfile(int index)
+	{
+		cursor.moveToPosition(index);
+		if(etProfileName.isEnabled())
+			etProfileName.setText(cursor.getString(cursor.getColumnIndex("profilename")));
+		etServerAddress.setText(cursor.getString(cursor.getColumnIndex("serveraddress")));
+		String port=cursor.getString(cursor.getColumnIndex("port"));
+		if(port.equals(String.valueOf(PORT_NULL)))
+		{
+			etPort.setText("");
+		}
+		else
+		{
+			etPort.setText(port);
+		}
+		etUser.setText(cursor.getString(cursor.getColumnIndex("username")));
+		etPwd.setText(cursor.getString(cursor.getColumnIndex("password"))); 
+		chkIsDefault.setChecked(cursor.getInt(cursor.getColumnIndex("isdefault"))>0);
+	}
+	
+	private boolean checkUserInput()
+	{
+		AlertDialog ad=new AlertDialog.Builder(ProfileManagementActivity.this).create();
+		String port = etPort.getText().toString().trim();
+		if ( etProfileName.getText().toString().trim().equals("") ||
+			 etServerAddress.getText().toString().trim().equals(""))
+		{
+			ad.setMessage("The profile name and server address cannot be empty !");
+			ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					return;
+				}
+			});
+			ad.show();
+			return false;
+		}
+		else if (port.length()>0)
+		{
+			if(port.contains("-") || port.contains("e"))
+			{
+				ad.setMessage("Invalide port number !");
+				ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						return;
+					}
+				});
+				ad.show();
+				return false;
+			}
+			try{
+				Integer.parseInt(port);
+			}catch(NumberFormatException e){
+				Log.i(TAG, "NumberFormatException");
+				ad.setMessage("Invalide port number !");
+				ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						return;
+					}
+				});
+				ad.show();
+				return false;
+			}				
+		}
+		return true;
+	}
+
 	
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-   	 
-        //Création d'un MenuInflater qui va permettre d'instancier un Menu XML en un objet Menu
-        MenuInflater inflater = getMenuInflater();
-        //Instanciation du menu XML spécifier en un objet Menu
+   	    MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.layout.menu_profile, menu);
         return true;
      }
  
-       //Méthode qui se déclenchera au clic sur un item
       public boolean onOptionsItemSelected(MenuItem item) 
       {
          switch (item.getItemId()) {
@@ -222,7 +297,10 @@ public class ProfileManagementActivity extends Activity {
                 return true;
             case R.id.menuDelProfile:
             	cursor.moveToPosition(spinner.getSelectedItemPosition());
-                dbHelper.deleteProfile(cursor.getInt(0));
+                dbHelper.deleteProfile(cursor.getInt(cursor.getColumnIndex("id")));
+                if(cursor!=null)
+        			cursor.close();
+                cursor=dbHelper.queryAll();
                 reloadSpinner();
                 return true;
            case R.id.quitter:
@@ -231,4 +309,14 @@ public class ProfileManagementActivity extends Activity {
          }
          return false;
       }
+
+
+      @Override
+      public void onDestroy()
+      {
+      	cursor.close();
+      	dbHelper.close();
+      	super.onDestroy();
+      }
+      
 }

@@ -22,8 +22,11 @@
         </activity>
         <activity
             android:name=".ProfileManagementActivity">
-            
         </activity>
+        <activity
+            android:name=".HomeActivity">
+        </activity>
+        
     </application>
 
 </manifest>
