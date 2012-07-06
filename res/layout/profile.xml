@@ -54,10 +54,12 @@
 				android:text="@string/tvProfileName" />
 			
             <EditText
-			        android:id="@+id/etProfileName"
-			        android:hint="Enter profile name..."
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content" />
+                android:id="@+id/etProfileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter profile name..."
+                android:singleLine="true" />
+
             <!-- server address -->
 		    <TextView 
 		        android:id="@+id/tvServerAddress"
@@ -65,11 +67,35 @@
 				android:layout_height="wrap_content"
 				android:text="@string/tvServerAddress" />
 
-		    <EditText
-		        android:id="@+id/etServerAddress"
-		        android:hint="Enter your server address..."
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content" />
+		    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+
+			    <EditText
+			        android:id="@+id/etServerAddress"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="0.83"
+			        android:hint="Enter server address..."
+			        android:singleLine="true" />
+
+			    <TextView 
+			        android:id="@+id/tvPort"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text=" : " 
+					android:layout_weight="0.05"/>
+
+			    <EditText
+			        android:id="@+id/etPort"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_weight="0.12"
+			        android:hint="Port..."
+			        android:singleLine="true" />
+
+			</LinearLayout>
             <!-- username -->
 		    <TextView 
 				android:layout_width="wrap_content"
@@ -78,11 +104,11 @@
 
 		    <EditText
 		        android:id="@+id/etUser"
-		        android:hint="Enter your username..."
 		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content" >
+		        android:layout_height="wrap_content"
+		        android:hint="Enter your username..."
+		        android:singleLine="true" >
 
-		        <requestFocus />
 	    	</EditText>
 			
 		    <!-- password -->
@@ -94,10 +120,11 @@
 
 		    <EditText
 		        android:id="@+id/etPwd"
-		        android:hint="........"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:inputType="textPassword" />
+		        android:hint="........"
+		        android:inputType="textPassword"
+		        android:singleLine="true" />
 		    
 			<CheckBox 
 			       android:id="@+id/chkIsDefaultProfile"

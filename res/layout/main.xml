@@ -48,7 +48,7 @@
                 android:id="@+id/spinnerSetting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            
+
 		    <TextView 
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -58,9 +58,9 @@
 		        android:id="@+id/etUser"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:hint="Enter your username here..." >
+		        android:hint="Enter your username here..."
+		        android:singleLine="true" >
 
-		        <requestFocus />
 	    	</EditText>
 
 		    <TextView 
@@ -74,7 +74,8 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:hint="........"
-		        android:inputType="textPassword" />
+		        android:inputType="textPassword"
+		        android:singleLine="true" />
 		
 		    <Button 
 		        android:layout_marginTop="10dip"
@@ -82,7 +83,6 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 		        android:layout_gravity="center_horizontal"
-		        android:layout_marginTop="5dip"
 		        android:text="@string/btnLogin"  />
 		</LinearLayout>
 

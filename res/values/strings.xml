@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- The Strings from xml layout files   -->
     <string name="hello">Ofbiz, login page</string>
     <string name="app_name">ClientOfbiz</string>
     <string name="tvUser">Username:</string>
     <string name="tvPwd">Password:</string>
     <string name="btnLogin">Login</string>
-	<string-array name="spinner_settings">
-	    <item >No saved setting</item>
-	</string-array>
-	<string name="tvProfileName">Profile name</string>
-	<string name="btnSaveProfile">Save</string>
-	<string name="tvServerAddress">Server address</string>
-	<string name="btnCancelProfile">Cancel</string>
-
+    <string name="tvProfileName">Profile name</string>
+    <string name="btnSaveProfile">Save</string>
+    <string name="tvServerAddress">Server address</string>
+    <string name="btnCancelProfile">Cancel</string>
+    <string name="ibtnTitleBarLeftContentDes">Left</string>
+    <string name="ivLogoContentDes">Logo</string>
+    <string name="ibtnTitleBarRightContentDes">Right</string>
+    
+    <!-- The Strings from Java code files   -->
+    <string name="loginErrorMessage_unknown">The server is not reachable, please check the address.</string>
+    <string name="loading">Loading#8230</string>
+    <string name="loginSucceeds">Login Succeeds !</string>
 </resources>
