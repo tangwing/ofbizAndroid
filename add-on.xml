@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<add-on xmlns:xsd="http://www.w3.org/2000/10/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://addons.neogia.org/dtd/add-on.xsd">
+
+    <artifactId>auto-parameters-entity</artifactId>
+    <name>Ceci n'est pas un addon. C'est les source du client ofbiz</name>
+    <version>xxxxxxxxx</version>
+    <ofbiz-version>xxxxxxxx</ofbiz-version>
+
+    <changelog>
+        <changeitem date="2012-06-29 16:00">Creation. page de login et gestion des profiles</changeitem>
+    </changelog>
+    <license>
+        <name>Apache 2</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+    <developers>
+        <developer>
+            <name>Leo SHANG</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Khaye youssef</name>
+            <roles>
+                <role>maintainer</role>
+            </roles>
+        </developer>
+    </developers>
+</add-on>
+

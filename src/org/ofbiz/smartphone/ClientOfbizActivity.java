@@ -247,7 +247,7 @@ public class ClientOfbizActivity extends Activity {
                 AlertDialog ad = new AlertDialog.Builder(
                         ClientOfbizActivity.this)
                         .create();
-                String msg = getResources().getString(R.string.loginErrorMessage_unknown);
+                String msg = getResources().getString(R.string.loginWarning_certificate);
                 ad.setMessage(msg);
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
                         dialogPositiveButtonListener);
@@ -470,7 +470,10 @@ public class ClientOfbizActivity extends Activity {
             startActivity(i);
             return true;
         case R.id.quitter:
-            finish();
+            //finish();
+            i = new Intent(this, TestActivity.class);
+            //i.putExtra("target", "main.xml");
+            startActivity(i);
             return true;
         }
         return false;

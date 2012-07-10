@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#454545" >
+     >
     <LinearLayout
         android:id="@+id/llTitleBar"
         android:layout_width="match_parent"
@@ -29,16 +29,6 @@
            android:layout_height="match_parent" 
            android:src="@drawable/logo" />
 
-<!--         <TextView -->
-<!--             android:id="@+id/tvTitleBarMiddle" -->
-<!--             android:layout_width="match_parent" -->
-<!--             android:layout_height="match_parent" -->
-<!--             android:layout_gravity="center" -->
-<!--             android:gravity="center" -->
-<!--             android:layout_weight="4" -->
-<!--             android:textColor="#000000" -->
-<!--             android:text="Ofbiz-Open For Bussiness" /> -->
-
         <ImageButton 
             android:id="@+id/ibtnTitleBarRight"
             android:contentDescription="@string/ibtnTitleBarRightContentDes"
@@ -50,26 +40,34 @@
             android:layout_height="wrap_content"
             android:src="@drawable/add" />
     </LinearLayout>
-    
+<!--     <ListView -->
+<!--         android:id="@+id/lvMain" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:layout_below="@id/llTitleBar" -->
+<!--         android:layout_marginTop="8dip" -->
+<!--         android:padding="10dip" > -->
+<!--     </ListView> -->
+
     <LinearLayout
-    android:id="@+id/llTest"
-    android:layout_below="@id/llTitleBar"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="10dip"
-    android:background="#BFB9B3"
-    android:orientation="vertical" >
+        android:id="@+id/llTest"
+        android:layout_below="@id/llTitleBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dip"
+        android:background="#BFB9B3"
+        android:orientation="vertical" >
         
-        <ListView
-            android:id="@+id/lvMain"
+        <ListView 
+            android:id="@+id/lvTest"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dip"
-            android:padding="10dip"
-            android:divider="@color/blue"
-            android:dividerHeight="3dip"
-            android:background="@drawable/mysharp" >
+            android:smoothScrollbar="true"
+            android:divider="@color/red"
+            android:dividerHeight="1dp"
+            android:cacheColorHint="#00000000"
+            android:background="@android:color/background_light" >
+            
         </ListView>
-<!--             android:background="#A1C46C" > -->
     </LinearLayout>
 </RelativeLayout>

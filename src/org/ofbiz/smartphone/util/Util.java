@@ -14,11 +14,11 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import javolution.util.FastSet;
-
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
 import org.json.JSONObject;
+import org.ofbiz.smartphone.ClientOfbizActivity;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -143,6 +143,8 @@ public class Util {
     ParserConfigurationException, SAXException, IOException{
         return readXmlDocument(new ByteArrayInputStream(s.getBytes()));
     }
+    
+    
     
     /**
      * This dosen't work for now private BufferedReader
