@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui>
-    
-<!--     <Menu type="style" >  -->
-<!--         <MenuItem  name="backgroundcolor" target="BUTTON_FORM" value="#ff0000"/> -->
-<!--         <MenuItem  name="textcolor" target="TEXT" value="#00ff00"/> -->
-<!--         <MenuItem  name="backgroundcolor" target="CONTAINER_MAINPANEL" value="#0000ff"/> -->
-<!--     </Menu> -->
-    
+    <Menu type="style" > 
+        <MenuItem  name="backgroundcolor" target="BUTTON_FORM" value=""/>
+        <MenuItem  name="textcolor" target="TEXT" value=""/>
+        <MenuItem  name="backgroundcolor" target="CONTAINER_MAINPANEL" value=""/>
+    </Menu>
     <Menu type="bar" row-items="3"> 
         <MenuItem cell-width="15" name="logout" target="logout" img="/images/neogia/001_42.png"/>
         <MenuItem cell-width="70" name="logo" target="" img="file://logo.png"/>

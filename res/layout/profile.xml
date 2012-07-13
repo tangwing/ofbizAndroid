@@ -116,7 +116,6 @@
                 android:text="@string/tvPwd" />
 
             <EditText
-                style="@style/CommonEditText"
                 android:id="@+id/etPwd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

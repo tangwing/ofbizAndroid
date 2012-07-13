@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,6 +81,7 @@ public class ProfileManagementActivity extends Activity {
         Style.CURRENTSTYLE.applyStyle(etPort, StyleTargets.EDITTEXT);
         Style.CURRENTSTYLE.applyStyle(etUser, StyleTargets.EDITTEXT);
         Style.CURRENTSTYLE.applyStyle(etPwd, StyleTargets.EDITTEXT);
+        etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
         
         chkIsDefault = (CheckBox) findViewById(R.id.chkIsDefaultProfile);
         Style.CURRENTSTYLE.applyStyle(chkIsDefault , StyleTargets.TEXT);
@@ -89,10 +91,9 @@ public class ProfileManagementActivity extends Activity {
         Style.CURRENTSTYLE.applyStyle(btnSaveProfile, StyleTargets.BUTTON_FORM);
         Style.CURRENTSTYLE.applyStyle(btnCancelProfile, StyleTargets.BUTTON_FORM);
         
-        // TODO set the value of isNewProfile
         dbHelper = new DatabaseHelper(this);
         profileValues = new ContentValues();
-        //
+        
         spinnerAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);

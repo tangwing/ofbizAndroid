@@ -118,13 +118,10 @@ public class GeneratorActivity extends Activity{
                             xmlStream));
                 } 
         }catch (ParserConfigurationException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
         } catch (SAXException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -162,6 +159,7 @@ public class GeneratorActivity extends Activity{
             for(final ModelFormField mff : mffList) {  
                 //Each LinearLayout corresponds to a ListRow 
                 LinearLayout row = new LinearLayout(this);
+                
 //                row.setLayoutParams(new LinearLayout.LayoutParams(
 //                        LinearLayout.LayoutParams.MATCH_PARENT, 
 //                        LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -204,10 +202,9 @@ public class GeneratorActivity extends Activity{
         for ( int index = 0; index < mmList.size(); index ++){
             ModelMenu mm = mmList.get(index);
             Log.d(TAG, "Menu Type = "+mm.getType());
-            //TODO if(mm.getType().equals("title")){
             if(mm.getType().equals("bar")){
                 setTitleBar(mm);
-            }else if(mm.getType().equals("panel")){// if(mm.getType().equals("list")){
+            }else if(mm.getType().equals("panel")){
                 List<ModelMenuItem> mmiList = mm.getMenuItems();
                 Log.d(TAG, "mmiList.size= " + mmiList.size());
                 
@@ -402,7 +399,6 @@ public class GeneratorActivity extends Activity{
             try {
                 d = Drawable.createFromStream(res.getAssets().open(targetUrl.substring(7)), srcName);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }else {

@@ -7,6 +7,7 @@ import org.ofbiz.smartphone.model.ModelMenu;
 import org.w3c.dom.Element;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
@@ -41,7 +42,9 @@ public class Style {
         styleMap.put(StyleTargets.CONTAINER_MAINPANEL, new Properties());
         styleMap.put(StyleTargets.BUTTON_TITLEBAR, new Properties());
         styleMap.put(StyleTargets.BUTTON_FORM, new Properties());
-        styleMap.put(StyleTargets.TEXT, new Properties());
+        p = new Properties();
+        //p.put("textcolor","#ff0000");
+        styleMap.put(StyleTargets.TEXT, p);
         styleMap.put(StyleTargets.EDITTEXT, new Properties());
     }
     
@@ -69,7 +72,14 @@ public class Style {
     
     public void setProperty(StyleTargets st, String name, String value) {
         Properties p = styleMap.get(st);
-        p.put(name, value);
+        if( p == null ) {
+            p = new Properties();
+            p.put(name, value);
+            styleMap.put(st, p);
+        } else {
+            p.put(name, value);
+        }
+            
     }
     
     private void setStyleMap(Hashtable<StyleTargets, Properties> sm) {
@@ -96,7 +106,9 @@ public class Style {
                     
                 case EDITTEXT:   
                     EditText et = (EditText)view;
+                    Log.d("Style", ""+et.getInputType());
                     et.setSingleLine(true);
+                    Log.d("Style", "after set single line" + et.getInputType());
                     color = styleAttr.getProperty("textcolor","");
                     if(!color.equals("")) {
                         et.setTextColor(Color.parseColor(color));

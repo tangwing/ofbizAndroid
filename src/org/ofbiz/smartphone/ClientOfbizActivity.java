@@ -39,7 +39,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -113,6 +115,8 @@ public class ClientOfbizActivity extends Activity {
         etPwd = (EditText) findViewById(R.id.etPwd);
         Style.CURRENTSTYLE.applyStyle(etUser, StyleTargets.EDITTEXT);
         Style.CURRENTSTYLE.applyStyle(etPwd, StyleTargets.EDITTEXT);
+        Log.d("TAG", "after set style" + etPwd.getInputType());
+        etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
 
         spinner = (Spinner) findViewById(R.id.spinnerSetting);
         spinnerAdapter = new ArrayAdapter<String>(this,
@@ -447,6 +451,7 @@ public class ClientOfbizActivity extends Activity {
         cursor.moveToPosition(index);
         etUser.setText(cursor.getString(cursor.getColumnIndex("username")));
         etPwd.setText(cursor.getString(cursor.getColumnIndex("password")));
+        Log.d("TAG", "after loadprofile" + etPwd.getInputType());
     }
 
 
