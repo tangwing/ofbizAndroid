@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui>
+    
+<!--     <Menu type="style" >  -->
+<!--         <MenuItem  name="backgroundcolor" target="BUTTON_FORM" value="#ff0000"/> -->
+<!--         <MenuItem  name="textcolor" target="TEXT" value="#00ff00"/> -->
+<!--         <MenuItem  name="backgroundcolor" target="CONTAINER_MAINPANEL" value="#0000ff"/> -->
+<!--     </Menu> -->
+    
+    <Menu type="bar" row-items="3"> 
+        <MenuItem cell-width="15" name="logout" target="logout" img="/images/neogia/001_42.png"/>
+        <MenuItem cell-width="70" name="logo" target="" img="file://logo.png"/>
+        <MenuItem cell-width="15" name="addNotePartyNote" target="addNotePartyNote" img="/images/neogia/001_01.png"/>
+    </Menu>
+    <Menu  type="panel" row-items="4" >
+        <MenuItem type="image"  name="SmarthoneMaiMenuCalendar" title="Item1" img="/images/icons/famfamfam/calendar.png" />
+        <MenuItem type="image" name="SmarthoneMaiMenuToday" title="Item2" img="/images/icons/famfamfam/calendar_view_day.png" />
+        <MenuItem type="image" name="SmarthoneMaiMenuCalendar" img="/images/icons/famfamfam/script_error.png" />
+        <MenuItem cell-width="" name="SmarthoneMaiMenuCalendar" target="calendar" img="/images/icons/famfamfam/calendar.png"/>
+        <MenuItem cell-width="" name="SmarthoneMaiMenuToday" target="today" img="/images/icons/famfamfam/calendar_view_day.png"/>
+        <MenuItem cell-width="" name="SmarthoneMaiMenuLate" target="late" img="/images/icons/famfamfam/script_error.png"/>
+        <MenuItem cell-width="" name="SmarthoneMaiMenuCompany" target="customerList" img="/images/icons/famfamfam/folder_database.png"/>
+        <MenuItem cell-width="" name="SmarthoneMaiMenuContact" target="contact" img="/images/icons/famfamfam/book_addresses.png"/>
+        <MenuItem cell-width="" name="SmarthoneMaiMenuTasks" target="tasks" img="/images/icons/famfamfam/script.png"/>
+    </Menu>
+    <form name="login" type="single" target="login">
+        <field name="USERNAME" title="${uiLabelMap.CommonUsername}" />
+        <field name="PASSWORD" title="${uiLabelMap.CommonPassword}" />
+        <field name="submit" title="${uiLabelMap.CommonLogin}" />
+    </form>
+</ui>

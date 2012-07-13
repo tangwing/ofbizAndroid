@@ -21,7 +21,7 @@ public class OfbizOnClickListener implements View.OnClickListener{
         Intent intent = new Intent(c, GeneratorActivity.class);
         intent.putExtra("target", target);
         c.startActivity(intent);
-        //TODO Finish?
+        //TODO Finish? no!
     }
     
 }

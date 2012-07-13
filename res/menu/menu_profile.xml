@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/menuAddProfile" 
+	      android:title="New"/>
+	<item android:id="@+id/menuDelProfile" 
+	      android:title="Delete"/>
+	<item android:id="@+id/quitter" 
+	     android:title="Quitter"/>
+</menu>

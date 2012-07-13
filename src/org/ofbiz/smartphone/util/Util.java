@@ -144,7 +144,25 @@ public class Util {
         return readXmlDocument(new ByteArrayInputStream(s.getBytes()));
     }
     
-    
+    public static String makeFullUrlString(String serverRoot, boolean addSmartphoneDomain, String target)
+    {
+        if(target.startsWith("/") ) {
+            target = target.replaceFirst("/", "");
+        }
+        if (target.startsWith("smartphone/control")) {
+            target = target.replace("smartphone/control","");
+        }
+        if(target.startsWith("/") ) {
+            target = target.replaceFirst("/", "");
+        }
+        Log.d("Util", "Server root :"+serverRoot+"; target :"+target);
+        if(addSmartphoneDomain){
+            return serverRoot + "/smartphone/control/" + target;
+        }
+        else {
+            return serverRoot + "/" + target;
+        }
+    }
     
     /**
      * This dosen't work for now private BufferedReader

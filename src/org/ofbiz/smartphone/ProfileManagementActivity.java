@@ -1,5 +1,6 @@
 package org.ofbiz.smartphone;
 
+import org.ofbiz.smartphone.Style.StyleTargets;
 import org.ofbiz.smartphone.util.DatabaseHelper;
 
 import android.app.Activity;
@@ -49,7 +50,16 @@ public class ProfileManagementActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
-
+ 
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_MAINPANEL);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvProfileName), StyleTargets.TEXT);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvServerAddress), StyleTargets.TEXT);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvPort), StyleTargets.TEXT);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT);
+        
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent intent = this.getIntent();
@@ -58,15 +68,27 @@ public class ProfileManagementActivity extends Activity {
         spinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item);
         tvProfileName = (TextView) findViewById(R.id.tvProfileName);
+        Style.CURRENTSTYLE.applyStyle(tvProfileName , StyleTargets.TEXT);
+        
         etProfileName = (EditText) findViewById(R.id.etProfileName);
         etServerAddress = (EditText) findViewById(R.id.etServerAddress);
         etPort = (EditText) findViewById(R.id.etPort);
         etUser = (EditText) findViewById(R.id.etUser);
         etPwd = (EditText) findViewById(R.id.etPwd);
+        Style.CURRENTSTYLE.applyStyle(etProfileName, StyleTargets.EDITTEXT);
+        Style.CURRENTSTYLE.applyStyle(etServerAddress, StyleTargets.EDITTEXT);
+        Style.CURRENTSTYLE.applyStyle(etPort, StyleTargets.EDITTEXT);
+        Style.CURRENTSTYLE.applyStyle(etUser, StyleTargets.EDITTEXT);
+        Style.CURRENTSTYLE.applyStyle(etPwd, StyleTargets.EDITTEXT);
+        
         chkIsDefault = (CheckBox) findViewById(R.id.chkIsDefaultProfile);
+        Style.CURRENTSTYLE.applyStyle(chkIsDefault , StyleTargets.TEXT);
+
         btnSaveProfile = (Button) findViewById(R.id.btnSaveProfile);
         btnCancelProfile = (Button) findViewById(R.id.btnCancelProfile);
-
+        Style.CURRENTSTYLE.applyStyle(btnSaveProfile, StyleTargets.BUTTON_FORM);
+        Style.CURRENTSTYLE.applyStyle(btnCancelProfile, StyleTargets.BUTTON_FORM);
+        
         // TODO set the value of isNewProfile
         dbHelper = new DatabaseHelper(this);
         profileValues = new ContentValues();

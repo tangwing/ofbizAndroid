@@ -11,67 +11,84 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int black=0x7f040003;
         public static final int blue=0x7f040002;
         public static final int green=0x7f040001;
         public static final int red=0x7f040000;
+        public static final int white=0x7f040004;
     }
     public static final class drawable {
         public static final int add=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
-        public static final int logo=0x7f020002;
-        public static final int logout=0x7f020003;
-        public static final int mysharp=0x7f020004;
+        public static final int background_repeat=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int logo=0x7f020003;
+        public static final int logo2=0x7f020004;
+        public static final int logout=0x7f020005;
+        public static final int mysharp=0x7f020006;
+        public static final int ofbiz_logo=0x7f020007;
     }
     public static final class id {
-        public static final int btnCancelProfile=0x7f07001a;
-        public static final int btnLogin=0x7f07000c;
-        public static final int btnSaveProfile=0x7f070019;
-        public static final int chkIsDefaultProfile=0x7f070018;
-        public static final int etPort=0x7f070017;
-        public static final int etProfileName=0x7f070013;
-        public static final int etPwd=0x7f07000b;
-        public static final int etServerAddress=0x7f070015;
-        public static final int etUser=0x7f07000a;
-        public static final int gridView=0x7f070004;
-        public static final int header=0x7f070008;
-        public static final int ibtnTitleBarLeft=0x7f070001;
-        public static final int ibtnTitleBarRight=0x7f070003;
-        public static final int ivListHeader=0x7f070005;
-        public static final int ivLogo=0x7f07000e;
-        public static final int ivTitleBarMiddle=0x7f070002;
-        public static final int llTest=0x7f07000f;
-        public static final int llTitleBar=0x7f07000d;
-        public static final int lvMain=0x7f070010;
-        public static final int lvTest=0x7f07001c;
-        public static final int menuAddProfile=0x7f070021;
-        public static final int menuDelProfile=0x7f070022;
-        public static final int menuProfile=0x7f07001d;
-        public static final int quitter=0x7f07001e;
-        public static final int spinnerProfiles=0x7f070011;
-        public static final int spinnerSetting=0x7f070009;
-        public static final int testGenerator=0x7f07001f;
-        public static final int testHome=0x7f070020;
-        public static final int titleBar=0x7f070000;
-        public static final int tvListHeaderDescription=0x7f070007;
-        public static final int tvListHeaderTitre=0x7f070006;
-        public static final int tvPort=0x7f070016;
-        public static final int tvProfileName=0x7f070012;
-        public static final int tvServerAddress=0x7f070014;
-        public static final int tvTitleBarMiddle=0x7f07001b;
+        public static final int btnCancelProfile=0x7f08001f;
+        public static final int btnLogin=0x7f080011;
+        public static final int btnSaveProfile=0x7f08001e;
+        public static final int chkIsDefaultProfile=0x7f08001d;
+        public static final int etField=0x7f080022;
+        public static final int etPort=0x7f08001c;
+        public static final int etProfileName=0x7f080018;
+        public static final int etPwd=0x7f080010;
+        public static final int etServerAddress=0x7f08001a;
+        public static final int etUser=0x7f08000e;
+        public static final int gridView=0x7f080004;
+        public static final int header=0x7f08000a;
+        public static final int ibtnTitleBarLeft=0x7f080001;
+        public static final int ibtnTitleBarRight=0x7f080003;
+        public static final int ivListHeader=0x7f080005;
+        public static final int ivLogo=0x7f080013;
+        public static final int ivTitleBarMiddle=0x7f080002;
+        public static final int listItemContainer=0x7f080008;
+        public static final int llMainPanel=0x7f080014;
+        public static final int llMainPanelContainer=0x7f08000b;
+        public static final int llTest=0x7f080024;
+        public static final int llTitleBar=0x7f080012;
+        public static final int lvMain=0x7f080015;
+        public static final int lvTest=0x7f080025;
+        public static final int menuAddProfile=0x7f08002a;
+        public static final int menuDelProfile=0x7f08002b;
+        public static final int menuProfile=0x7f080026;
+        public static final int quitter=0x7f080027;
+        public static final int singleformfield=0x7f080020;
+        public static final int spinnerProfiles=0x7f080016;
+        public static final int spinnerSetting=0x7f08000c;
+        public static final int testGenerator=0x7f080028;
+        public static final int testHome=0x7f080029;
+        public static final int titleBar=0x7f080000;
+        public static final int tvFieldTitle=0x7f080021;
+        public static final int tvListHeaderDescription=0x7f080007;
+        public static final int tvListHeaderTitre=0x7f080006;
+        public static final int tvPort=0x7f08001b;
+        public static final int tvProfileName=0x7f080017;
+        public static final int tvPwd=0x7f08000f;
+        public static final int tvServerAddress=0x7f080019;
+        public static final int tvTitleBarMiddle=0x7f080023;
+        public static final int tvUser=0x7f08000d;
+        public static final int window=0x7f080009;
     }
     public static final class layout {
         public static final int home=0x7f030000;
         public static final int listheader=0x7f030001;
         public static final int listitem=0x7f030002;
-        public static final int main=0x7f030003;
-        public static final int masterpage=0x7f030004;
-        public static final int profile=0x7f030005;
-        public static final int titlebar=0x7f030006;
-        public static final int tmp=0x7f030007;
+        public static final int listitemcontainer=0x7f030003;
+        public static final int main=0x7f030004;
+        public static final int masterpage=0x7f030005;
+        public static final int profile=0x7f030006;
+        public static final int singleformfield=0x7f030007;
+        public static final int test=0x7f030008;
+        public static final int titlebar=0x7f030009;
+        public static final int tmp=0x7f03000a;
     }
     public static final class menu {
-        public static final int menu_login=0x7f060000;
-        public static final int menu_profile=0x7f060001;
+        public static final int menu_login=0x7f070000;
+        public static final int menu_profile=0x7f070001;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
@@ -94,5 +111,18 @@ public final class R {
         public static final int tvPwd=0x7f050003;
         public static final int tvServerAddress=0x7f050007;
         public static final int tvUser=0x7f050002;
+    }
+    public static final class style {
+        public static final int BarContainer=0x7f060001;
+        public static final int CommonEditText=0x7f060006;
+        public static final int CommonTextView=0x7f060005;
+        /**          <item name="android:textColorHighlight"></item> 
+         */
+        public static final int FormButton=0x7f060004;
+        /**          <item name="android:background"></item> 
+         */
+        public static final int MainPanelContainer=0x7f060002;
+        public static final int TitleBarButton=0x7f060003;
+        public static final int Window=0x7f060000;
     }
 }

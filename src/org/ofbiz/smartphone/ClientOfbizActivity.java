@@ -10,6 +10,7 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -26,6 +27,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.ofbiz.smartphone.Style.StyleTargets;
 import org.ofbiz.smartphone.util.DatabaseHelper;
 import org.ofbiz.smartphone.util.MySSLSocketFactory;
 import org.ofbiz.smartphone.util.Util;
@@ -49,6 +51,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -83,15 +86,33 @@ public class ClientOfbizActivity extends Activity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-                
+        
+//        Properties p = new Properties();
+//        p.put("name", "old");
+//        Hashtable<String, Properties> h =new Hashtable<String, Properties>();
+//        h.put("key", p);
+//        h.get("key").put("name", "new");
+//        Log.d("test", h.get("key").getProperty("name"));
         
         // Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        
+        
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_MAINPANEL);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT);
+        
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        Style.CURRENTSTYLE.applyStyle(btnLogin, StyleTargets.BUTTON_FORM);
+        
         btnLogin.setOnClickListener(btnLoginListener);
         etUser = (EditText) findViewById(R.id.etUser);
         etPwd = (EditText) findViewById(R.id.etPwd);
+        Style.CURRENTSTYLE.applyStyle(etUser, StyleTargets.EDITTEXT);
+        Style.CURRENTSTYLE.applyStyle(etPwd, StyleTargets.EDITTEXT);
 
         spinner = (Spinner) findViewById(R.id.spinnerSetting);
         spinnerAdapter = new ArrayAdapter<String>(this,
@@ -129,7 +150,7 @@ public class ClientOfbizActivity extends Activity {
             reloadSpinner();
         }
     }
-
+ 
     /**
      * Reload the spinner and then other components
      */
@@ -315,20 +336,13 @@ public class ClientOfbizActivity extends Activity {
             fullUrl = "https://" + url;
         }
         if (httpPort != PORT_NULL && !url.contains(":")) {
-            fullUrl = fullUrl + ":" + httpPort;
+            SERVER_ROOT = fullUrl + ":" + httpPort;
         }
-        if(target.startsWith("/") ) {
-            target.replaceFirst("/", "");
-        }
-        if (!target.startsWith("smartphone/control")) {
-            SERVER_ROOT = fullUrl + "/smartphone/control/";
-        }
-        else {
-            SERVER_ROOT = fullUrl + "/" ;
-        }
-        fullUrl=SERVER_ROOT+target;
-        return fullUrl;
+        
+        return Util.makeFullUrlString(SERVER_ROOT,true, target);
     }
+    
+    
 
     /**
      * @param isAnthentificationEnabled
@@ -411,6 +425,7 @@ public class ClientOfbizActivity extends Activity {
                     Toast.makeText(ClientOfbizActivity.this, getResources().getString(R.string.loginSucceeds), Toast.LENGTH_SHORT).show();
                 }
             });
+            //intent.putExtra("target", "main");
             //To home page
             startActivity(intent);
         }else if(result.get("status").equals("NOK")){
@@ -461,9 +476,7 @@ public class ClientOfbizActivity extends Activity {
             intent.putExtra("isNewProfile", false);
             this.startActivityForResult(intent, REQUEST_NEWPROFILE);
             return true;
-        case R.id.testHome:
-            startActivity(new Intent(this, HomeActivity.class));
-            return true;
+
         case R.id.testGenerator:
             Intent i = new Intent(this, GeneratorActivity.class);
             i.putExtra("target", "main.xml");

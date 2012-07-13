@@ -1,165 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent"
-  android:layout_gravity="center_horizontal"
-  android:fillViewport="true" >
-  
-  <RelativeLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Window"
+    android:id="@+id/window"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center_horizontal"
+    android:fillViewport="true"
+     >
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:background="#454545"
-        android:paddingLeft="20dip"
-        android:paddingRight="20dip" >
-        
-        <!--  Header  Starts-->
-		<LinearLayout
-		    android:id="@+id/header"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:background="#454545"  >
-		    <!-- Logo Start -->
-			<ImageView
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:src="@drawable/logo" />
-			<!-- Logo Ends -->
-		</LinearLayout>
-        
-        <!-- Footer Start -->
-<!--         <LinearLayout android:id="@+id/footer" -->
-<!--                 android:layout_width="fill_parent" -->
-<!--                 android:layout_height="90dip" -->
-<!--                 android:background="@drawable/logo" -->
-<!--                 android:layout_alignParentBottom="true"> -->
-<!--         </LinearLayout> -->
-        
-        <!-- profile part starts-->
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="vertical"
-		    android:layout_below="@id/header" >
-			<!-- choose profile -->
-            <Spinner 
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            style="@style/BarContainer"
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ofbiz_logo" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/MainPanelContainer"
+            android:id="@+id/llMainPanelContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"  >
+
+            <!-- choose profile -->
+            <Spinner
                 android:id="@+id/spinnerProfiles"
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content" />
-			<!-- profile name -->
-			<TextView 
-			    android:id="@+id/tvProfileName"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/tvProfileName" />
-			
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+            <!-- profile name -->
+            <TextView
+                style="@style/CommonTextView"
+                android:id="@+id/tvProfileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tvProfileName" />
+
             <EditText
+                style="@style/CommonEditText"
                 android:id="@+id/etProfileName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter profile name..."
-                android:singleLine="true" />
+                android:hint="Enter profile name..."  />
 
             <!-- server address -->
-		    <TextView 
-		        android:id="@+id/tvServerAddress"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/tvServerAddress" />
+            <TextView
+                style="@style/CommonTextView"
+                android:id="@+id/tvServerAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tvServerAddress" />
 
-		    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal" >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
 
-			    <EditText
-			        android:id="@+id/etServerAddress"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_weight="0.83"
-			        android:hint="Enter server address..."
-			        android:singleLine="true" />
+                <EditText
+                    style="@style/CommonEditText"
+                    android:id="@+id/etServerAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.83"
+                    android:hint="Enter server address..."  />
 
-			    <TextView 
-			        android:id="@+id/tvPort"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text=" : " 
-					android:layout_weight="0.05"/>
+                <TextView
+                    style="@style/CommonTextView"
+                    android:id="@+id/tvPort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.05"
+                    android:text=" : " />
 
-			    <EditText
-			        android:id="@+id/etPort"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_weight="0.12"
-			        android:hint="Port..."
-			        android:singleLine="true" />
-
-			</LinearLayout>
+                <EditText
+                    style="@style/CommonEditText"
+                    android:id="@+id/etPort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.12"
+                    android:hint="Port..."  />
+            </LinearLayout>
             <!-- username -->
-		    <TextView 
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/tvUser" />
 
-		    <EditText
-		        android:id="@+id/etUser"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:hint="Enter your username..."
-		        android:singleLine="true" >
+            <TextView
+                style="@style/CommonTextView"
+                android:id="@+id/tvUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tvUser" />
 
-	    	</EditText>
-			
-		    <!-- password -->
-		    <TextView 
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/tvPwd" 
-				android:layout_marginTop="5dip"/>
+            <EditText
+                style="@style/CommonEditText"
+                android:id="@+id/etUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter your username..."  >
+            </EditText>
 
-		    <EditText
-		        android:id="@+id/etPwd"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:hint="........"
-		        android:inputType="textPassword"
-		        android:singleLine="true" />
-		    
-			<CheckBox 
-			       android:id="@+id/chkIsDefaultProfile"
-			       android:layout_width="wrap_content"
-	        	   android:layout_height="wrap_content"
-	        	   android:checked="false"
-			       android:text="Set as default profile"/>
-			
-			<LinearLayout
-			    android:layout_width="fill_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_marginTop="10dip"
-			    android:orientation="horizontal" >
+            <!-- password -->
 
-			    <Button
-			        android:id="@+id/btnSaveProfile"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_gravity="center_horizontal"
-			        android:layout_marginRight="5dip"
-			        android:layout_weight="0.3"
-			        android:text="@string/btnSaveProfile" />
+            <TextView
+                style="@style/CommonTextView"
+                android:id="@+id/tvPwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:text="@string/tvPwd" />
 
-			    <Button
-			        android:id="@+id/btnCancelProfile"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_weight="0.3"
-			        android:layout_gravity="center_horizontal"
-			        android:text="@string/btnCancelProfile" />
-			</LinearLayout>
+            <EditText
+                style="@style/CommonEditText"
+                android:id="@+id/etPwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="........"
+                android:inputType="textPassword"/>
 
-		</LinearLayout>
-  </RelativeLayout>
+            <CheckBox
+                style="@style/CommonTextView"
+                android:id="@+id/chkIsDefaultProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Set as default profile" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:orientation="horizontal" >
+
+                <Button
+                    style="@style/FormButton"
+                    android:id="@+id/btnSaveProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dip"
+                    android:layout_weight="0.3"
+                    android:text="@string/btnSaveProfile" />
+
+                <Button
+                    style="@style/FormButton"
+                    android:id="@+id/btnCancelProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:text="@string/btnCancelProfile" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
 </ScrollView>
-      
-
-

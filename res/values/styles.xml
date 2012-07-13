@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Window" >
+        <item name="android:background">#22A5D1</item>
+    </style>
+    
+    <style name="BarContainer" parent="@android:style/ButtonBar">
+        <item name="android:background">#22A5D1</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="MainPanelContainer" >
+        <item name="android:padding">20dip</item>
+        <item name="android:orientation">vertical</item>
+<!--         <item name="android:background"></item> -->
+    </style>
+
+    <style name="TitleBarButton" parent="@android:style/Widget.ImageButton">
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="FormButton" parent="@android:style/Widget.Button">
+<!--         <item name="android:textColorHighlight"></item> -->
+    </style>
+    
+    <style name="CommonTextView" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    
+    <style name="CommonEditText" parent="@android:style/Widget.EditText">
+        <item name="android:singleLine">true</item>
+    </style>
+</resources>
