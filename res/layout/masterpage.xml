@@ -58,9 +58,10 @@
             android:id="@+id/lvMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:divider="@drawable/listitem_divider"
+            android:dividerHeight="1px"
+            android:cacheColorHint="#00000000"
             android:smoothScrollbar="true"
-            android:divider="@color/blue"
-            android:dividerHeight="3dip"
              >
         </ListView>
     </LinearLayout>

@@ -3,6 +3,8 @@
     android:id="@+id/singleformfield"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:gravity="center_vertical"
     android:orientation="vertical" >
     <TextView 
         android:id="@+id/tvFieldTitle"
@@ -14,6 +16,7 @@
         android:id="@+id/etField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:singleLine="true" >
+        android:singleLine="true" 
+        android:visibility="gone">
     </EditText>
 </LinearLayout>

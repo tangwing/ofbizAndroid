@@ -1,60 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?>
-  <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="#454545" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui>
 
-       <LinearLayout  android:id="@+id/titleBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="3dip"
-        android:orientation="horizontal"
-        android:background="#BFB9B3"
-        >
-	    <ImageButton 
-	        android:id="@+id/ibtnTitleBarLeft"
-	        android:layout_gravity="left"
-	        android:contentDescription="@string/ibtnTitleBarLeftContentDes"
-	        android:paddingLeft="19dip"
-	        android:paddingRight="19dip"
-	        android:layout_weight="1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/logout" />
-	    <ImageView 
-	    	android:contentDescription="@string/ivLogoContentDes"
-	    	android:scaleType="fitXY"
-	    	android:layout_gravity="center"
-	    	android:layout_weight="4"
-	   		android:layout_width="wrap_content"
-	        android:layout_height="match_parent" 
-	        android:id="@+id/ivTitleBarMiddle"
-	        android:src="@drawable/logo" />
-	    <ImageButton 
-	        android:id="@+id/ibtnTitleBarRight"
-	        android:contentDescription="@string/ibtnTitleBarRightContentDes"
-	        android:paddingLeft="19dip"
-	        android:paddingRight="19dip"
-	        android:layout_weight="1"
-	        android:layout_gravity="right" 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/add" />
-    </LinearLayout>
+    <Menu
+        row-items="3"
+        type="bar" >
 
-      <GridView
-          
-	      android:padding="20dip"
-          android:id="@+id/gridView"
-          android:layout_below="@id/titleBar"
-          android:layout_marginTop="8dip"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
+        <MenuItem
+            name="mainBarLeft"
+            cell-width="15"
+            img="/images/neogia/001_42.png"
+            target="back"
+            title="" />
 
-          android:clipChildren="true"
-          android:gravity="center"
-          android:numColumns="3"
-          android:horizontalSpacing="30dip"
-          android:verticalSpacing="30dip" >
-      </GridView>
-  </RelativeLayout>
+        <MenuItem
+            name="logo"
+            cell-width="70"
+            img="/imageofbiz_logo.gif"
+            target=""
+            title="" />
+
+        <MenuItem
+            name="mainBarRight"
+            cell-width="15"
+            img="/images/neogia/001_01.png"
+            target="editCustomer?partyId=accountingadmin&amp;editMode=Y"
+            title="" />
+    </Menu>
+
+    <form
+        name="viewCustomer"
+        action=""
+        type="single" >
+
+        <field
+            action="null"
+            description="Accounting"
+            event=""
+            type="display" >
+        </field>
+
+        <field
+            action="null"
+            description="Accounting"
+            event=""
+            type="display" >
+        </field>
+
+        <field
+            action="null"
+            description=""
+            event=""
+            type="display" >
+        </field>
+
+        <field
+            action="null"
+            description=""
+            event=""
+            type="display" >
+        </field>
+
+        <field
+            action="null"
+            description=""
+            event=""
+            type="display" >
+        </field>
+
+        <field
+            action="null"
+            description="nullnull null"
+            event=""
+            type="display" >
+        </field>
+
+        <field
+            name="submit"
+            title="Submit"
+            type="submit" >
+        </field>
+    </form>
+
+</ui>
