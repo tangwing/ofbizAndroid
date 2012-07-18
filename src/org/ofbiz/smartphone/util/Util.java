@@ -41,7 +41,6 @@ public class Util {
     public static final int ACTION_VIEW = 0;
 
     public static Hashtable<String, String> getStatusCode(HttpResponse rp) {
-        //TODO Judge the status code and notify the user 
         Hashtable<String, String> result = new Hashtable<String, String>();
         BufferedReader br;
         try {

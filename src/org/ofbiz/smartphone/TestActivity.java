@@ -22,8 +22,9 @@ public class TestActivity extends Activity{
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tmp);
-        ListView lvTest = (ListView) findViewById(R.id.lvTest);
+//        setContentView(R.layout.tmp);
+//        ListView lvTest = (ListView) findViewById(R.id.lvTest);
+        ListView lvTest = null;
         LinearLayoutListAdapter llListAdapter = new LinearLayoutListAdapter(this);
         lvTest.setAdapter(llListAdapter);
         

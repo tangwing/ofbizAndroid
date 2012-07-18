@@ -25,7 +25,7 @@ public class ModelMenuItem {
     
     
     //The following attributes are not used yet
-    //TODO Whether we begin a new line, not used
+    //Whether we begin a new line, not used
     private boolean isNewline=true;
     private String color="";
     private int size = 20;//unit sp
@@ -45,6 +45,7 @@ public class ModelMenuItem {
 		img="/images/neogia/001_42.png"/>
      */
     public ModelMenuItem(Element element) {
+        
         setName(element.getAttribute("name"));
         setType(element.getAttribute("type"));
         //setType("image");
@@ -67,10 +68,16 @@ public class ModelMenuItem {
         setTarget(element.getAttribute("target"));
         setTitle(element.getAttribute("title"));
         if(imgSrc.equals("")){
-            setType("text");
+//            if(target.equals(""))
+                setType("text");
+//            else
+//                setType("button");
         }else {
             setType("image");
         }
+        String log = "New MenuItem : name :"+name+"" +
+        		"; title:"+title+";img:"+imgSrc+";target:"+target+";type:"+type;
+        Log.d("ModelMenuItem", log);
     }
 
     public String getType() {

@@ -1,7 +1,10 @@
 package org.ofbiz.smartphone;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +12,15 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 import org.ofbiz.smartphone.Style.StyleTargets;
 import org.ofbiz.smartphone.model.ModelForm;
 import org.ofbiz.smartphone.model.ModelFormField;
+import org.ofbiz.smartphone.model.ModelFormItem;
 import org.ofbiz.smartphone.model.ModelMenu;
 import org.ofbiz.smartphone.model.ModelMenuItem;
 import org.ofbiz.smartphone.model.ModelReader;
@@ -24,17 +31,20 @@ import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -63,36 +73,51 @@ public class GeneratorActivity extends Activity{
     private List<ModelMenu> mmList = null;
     private List<ModelForm> mfList = null;
     public static Resources res= null;
+    private String target="";
+    private int listFormViewIndex = 0;
+    private int listFormViewSize = 0;
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.masterpage);
+     // Avoid the annoying auto appearance of the keyboard
+        this.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llTitleBar), StyleTargets.CONTAINER_BAR);
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_MAINPANEL);
         
-        
         res = getResources();
-        String target = getIntent().getStringExtra("target");
+         target = getIntent().getStringExtra("target");
+        ArrayList<String> nameValuePairs = (ArrayList<String>) getIntent().getSerializableExtra("params");
+        
         
         lvMain = (ListView)findViewById(R.id.lvMain);
+//        lvMain.setDivider(res.getDrawable(R.drawable.listitem_divider));
+//        lvMain.setDividerHeight(2);
         //At first there is no item in the list adapter
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
-        
+       
         Map<String, List<?>> xmlMap = null;
-        try {
-            //******************Pour faciliter le développement, on utilise, pour l'instant un ficher XML local
-            
+        try {            
             if(target != null && !"".equals(target)) {
+//                if(target.equals("main")) {
+//                   // on
+//                }
                 target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
-                HttpPost hp = new HttpPost(target);
+                HttpPost hp = getHttpPost(target, nameValuePairs);
                 Log.d(TAG,"target : "+target);
                 HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
+                String xmlString = logStream(response.getEntity().getContent());
+                xmlString=xmlString.replace("&", "&#x26;");
+                Log.d("xml", xmlString);
                 xmlMap = ModelReader.readModel(Util.readXmlDocument(
-                        response.getEntity().getContent()));
+                        xmlString));
+//                xmlMap = ModelReader.readModel(Util.readXmlDocument(
+//                        response.getEntity().getContent()));
             }
             
         } catch (IllegalStateException e) {
@@ -105,25 +130,30 @@ public class GeneratorActivity extends Activity{
             e.printStackTrace();
         }
       //**********************
-        try 
-        {
+//        if(xmlMap == null) Log.d(TAG, "xmlMap == null");
+//        else if(xmlMap.get("menus")==null) Log.d(TAG, "xmlMap.get(menus)==null");
+//        else if(xmlMap.get("forms")==null) Log.d(TAG, "xmlMap.get(forms)==null");
+//        
+//        try 
+//        {
             if(xmlMap == null || 
                     (xmlMap.get("menus")==null && 
                     xmlMap.get("forms")==null)){
-                Toast.makeText(this, "Target is not available, use local xml.", Toast.LENGTH_LONG).show();
-                AssetManager am = getAssets();
-                InputStream xmlStream;
-                    xmlStream = am.open("main.xml");
-                    xmlMap = ModelReader.readModel(Util.readXmlDocument(
-                            xmlStream));
+                Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+                return;
+//                AssetManager am = getAssets();
+//                InputStream xmlStream;
+//                    xmlStream = am.open("main.xml");
+//                    xmlMap = ModelReader.readModel(Util.readXmlDocument(
+//                            xmlStream));
                 } 
-        }catch (ParserConfigurationException e) {
-                e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        }catch (ParserConfigurationException e) {
+//                e.printStackTrace();
+//        } catch (SAXException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         mmList = (List<ModelMenu>) xmlMap.get("menus");
         mfList = (List<ModelForm>) xmlMap.get("forms");
@@ -138,15 +168,59 @@ public class GeneratorActivity extends Activity{
         
         lvMain.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                    long arg3) {
-                Log.d(TAG, "List item clicked "+"You have clicked item "+arg2);
-                Toast.makeText(GeneratorActivity.this, "You have clicked item "+arg2, Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View currentView, int position,
+                    long rowid) {
+                Log.d(TAG, "List item clicked "+"You have clicked item "+position);
+                Toast.makeText(GeneratorActivity.this, 
+                        "You have clicked item "+position, Toast.LENGTH_SHORT).show();
+                String action = (String) currentView.getTag();
+                if(action != null ) {
+                    
+                    Intent intent = new Intent(GeneratorActivity.this, GeneratorActivity.class);
+                    intent.putExtra("target", action);
+                    startActivity(intent);
+                }
             }
         });
+        
+        
     }
     
-    private void setForms(LinearLayoutListAdapter parentListAdapter, List<ModelForm> mfList) {
+    private HttpPost getHttpPost(String target, ArrayList<String> params) {
+        HttpPost hp = new HttpPost(target);
+        List<NameValuePair> nvPairs = new ArrayList<NameValuePair>();
+        if(params != null && params.size() > 1) {
+            for(int index = 0; index <= params.size()/2 ; index++) {
+                nvPairs.add(new BasicNameValuePair(
+                        params.get(index), 
+                        params.get(index+1)));
+                try {
+                    hp.setEntity(new UrlEncodedFormEntity(nvPairs));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        return hp;
+    }
+
+    private String logStream(InputStream content) {
+        BufferedReader br = new BufferedReader( new InputStreamReader(content));
+        String line = "";
+        StringBuffer sb = new StringBuffer(); 
+        try {
+            while( (line = br.readLine()) != null) {
+                sb.append(line);
+                Log.d("StreamLog", line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
+    private void setForms(final LinearLayoutListAdapter parentListAdapter, List<ModelForm> mfList) {
         if(mfList == null || mfList.isEmpty())
             return;
         
@@ -154,43 +228,126 @@ public class GeneratorActivity extends Activity{
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for ( int index = 0; index < mfList.size(); index ++){
             ModelForm mf = mfList.get(index);
-            List<ModelFormField> mffList = mf.getFormFields();
+            if(mf.getName().toLowerCase().equals("login")) {
+                Intent intent = new Intent(getApplicationContext(), ClientOfbizActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
             
-            for(final ModelFormField mff : mffList) {  
-                //Each LinearLayout corresponds to a ListRow 
-                LinearLayout row = new LinearLayout(this);
+            //Deal with the single form
+            if(mf.getType().equals("single")) {
+                List<ModelFormField> mffList = mf.getFormFields();
+                ArrayList<EditText> listUserInput= new ArrayList<EditText>();
                 
-//                row.setLayoutParams(new LinearLayout.LayoutParams(
-//                        LinearLayout.LayoutParams.MATCH_PARENT, 
-//                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                //row.setGravity(Gravity.CENTER);
-                System.out.println("FormField : name=" + mff.getName() +
-                        "; title = " + mff.getTitle());
-                if(mff.getName().equals("PASSWORD") || 
-                    mff.getName().equals("USERNAME")) {
-                    LinearLayout itemContainer = (LinearLayout)
-                            inflater.inflate(R.layout.singleformfield, null);
-                    TextView tvTitle = (TextView)itemContainer.getChildAt(0);
-                    Style.CURRENTSTYLE.applyStyle(tvTitle, StyleTargets.TEXT);
-                    
-                    tvTitle.setText(mff.getTitle());
-                    EditText etField = (EditText)itemContainer.getChildAt(1);
-                    Style.CURRENTSTYLE.applyStyle(etField, StyleTargets.EDITTEXT);
-                    if(mff.getName().equals("PASSWORD"))
-                    {
+                for(final ModelFormField mff : mffList) {  
+                    //Each LinearLayout corresponds to a ListRow 
+                    LinearLayout row = (LinearLayout)
+                            inflater.inflate(R.layout.form_single_field, null);
+                    if(mff.getType().toLowerCase().equals("display")){
+                        
+                        TextView tvTitle = (TextView)row.getChildAt(0);
+                        Style.CURRENTSTYLE.applyStyle(tvTitle, StyleTargets.TEXT);
+                        tvTitle.setText(mff.getDescription());
+                    } else if(mff.getType().equals("text")) {
+                        TextView tvTitle = (TextView)row.getChildAt(0);
+                        Style.CURRENTSTYLE.applyStyle(tvTitle, StyleTargets.TEXT);
+                        tvTitle.setText(mff.getTitle());
+                        
+                        EditText etField = (EditText)row.getChildAt(1);
+                        etField.setTag(R.id.userInputName, mff.getName());
+                        listUserInput.add(etField);
+                        etField.setVisibility(EditText.VISIBLE);
+                        Style.CURRENTSTYLE.applyStyle(etField, StyleTargets.EDITTEXT);
+                    } else if(mff.getType().equals("password")) {
+                        TextView tvTitle = (TextView)row.getChildAt(0);
+                        Style.CURRENTSTYLE.applyStyle(tvTitle, StyleTargets.TEXT);
+                        
+                        tvTitle.setText(mff.getTitle());
+                        EditText etField = (EditText)row.getChildAt(1);
+                        etField.setVisibility(View.VISIBLE);
+                        Style.CURRENTSTYLE.applyStyle(etField, StyleTargets.EDITTEXT);
                         etField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    } else if(mff.getType().equals("submit")) {
+                        Button btnSubmit = (Button)row.getChildAt(2);//new Button(this);
+                        btnSubmit.setVisibility(View.VISIBLE);
+                        Style.CURRENTSTYLE.applyStyle(btnSubmit, StyleTargets.BUTTON_FORM);
+                        btnSubmit.setText(mff.getTitle());
+                        btnSubmit.setOnClickListener(new OfbizOnClickListener(this, mf.getTarget(), listUserInput));
+                    } else if(mff.getType().equals("text-find")) {
+                        EditText etSearch = (EditText)findViewById(R.id.etSearch);
+                        etSearch.setVisibility(View.VISIBLE);
+                        etSearch.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                Log.d("TextWatcher", "on:s="+s+";start="+start+";count="+count+";before="+before);
+                            }
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count,
+                                    int after) {
+                                Log.d("TextWatcher", "before:s="+s+";start="+start+";count="+count+";after="+after);
+                            }
+                            
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                Log.d("TextWatcher", "after:s="+s);
+                                if(s.length()>0) {
+                                    int result = parentListAdapter.searchOrderedList(s.toString());
+                                    if(result > -1) {
+                                        lvMain.setSelectionFromTop(result, 0);
+                                        Log.d("Search","Set position "+result);
+                                    }
+                                } else {
+                                    lvMain.setSelectionFromTop(0, 0);
+                                }
+                            }
+                        });
+                        row = null;
                     }
-                    row.addView(itemContainer);
-                    //Log.d(TAG, "row width "+ row.getLayoutParams().width);
-                } else if(mff.getName().equals("submit")) {
-                    Button btnSubmit = new Button(this);
-                    Style.CURRENTSTYLE.applyStyle(btnSubmit, StyleTargets.BUTTON_FORM);
-                    Style.CURRENTSTYLE.applyStyle(btnSubmit, StyleTargets.BUTTON_FORM);
-                    btnSubmit.setText(mff.getTitle());
-                    btnSubmit.setOnClickListener(new OfbizOnClickListener(this, mf.getTarget()));
-                    row.addView(btnSubmit);
+                    parentListAdapter.add(row);
                 }
-                parentListAdapter.add(row);
+                
+            }
+          //Deal with the list form
+            else if(mf.getType().equals("list")) {
+                List<ModelFormItem> mfiList = mf.getListFormItems();
+                this.listFormViewIndex = mf.getViewIndex();
+                this.listFormViewSize = mf.getViewSize();
+                LinearLayout pageSelector = (LinearLayout)findViewById(R.id.llPageSelector);
+                pageSelector.setVisibility(View.VISIBLE);
+                EditText etPageNum = (EditText)(pageSelector.getChildAt(2));
+                etPageNum.setText(listFormViewIndex+1+"");
+                
+                
+                //Each item corresponds to a row of the form
+                for(final ModelFormItem mfi : mfiList) { 
+                    LinearLayout row = (LinearLayout)inflater.inflate(
+                            R.layout.form_list_item, null);
+                    List<ModelFormField> mffList = mfi.getFormItemFields();
+                    //All the fields in this list is in a single row
+                    for(final ModelFormField mff : mffList) { 
+                        if("image".equals(mff.getType())) {
+                            ImageView iv = (ImageView)row.getChildAt(0);
+                            iv.setVisibility(ImageView.VISIBLE);
+                            iv.setImageDrawable(mff.getImgDrawable());
+                            String action = mff.getAction();
+                            if(!"".equals(action))
+                                row.setTag(action);
+                        } else if("display".equals(mff.getType())) {
+                            TextView tv = (TextView)row.getChildAt(1);
+                            tv.setVisibility(TextView.VISIBLE);
+                            tv.setText(mff.getDescription());
+//                            Log.d(TAG, "Display : name = "+mff.getName()+
+//                                    "; des="+ mff.getDescription());
+                            String action = mff.getAction();
+                            if(!"".equals(action))
+                                row.setTag(action);
+                        } else if("text".equals(mff.getType())) {
+                            EditText et =(EditText)row.getChildAt(2);
+                            et.setVisibility(EditText.VISIBLE);
+                        }
+                    }
+                    parentListAdapter.add(row);
+                }
             }
         }
     }
@@ -206,68 +363,54 @@ public class GeneratorActivity extends Activity{
                 setTitleBar(mm);
             }else if(mm.getType().equals("panel")){
                 List<ModelMenuItem> mmiList = mm.getMenuItems();
-                Log.d(TAG, "mmiList.size= " + mmiList.size());
-                
+//                Log.d(TAG, "mmiList.size= " + mmiList.size());
+//                
                 //Each LinearLayout corresponds to a ListRow 
                 LinearLayout row = new LinearLayout(this);
-                row.setGravity(Gravity.CENTER);
+                //row.setGravity(Gravity.CENTER);
                 int currentColNum = 0;
                 
                 for(final ModelMenuItem mmi : mmiList) {  
                     
-                    System.out.println("Menuitem : name=" + mmi.getName() +"; type = " + mmi.getType()+"; isNewLine=" + mmi.isNewline()+"; ");
-
-//                    if(mmi.isNewline()) {
-//                        if(llTmp != null) {
-//                            parentListAdapter.add(llTmp);
-//                            Log.d(TAG, "Add a new ListItem to list!");
-//                        }
-//                        llTmp = new LinearLayout(this);
-//                    }
+                    System.out.println("Menuitem : name=" + mmi.getName() +"; type = " + mmi.getType());
                     //The vertical container for each item
-                    
-                    LinearLayout itemContainer = (LinearLayout) inflater.inflate(R.layout.listitemcontainer, null);
+                    LinearLayout itemContainer = (LinearLayout) inflater.inflate(
+                            R.layout.menu_item, null);
                     Log.d(TAG, "new itemContainer !; id ="+itemContainer.getId());
                     View currentView = null;
+                    
                     if( "image".equals(mmi.getType())){
-                        //Simple image
-                        ImageView img = new ImageView(this);
-                        img.setImageDrawable(mmi.getImgDrawable());
-                        Log.d(TAG, "new image view, width="+mmi.getImgDrawable().getIntrinsicWidth());
-//                      img.setAdjustViewBounds(adjustViewBounds)
+                        ImageView img = null;
                         if(null==mmi.getTarget() || mmi.getTarget().equals("")){
-                            img.setClickable(false);
+                            //Simple image
+                            img = (ImageView) itemContainer.getChildAt(1);
                         }else {
-                            //imgButton.setImageDrawable(getResources().getDrawable(R.drawable.add));
-                            //Set target
+                            img = (ImageButton) itemContainer.getChildAt(0);
+                            img.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xFF22A5D1));
+//                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.DARKEN);
+//                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.XOR);
                             img.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
-                            img.setClickable(true);
                         }
-                        if(mmi.getWeight()==0){
-                            int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, res.getDisplayMetrics());
-                            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(px,px);
-//                            int margin = (res.getDisplayMetrics().widthPixels-px * (mm.getRow_items())+1)/(2*mm.getRow_items());
-//                            int margin = (px/4);
-//                            llp.setMargins(margin, margin, margin, margin);
-                            img.setLayoutParams(llp);
-                        }
-                        //int currentView.getMeasuredWidth();
-                        itemContainer.addView(img);
-                        //if(!mmi.getTitle().equals("")) {
-//                            currentView.setLayoutParams(new LinearLayout.LayoutParams(
-//                                    LinearLayout.LayoutParams.MATCH_PARENT,
-//                                    LinearLayout.LayoutParams.WRAP_CONTENT));
+                        img.setVisibility(ImageView.VISIBLE);
+                        img.setImageDrawable(mmi.getImgDrawable());
+                        if(!mmi.getTitle().equals("")) {
                             //Add the caption
-                            TextView caption = new TextView(this);
+                            TextView caption = (TextView)itemContainer.getChildAt(3);
+                            caption.setVisibility(View.VISIBLE);
                             Style.CURRENTSTYLE.applyStyle(caption, StyleTargets.TEXT);
-                            //caption.setLayoutParams(itemContainer.getLayoutParams());
-                            caption.setText(" "+mmi.getTitle());
-                            itemContainer.addView(caption);
-                        //}
+                            caption.setText(""+mmi.getTitle());
+                            Log.d(TAG,"Caption:"+caption.getText());
+                        }
                         currentView = itemContainer;
                         
                     } else if ( "text".equals(mmi.getType())){
-                        TextView tv = new TextView(this);
+                        TextView tv = null;
+                        if(null==mmi.getTarget() || mmi.getTarget().equals("")){
+                            tv = (TextView)itemContainer.getChildAt(3);
+                        }else {
+                            tv = (Button)itemContainer.getChildAt(2);
+                        }
+                        tv.setVisibility(View.VISIBLE);
                         Style.CURRENTSTYLE.applyStyle(tv, StyleTargets.TEXT);
                         tv.setText(mmi.getTitle());
                         Log.d(TAG, "Text Style : "+mmi.getStyle());
@@ -287,13 +430,20 @@ public class GeneratorActivity extends Activity{
 //                            
 //                        }
                         //Log.d(TAG, tv.getText()+"; "+mmi.getSize());
-                        currentView = tv;
+                        currentView = itemContainer;
                     } 
                     if(mmi.getWeight()!=0) {
                         currentView.setLayoutParams(new LinearLayout.LayoutParams(
                                 0, LayoutParams.WRAP_CONTENT, mmi.getWeight()));
+                    }else {
+                        currentView.setLayoutParams(new LinearLayout.LayoutParams(
+                                0, LayoutParams.WRAP_CONTENT, 1));
                     }
                     
+//                    if(mmi.getName().equals("main")) {
+//                        itemContainer.setBackgroundColor(R.color.red);
+//                    }
+//                    
                     Log.d(TAG, "Add a new View to listItem !; id ="+currentView.getId());
                     row.addView(currentView);
                     currentColNum ++;
@@ -302,23 +452,17 @@ public class GeneratorActivity extends Activity{
                         parentListAdapter.add(row);
                         Log.d(TAG, "Add a new ListItem to list! getRow_items=" + mm.getRow_items());
                         row = new LinearLayout(this);
-                        row.setGravity(Gravity.CENTER);
-                    
                     }
-                        
-                                         
                 }
-                if(row.getChildCount() > 0) {
-                    int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, res.getDisplayMetrics());
+                
+                if(row.getChildCount() > 0 && mmiList.get(mmiList.size()-1).getWeight()==0) {
                     //This is for the alignement
                     for(int i = row.getChildCount() ; i < mm.getRow_items() ; i++) {
-                        LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.listitemcontainer, null);
-                        ImageView img = new ImageView(this);
-                        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(px,px);
-                        img.setLayoutParams(llp);
-                        ll.addView(img);
+                        LinearLayout ll = (LinearLayout)inflater.inflate(
+                                R.layout.menu_item, null);
+                        ll.setLayoutParams(new LinearLayout.LayoutParams(
+                                0, LayoutParams.WRAP_CONTENT, 1));
                         row.addView(ll);
-                        
                     }
                     parentListAdapter.add(row);
                     Log.d(TAG, "Add last ListItem !");
@@ -369,7 +513,44 @@ public class GeneratorActivity extends Activity{
         ibtnTitleBarRight.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
     }
 
-    
+    public void goToPage(View view) {
+        Button selectPage = (Button)view;
+        String tag = (String)selectPage.getTag();
+        Intent intent = new Intent(this, GeneratorActivity.class);
+        ArrayList<String> nameValuePairs = new ArrayList<String>();
+            if(tag.equals("firstpage")) {
+                nameValuePairs.add("viewIndex");
+                nameValuePairs.add("0");
+                nameValuePairs.add("viewSize");
+                nameValuePairs.add(listFormViewSize+"");
+            } else if(tag.equals("lastpage")) {
+                nameValuePairs.add("viewIndex");
+                //TODO page number unknown
+                nameValuePairs.add("10");
+                nameValuePairs.add("viewSize");
+                nameValuePairs.add(listFormViewSize+"");
+                nameValuePairs.add(listFormViewSize+"");
+            
+            } else if(tag.equals("previouspage") && listFormViewIndex>0) {
+                nameValuePairs.add("viewIndex");
+                nameValuePairs.add(String.valueOf(listFormViewIndex-1));
+                nameValuePairs.add("viewSize");
+                nameValuePairs.add(listFormViewSize+"");
+            
+            } else if(tag.equals("nextpage")) {
+              //TODO page number unknown
+                nameValuePairs.add("viewIndex");
+                nameValuePairs.add(String.valueOf(listFormViewIndex+1));
+                nameValuePairs.add("viewSize");
+                nameValuePairs.add(listFormViewSize+"");
+            } 
+            intent.putExtra("target", getIntent().getStringExtra("target"));
+            intent.putExtra("params", nameValuePairs);
+            startActivity(intent);
+            finish();
+
+        return;
+    }
     
     public List<ModelMenuItem> getModelMenuListExample()
     {
@@ -395,7 +576,7 @@ public class GeneratorActivity extends Activity{
             d = res.getDrawable(R.drawable.ic_launcher);
             Log.d("getDrawableFromUrl", "Default image, target : "+targetUrl+"; drawablewidth: "+d.getIntrinsicWidth());
         }else if(targetUrl.startsWith("file://")) {
-            Log.d("getDrawableFromTarget", "Local file : " + targetUrl);
+            Log.d("getDrawableFromUrl", "Local file : " + targetUrl);
             try {
                 d = Drawable.createFromStream(res.getAssets().open(targetUrl.substring(7)), srcName);
             } catch (IOException e) {
@@ -413,11 +594,10 @@ public class GeneratorActivity extends Activity{
                 if(d == null)
                 {
                     Log.d("getDrawableFromTarget", "NULL drawable, return a default image");
-                    return getDrawableFromUrl("", srcName);
-                }
-                Log.d("getDrawableFromTarget", 
-                        "New drawable added ! Name = "+srcName+" url="+ClientOfbizActivity.SERVER_ROOT.replace("/smartphone/control","")+targetUrl);
-                
+                    d = getDrawableFromUrl("", srcName);
+                }else{
+                    Log.d("getDrawableFromTarget", "Create image successfully from :"+ fullUrl);
+                }                
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
             } catch (IOException e) {

@@ -23,6 +23,7 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -71,12 +72,13 @@ public class ClientOfbizActivity extends Activity {
     private ArrayAdapter<String> spinnerAdapter = null;
     private DatabaseHelper dbHelper = null;
     private Cursor cursor = null;
-    public static HttpClient httpClient = null;
+    public static DefaultHttpClient httpClient = null;
+    
     private final String TAG = "LOGIN_PAGE";
     private final int REQUEST_NEWPROFILE = 1;
     private final int PORT_NULL = -1;
     private final int CONNECTION_TIMEOUT = 10000;
-    private final int SOCKET_TIMEOUT = 3000;
+    private final int SOCKET_TIMEOUT = 10000;
 
     public static String SERVER_ROOT;
 
@@ -96,9 +98,12 @@ public class ClientOfbizActivity extends Activity {
 //        h.get("key").put("name", "new");
 //        Log.d("test", h.get("key").getProperty("name"));
         
+        
+        
+        
         // Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         
         
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
@@ -379,7 +384,6 @@ public class ClientOfbizActivity extends Activity {
 
         registry.register(new Scheme("https", socketFactory, 443));
         HttpParams hp = new BasicHttpParams();
-
         HttpConnectionParams.setConnectionTimeout(hp, CONNECTION_TIMEOUT);
         HttpConnectionParams.setSoTimeout(hp, SOCKET_TIMEOUT);
 
@@ -396,12 +400,12 @@ public class ClientOfbizActivity extends Activity {
                         .contains(":")) {
             url = makeFullUrlString(
                     cursor.getString(cursor.getColumnIndex("serveraddress")),
-                    PORT_NULL, "smartphoneLogin");
+                    PORT_NULL, "login");
         } else {
             url = makeFullUrlString(
                     cursor.getString(cursor.getColumnIndex("serveraddress")),
                     cursor.getInt(cursor.getColumnIndex("port")),
-                    "smartphoneLogin");
+                    "login");
         }
         Log.d(TAG, "L308:url = " + url);
         Log.d(TAG,
@@ -413,11 +417,11 @@ public class ClientOfbizActivity extends Activity {
         HttpPost httpPost = new HttpPost(url);
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("username", etUser.getText().toString()));
-        nameValuePairs.add(new BasicNameValuePair("password", etPwd.getText().toString()));
+        nameValuePairs.add(new BasicNameValuePair("USERNAME", etUser.getText().toString()));
+        nameValuePairs.add(new BasicNameValuePair("PASSWORD", etPwd.getText().toString()));
         httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         HttpResponse response = httpClient.execute(httpPost);
-        Log.println(1, "INFO: ", response.toString());
+        //Log.println(1, "INFO: ", response.toString());
 
         final Hashtable<String, String> result = Util.getStatusCode(response);
 
@@ -429,8 +433,7 @@ public class ClientOfbizActivity extends Activity {
                     Toast.makeText(ClientOfbizActivity.this, getResources().getString(R.string.loginSucceeds), Toast.LENGTH_SHORT).show();
                 }
             });
-            //intent.putExtra("target", "main");
-            //To home page
+            intent.putExtra("target", "main");
             startActivity(intent);
         }else if(result.get("status").equals("NOK")){
             runOnUiThread(new Runnable() {

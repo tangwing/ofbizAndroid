@@ -43,7 +43,7 @@ public class Style {
         styleMap.put(StyleTargets.BUTTON_TITLEBAR, new Properties());
         styleMap.put(StyleTargets.BUTTON_FORM, new Properties());
         p = new Properties();
-        //p.put("textcolor","#ff0000");
+        //p.put("backgroundcolor","#22A5D1");
         styleMap.put(StyleTargets.TEXT, p);
         styleMap.put(StyleTargets.EDITTEXT, new Properties());
     }
@@ -98,6 +98,7 @@ public class Style {
             switch (st) {
                 case TEXT:   
                     TextView tv = (TextView)view;
+                    //tv.setSingleLine(false);
                     color = styleAttr.getProperty("textcolor","");
                     if(!color.equals("")) {
                         tv.setTextColor(Color.parseColor(color));
@@ -108,7 +109,6 @@ public class Style {
                     EditText et = (EditText)view;
                     Log.d("Style", ""+et.getInputType());
                     et.setSingleLine(true);
-                    Log.d("Style", "after set single line" + et.getInputType());
                     color = styleAttr.getProperty("textcolor","");
                     if(!color.equals("")) {
                         et.setTextColor(Color.parseColor(color));
