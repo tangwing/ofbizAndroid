@@ -76,6 +76,7 @@ public class GeneratorActivity extends Activity{
     private String target="";
     private int listFormViewIndex = 0;
     private int listFormViewSize = 0;
+    private LayoutInflater inflater;
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -91,12 +92,16 @@ public class GeneratorActivity extends Activity{
         
         res = getResources();
          target = getIntent().getStringExtra("target");
+        inflater = (LayoutInflater)
+                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ArrayList<String> nameValuePairs = (ArrayList<String>) getIntent().getSerializableExtra("params");
         
         
         lvMain = (ListView)findViewById(R.id.lvMain);
-//        lvMain.setDivider(res.getDrawable(R.drawable.listitem_divider));
-//        lvMain.setDividerHeight(2);
+//        //Add headerView--page selector (not so good)
+//        LinearLayout pageSelector = (LinearLayout)inflater.inflate(
+//        R.layout.list_header_selector, null);
+//        lvMain.addHeaderView(pageSelector);
         //At first there is no item in the list adapter
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
@@ -104,9 +109,6 @@ public class GeneratorActivity extends Activity{
         Map<String, List<?>> xmlMap = null;
         try {            
             if(target != null && !"".equals(target)) {
-//                if(target.equals("main")) {
-//                   // on
-//                }
                 target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
                 HttpPost hp = getHttpPost(target, nameValuePairs);
                 Log.d(TAG,"target : "+target);
@@ -224,8 +226,7 @@ public class GeneratorActivity extends Activity{
         if(mfList == null || mfList.isEmpty())
             return;
         
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        
         for ( int index = 0; index < mfList.size(); index ++){
             ModelForm mf = mfList.get(index);
             if(mf.getName().toLowerCase().equals("login")) {
@@ -312,11 +313,15 @@ public class GeneratorActivity extends Activity{
                 List<ModelFormItem> mfiList = mf.getListFormItems();
                 this.listFormViewIndex = mf.getViewIndex();
                 this.listFormViewSize = mf.getViewSize();
+                
+//                //Add headerView
+//                LinearLayout pageSelector = (LinearLayout)lvMain.findViewById(R.id.llPageSelector);
+//                pageSelector.setVisibility(View.VISIBLE);
+//                EditText etPageNum = (EditText)lvMain.findViewById(R.id.etPageNum);
                 LinearLayout pageSelector = (LinearLayout)findViewById(R.id.llPageSelector);
                 pageSelector.setVisibility(View.VISIBLE);
-                EditText etPageNum = (EditText)(pageSelector.getChildAt(2));
+                EditText etPageNum = (EditText)pageSelector.getChildAt(2);
                 etPageNum.setText(listFormViewIndex+1+"");
-                
                 
                 //Each item corresponds to a row of the form
                 for(final ModelFormItem mfi : mfiList) { 

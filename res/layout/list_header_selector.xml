@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llPageSelector"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    >
+ 
+    <Button android:id="@+id/btnFirstPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:tag="firstpage"
+        android:onClick="goToPage"
+        android:text="@string/btnFirstPage"
+        />
+    <Button android:id="@+id/btnPreviousPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:tag="previouspage"
+        android:onClick="goToPage"
+        android:text="@string/btnPreviousPage"
+        />
+    <EditText   android:id="@+id/etPageNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:focusable="false" 
+        />
+    <Button android:id="@+id/btnNextPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:tag="nextpage"
+        android:onClick="goToPage"
+        android:text="@string/btnNextPage"
+        />
+    <Button android:id="@+id/btnLastPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:tag="lastpage"
+        android:onClick="goToPage"
+        android:text="@string/btnLastPage"
+        />
+</LinearLayout>

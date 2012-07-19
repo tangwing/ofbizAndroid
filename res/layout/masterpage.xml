@@ -53,7 +53,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
     >
-        
+        <EditText android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mysharp"
+            android:paddingLeft="10dp"
+            android:hint="@string/searchHint"
+            android:visibility="gone"
+            />
+        <include layout="@layout/list_header_selector"/>
         <ListView
             android:id="@+id/lvMain"
             android:layout_width="match_parent"
