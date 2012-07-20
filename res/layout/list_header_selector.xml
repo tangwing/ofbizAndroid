@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/mainpanel_bg_repeat"
     android:id="@+id/llPageSelector"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:layout_weight="0"
     android:visibility="gone"
     >
  
@@ -14,6 +16,7 @@
         android:tag="firstpage"
         android:onClick="goToPage"
         android:text="@string/btnFirstPage"
+        
         />
     <Button android:id="@+id/btnPreviousPage"
         android:layout_width="wrap_content"

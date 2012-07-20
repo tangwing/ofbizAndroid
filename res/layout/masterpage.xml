@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Window"
     android:id="@+id/window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
      >
 
     <LinearLayout
@@ -12,6 +13,7 @@
         android:id="@+id/llTitleBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:visibility="invisible" >
         
         <ImageButton 
@@ -20,9 +22,10 @@
             android:layout_gravity="left"
             android:contentDescription="@string/ibtnTitleBarLeftContentDes"
             android:layout_weight="15"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:src="@drawable/logout" />
+<!--             android:background="@drawable/roundedcorner" -->
 
        <ImageView 
            android:id="@+id/ivLogo"
@@ -41,36 +44,56 @@
             android:contentDescription="@string/ibtnTitleBarRightContentDes"
             android:layout_gravity="right" 
             android:layout_weight="15"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:src="@drawable/add" />
     </LinearLayout>
     
-    <LinearLayout
-        style="@style/MainPanelContainer"
-        android:id="@+id/llMainPanel"
-        android:layout_below="@id/llTitleBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-    >
+<!--     divider -->
+    <View
+    android:layout_width="fill_parent"
+    android:layout_height="1dp"
+    android:background="@android:color/darker_gray"/>
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:id="@+id/llSearchBar"
+       style="@style/BarContainer"
+       android:orientation="horizontal"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="0"
+       android:visibility="gone"
+       >
         <EditText android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/mysharp"
             android:paddingLeft="10dp"
+            android:paddingTop="3dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="3dp"
             android:hint="@string/searchHint"
-            android:visibility="gone"
             />
-        <include layout="@layout/list_header_selector"/>
+    </LinearLayout>
+    
+    <LinearLayout
+        style="@style/MainPanelContainer"
+        android:id="@+id/llMainPanel"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+    >
+        
         <ListView
             android:id="@+id/lvMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:divider="@drawable/listitem_divider"
             android:dividerHeight="1px"
             android:cacheColorHint="#00000000"
-            android:smoothScrollbar="true"
-             >
-        </ListView>
+            />
+        <include layout="@layout/list_header_selector" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

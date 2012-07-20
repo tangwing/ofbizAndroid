@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <shape xmlns:android="http://schemas.android.com/apk/res/android" 
      android:shape="rectangle"> 
-     <gradient android:startColor="#A1C46C" android:endColor="#ffffff" 
-            android:angle="0"/> 
-    
+<!--      <gradient android:startColor="#A1C46C" android:endColor="#ffffff"  -->
+<!--             android:angle="0"/>  -->
+    <solid android:color="#ffffff"/>
     <corners android:radius="20dp" /> 
 </shape> 

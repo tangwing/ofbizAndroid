@@ -39,6 +39,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -54,6 +55,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -98,6 +100,12 @@ public class ClientOfbizActivity extends Activity {
 //        h.get("key").put("name", "new");
 //        Log.d("test", h.get("key").getProperty("name"));
         
+//        int colors[] = { 0xffA8BCC0 , 0xff60778D };
+//        GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+//        g.setShape(GradientDrawable.RECTANGLE);
+//        LinearLayout lTitle = (LinearLayout)findViewById(R.id.header);
+//        g.setSize(50, 10);
+//        lTitle.setBackgroundDrawable(g);
         
         
         
@@ -105,6 +113,7 @@ public class ClientOfbizActivity extends Activity {
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         
+        //Style.updateCurrentStyle(Style.DEFAULT_STYLE);
         
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);

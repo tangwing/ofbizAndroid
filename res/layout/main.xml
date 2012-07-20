@@ -2,8 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Window"
     android:id="@+id/window"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fillViewport="true" >
 
     <RelativeLayout
@@ -15,7 +15,7 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             >
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -29,9 +29,11 @@
         <!-- Login part starts -->
         <LinearLayout
             style="@style/MainPanelContainer"
+            android:paddingTop="20dp"
             android:id="@+id/llMainPanelContainer"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_below="@id/header" >
 
             <Spinner

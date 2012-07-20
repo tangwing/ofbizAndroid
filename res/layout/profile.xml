@@ -28,7 +28,8 @@
             style="@style/MainPanelContainer"
             android:id="@+id/llMainPanelContainer"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_below="@id/header"  >
 
             <!-- choose profile -->
@@ -125,10 +126,10 @@
             <CheckBox
                 style="@style/CommonTextView"
                 android:id="@+id/chkIsDefaultProfile"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="Set as default profile" />
+                android:text="       Set as default profile" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

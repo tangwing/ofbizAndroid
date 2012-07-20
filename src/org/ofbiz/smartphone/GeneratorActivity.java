@@ -32,13 +32,16 @@ import org.xml.sax.SAXException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -86,9 +89,19 @@ public class GeneratorActivity extends Activity{
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         
+        
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llTitleBar), StyleTargets.CONTAINER_BAR);
+        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
         Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_MAINPANEL);
+        
+//        float outerRadii[] = {11,11,11,11,11,11,11,11 };
+//        RoundRectShape rrs = new RoundRectShape(outerRadii, null, null);
+//        ShapeDrawable sd = new ShapeDrawable(rrs);
+        //findViewById(R.id.llTitleBar).setBackgroundDrawable(sd);
+        
+        
+        
         
         res = getResources();
          target = getIntent().getStringExtra("target");
@@ -113,6 +126,7 @@ public class GeneratorActivity extends Activity{
                 HttpPost hp = getHttpPost(target, nameValuePairs);
                 Log.d(TAG,"target : "+target);
                 HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
+                //TODO special string
                 String xmlString = logStream(response.getEntity().getContent());
                 xmlString=xmlString.replace("&", "&#x26;");
                 Log.d("xml", xmlString);
@@ -275,8 +289,9 @@ public class GeneratorActivity extends Activity{
                         btnSubmit.setText(mff.getTitle());
                         btnSubmit.setOnClickListener(new OfbizOnClickListener(this, mf.getTarget(), listUserInput));
                     } else if(mff.getType().equals("text-find")) {
+                        LinearLayout llSearch = (LinearLayout)findViewById(R.id.llSearchBar);
+                        llSearch.setVisibility(View.VISIBLE);
                         EditText etSearch = (EditText)findViewById(R.id.etSearch);
-                        etSearch.setVisibility(View.VISIBLE);
                         etSearch.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -341,6 +356,9 @@ public class GeneratorActivity extends Activity{
                             TextView tv = (TextView)row.getChildAt(1);
                             tv.setVisibility(TextView.VISIBLE);
                             tv.setText(mff.getDescription());
+                            tv.setText(Html.fromHtml("<b>"+mff.getDescription()+"</b>"));
+//                            tv.settext
+//                            tv.setty
 //                            Log.d(TAG, "Display : name = "+mff.getName()+
 //                                    "; des="+ mff.getDescription());
                             String action = mff.getAction();
@@ -391,7 +409,7 @@ public class GeneratorActivity extends Activity{
                             img = (ImageView) itemContainer.getChildAt(1);
                         }else {
                             img = (ImageButton) itemContainer.getChildAt(0);
-                            img.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xFF22A5D1));
+                            //img.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xFF22A5D1));
 //                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.DARKEN);
 //                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.XOR);
                             img.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
@@ -472,6 +490,11 @@ public class GeneratorActivity extends Activity{
                     parentListAdapter.add(row);
                     Log.d(TAG, "Add last ListItem !");
                 }
+            } else if(mm.getType().equals("style")){
+                List<ModelMenuItem> mmiList = mm.getMenuItems();
+                for (int i = 0; i < mmiList.size() ; i++ ) {
+                    Style.updateCurrentStyle(mmiList.get(i));
+                }
             }
         }
         
@@ -481,9 +504,9 @@ public class GeneratorActivity extends Activity{
         List<ModelMenuItem> mmiList = modelMenu.getMenuItems();
         LinearLayout llTitleBar = (LinearLayout)findViewById(R.id.llTitleBar);
         llTitleBar.setVisibility(LinearLayout.VISIBLE);
-        if(!"".equals(modelMenu.getBackgroundcolor())){
-            llTitleBar.setBackgroundColor(Color.parseColor(modelMenu.getBackgroundcolor()));
-        }
+//        if(!"".equals(modelMenu.getBackgroundcolor())){
+//            llTitleBar.setBackgroundColor(Color.parseColor(modelMenu.getBackgroundcolor()));
+//        }
         ImageButton ibtnTitleBarLeft = (ImageButton)findViewById(R.id.ibtnTitleBarLeft);
         ImageView ivLogo = (ImageView)findViewById(R.id.ivLogo);
         ImageButton ibtnTitleBarRight = (ImageButton)findViewById(R.id.ibtnTitleBarRight);

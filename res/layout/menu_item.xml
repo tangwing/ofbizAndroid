@@ -4,30 +4,33 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:minHeight="80dip"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:gravity="center"
     android:orientation="vertical" >
     
     <ImageButton 
         android:id="@+id/ibtnListItem"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:scaleType="fitXY"
         android:visibility="gone"/>
     <ImageView 
         android:id="@+id/ivListItem"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:scaleType="fitXY"
         android:visibility="gone"/>
     <Button 
         android:id="@+id/btnListItem"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:visibility="gone"/>
     <TextView android:id="@+id/tvListItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:ellipsize="end"
+        android:textColor="@color/white"
         android:visibility="invisible" />
 </LinearLayout>
