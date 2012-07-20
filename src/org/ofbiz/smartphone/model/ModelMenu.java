@@ -57,11 +57,11 @@ public class ModelMenu {
             }
             Element element = (Element) node;
             if ("MenuItem".equals(element.getTagName())) {
-                if(type.equals("style")) {
-                    Style.updateCurrentStyle(element);
-                } else {
+//                if(type.equals("style")) {
+//                    Style.updateCurrentStyle(element);
+//                } else {
                     menuitems.add(new ModelMenuItem(element));                    
-                }
+//                }
             }
         }
     }

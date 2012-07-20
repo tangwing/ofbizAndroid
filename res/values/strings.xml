@@ -13,7 +13,11 @@
     <string name="ibtnTitleBarLeftContentDes">Left</string>
     <string name="ivLogoContentDes">Logo</string>
     <string name="ibtnTitleBarRightContentDes">Right</string>
-    <string name="searchHint">Search in the list...</string>
+    <string name="searchHint">Search...</string>
+    <string name="btnFirstPage">&lt;&lt;</string>
+    <string name="btnPreviousPage">&lt;</string>
+    <string name="btnNextPage">&gt;</string>
+    <string name="btnLastPage">&gt;&gt;</string>
     
     <!-- The Strings from Java code files   -->
     <string name="loginErrorMessage_unknown">The server is not reachable, please check the address.</string>

@@ -28,18 +28,24 @@ public class ModelReader{
         //NodeList childs =  doc.getDocumentElement().getChildNodes();
         //---------------
         NodeList childs = doc.getDocumentElement().getChildNodes();
+//        Node node = childs.item(0);
+//        Element element = (Element) node;
+//        if(element.getTagName().equals("ui")) {
+//            Log.d(TAG, "find ui tag");
+//            childs = element.getChildNodes();
+//        }
         System.out.println("childs count = " + childs.getLength());
         int found = 0;
-        for(int index=0; index < childs.getLength(); index++) {
-            Node node = childs.item(index);
-            if (node.getNodeType() == Node.TEXT_NODE) {
-                continue;
-            }
-            Element element = (Element) node;
-            found++;
-            System.out.println("child :" + element.getTagName());
-        }
-        System.out.println("Dom element  count = " + found);
+//        for(int index=0; index < childs.getLength(); index++) {
+//            Node node = childs.item(index);
+//            if (node.getNodeType() == Node.TEXT_NODE) {
+//                continue;
+//            }
+//            Element element = (Element) node;
+//            found++;
+//            System.out.println("child :" + element.getTagName());
+//        }
+//        System.out.println("Dom element  count = " + found);
         
         //----------------
         for (int index = 0; index < childs.getLength(); index++) {
@@ -48,11 +54,11 @@ public class ModelReader{
                 continue;
             }
             Element element = (Element) node;
-            if ("form".equals(element.getTagName())) {
+            if ("form".equals(element.getTagName().toLowerCase())) {
                 Log.d(TAG, "find form");
                 forms.add(new ModelForm(element));
             }
-            else if ("Menu".equals(element.getTagName())) {
+            else if ("menu".equals(element.getTagName().toLowerCase())) {
                 Log.d(TAG, "find menu "+index);
                 menus.add(new ModelMenu(element));
             }

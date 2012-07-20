@@ -16,6 +16,8 @@ public class ModelMenuItem {
     private String type="image";
     private int cell_width=0;
     private String name="";
+    private String value = "";
+    
     //If there is no target, this is an image instead of an image button
     private String target="";
     //If this is null we will use the test image 
@@ -47,6 +49,7 @@ public class ModelMenuItem {
     public ModelMenuItem(Element element) {
         
         setName(element.getAttribute("name"));
+        setValue(element.getAttribute("value"));
         setType(element.getAttribute("type"));
         //setType("image");
         if(!"".equals(element.getAttribute("cell-width")))
@@ -158,5 +161,11 @@ public class ModelMenuItem {
     }
     public void setStyle(String style) {
         this.style = style;
+    }
+    public String getValue() {
+        return value;
+    }
+    public void setValue(String value) {
+        this.value = value;
     }
 }
