@@ -90,19 +90,17 @@ public class GeneratorActivity extends Activity{
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         
         
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llTitleBar), StyleTargets.CONTAINER_BAR);
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_MAINPANEL);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.llTitleBar), StyleTargets.CONTAINER_BAR);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_MAINPANEL);
         
 //        float outerRadii[] = {11,11,11,11,11,11,11,11 };
 //        RoundRectShape rrs = new RoundRectShape(outerRadii, null, null);
 //        ShapeDrawable sd = new ShapeDrawable(rrs);
         //findViewById(R.id.llTitleBar).setBackgroundDrawable(sd);
         
-        
-        
-        
+
         res = getResources();
          target = getIntent().getStringExtra("target");
         inflater = (LayoutInflater)
@@ -156,6 +154,7 @@ public class GeneratorActivity extends Activity{
                     (xmlMap.get("menus")==null && 
                     xmlMap.get("forms")==null)){
                 Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+                finish();
                 return;
 //                AssetManager am = getAssets();
 //                InputStream xmlStream;
@@ -261,46 +260,48 @@ public class GeneratorActivity extends Activity{
                     if(mff.getType().toLowerCase().equals("display")){
                         
                         TextView tvTitle = (TextView)row.getChildAt(0);
-                        Style.CURRENTSTYLE.applyStyle(tvTitle, StyleTargets.TEXT);
+                        Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_DESCRIPTION);
                         tvTitle.setText(mff.getDescription());
                     } else if(mff.getType().equals("text")) {
                         TextView tvTitle = (TextView)row.getChildAt(0);
-                        Style.CURRENTSTYLE.applyStyle(tvTitle, StyleTargets.TEXT);
+                        Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_LABEL);
                         tvTitle.setText(mff.getTitle());
                         
                         EditText etField = (EditText)row.getChildAt(1);
                         etField.setTag(R.id.userInputName, mff.getName());
                         listUserInput.add(etField);
                         etField.setVisibility(EditText.VISIBLE);
-                        Style.CURRENTSTYLE.applyStyle(etField, StyleTargets.EDITTEXT);
+                        Style.getCurrentStyle().applyStyle(etField, StyleTargets.TEXT_EDIT);
                     } else if(mff.getType().equals("password")) {
                         TextView tvTitle = (TextView)row.getChildAt(0);
-                        Style.CURRENTSTYLE.applyStyle(tvTitle, StyleTargets.TEXT);
+                        Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_LABEL);
                         
                         tvTitle.setText(mff.getTitle());
                         EditText etField = (EditText)row.getChildAt(1);
                         etField.setVisibility(View.VISIBLE);
-                        Style.CURRENTSTYLE.applyStyle(etField, StyleTargets.EDITTEXT);
+                        Style.getCurrentStyle().applyStyle(etField, StyleTargets.TEXT_EDIT);
                         etField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     } else if(mff.getType().equals("submit")) {
                         Button btnSubmit = (Button)row.getChildAt(2);//new Button(this);
                         btnSubmit.setVisibility(View.VISIBLE);
-                        Style.CURRENTSTYLE.applyStyle(btnSubmit, StyleTargets.BUTTON_FORM);
+                        Style.getCurrentStyle().applyStyle(btnSubmit, StyleTargets.BUTTON_FORM);
                         btnSubmit.setText(mff.getTitle());
                         btnSubmit.setOnClickListener(new OfbizOnClickListener(this, mf.getTarget(), listUserInput));
                     } else if(mff.getType().equals("text-find")) {
                         LinearLayout llSearch = (LinearLayout)findViewById(R.id.llSearchBar);
                         llSearch.setVisibility(View.VISIBLE);
+                        Style.getCurrentStyle().applyStyle(llSearch, StyleTargets.CONTAINER_BAR);
                         EditText etSearch = (EditText)findViewById(R.id.etSearch);
+                        Style.getCurrentStyle().applyStyle(etSearch, StyleTargets.TEXT_EDIT);
                         etSearch.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                Log.d("TextWatcher", "on:s="+s+";start="+start+";count="+count+";before="+before);
+//                                Log.d("TextWatcher", "on:s="+s+";start="+start+";count="+count+";before="+before);
                             }
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count,
                                     int after) {
-                                Log.d("TextWatcher", "before:s="+s+";start="+start+";count="+count+";after="+after);
+//                                Log.d("TextWatcher", "before:s="+s+";start="+start+";count="+count+";after="+after);
                             }
                             
                             @Override
@@ -335,7 +336,9 @@ public class GeneratorActivity extends Activity{
 //                EditText etPageNum = (EditText)lvMain.findViewById(R.id.etPageNum);
                 LinearLayout pageSelector = (LinearLayout)findViewById(R.id.llPageSelector);
                 pageSelector.setVisibility(View.VISIBLE);
+                Style.getCurrentStyle().applyStyle(pageSelector, StyleTargets.CONTAINER_BAR);
                 EditText etPageNum = (EditText)pageSelector.getChildAt(2);
+                Style.getCurrentStyle().applyStyle(etPageNum, StyleTargets.TEXT_EDIT);
                 etPageNum.setText(listFormViewIndex+1+"");
                 
                 //Each item corresponds to a row of the form
@@ -354,6 +357,7 @@ public class GeneratorActivity extends Activity{
                                 row.setTag(action);
                         } else if("display".equals(mff.getType())) {
                             TextView tv = (TextView)row.getChildAt(1);
+                            Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_TITLE);
                             tv.setVisibility(TextView.VISIBLE);
                             tv.setText(mff.getDescription());
                             tv.setText(Html.fromHtml("<b>"+mff.getDescription()+"</b>"));
@@ -366,6 +370,7 @@ public class GeneratorActivity extends Activity{
                                 row.setTag(action);
                         } else if("text".equals(mff.getType())) {
                             EditText et =(EditText)row.getChildAt(2);
+                            Style.getCurrentStyle().applyStyle(et, StyleTargets.TEXT_DESCRIPTION);
                             et.setVisibility(EditText.VISIBLE);
                         }
                     }
@@ -420,7 +425,7 @@ public class GeneratorActivity extends Activity{
                             //Add the caption
                             TextView caption = (TextView)itemContainer.getChildAt(3);
                             caption.setVisibility(View.VISIBLE);
-                            Style.CURRENTSTYLE.applyStyle(caption, StyleTargets.TEXT);
+                            Style.getCurrentStyle().applyStyle(caption, StyleTargets.TEXT_LABEL);
                             caption.setText(""+mmi.getTitle());
                             Log.d(TAG,"Caption:"+caption.getText());
                         }
@@ -434,7 +439,7 @@ public class GeneratorActivity extends Activity{
                             tv = (Button)itemContainer.getChildAt(2);
                         }
                         tv.setVisibility(View.VISIBLE);
-                        Style.CURRENTSTYLE.applyStyle(tv, StyleTargets.TEXT);
+                        Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_LABEL);
                         tv.setText(mmi.getTitle());
                         Log.d(TAG, "Text Style : "+mmi.getStyle());
 //                        if((mmi.getStyle()).contains("bold")) {
@@ -510,8 +515,9 @@ public class GeneratorActivity extends Activity{
         ImageButton ibtnTitleBarLeft = (ImageButton)findViewById(R.id.ibtnTitleBarLeft);
         ImageView ivLogo = (ImageView)findViewById(R.id.ivLogo);
         ImageButton ibtnTitleBarRight = (ImageButton)findViewById(R.id.ibtnTitleBarRight);
-        Style.CURRENTSTYLE.applyStyle(ibtnTitleBarLeft, StyleTargets.BUTTON_TITLEBAR);
-        Style.CURRENTSTYLE.applyStyle(ibtnTitleBarRight, StyleTargets.BUTTON_TITLEBAR);
+        Style.getCurrentStyle().applyStyle(ibtnTitleBarLeft, StyleTargets.CONTAINER_BAR);
+        Style.getCurrentStyle().applyStyle(ibtnTitleBarLeft, StyleTargets.BUTTON_TITLEBAR);
+        Style.getCurrentStyle().applyStyle(ibtnTitleBarRight, StyleTargets.BUTTON_TITLEBAR);
         
         ModelMenuItem mmi = mmiList.get(0);
         if(mmi.getWeight()!=0) {
@@ -572,10 +578,14 @@ public class GeneratorActivity extends Activity{
                 nameValuePairs.add("viewSize");
                 nameValuePairs.add(listFormViewSize+"");
             } 
-            intent.putExtra("target", getIntent().getStringExtra("target"));
-            intent.putExtra("params", nameValuePairs);
-            startActivity(intent);
-            finish();
+            
+            if(nameValuePairs.isEmpty() == false ) {
+                
+                intent.putExtra("target", getIntent().getStringExtra("target"));
+                intent.putExtra("params", nameValuePairs);
+                startActivity(intent);
+                finish();
+            }
 
         return;
     }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:dither="true"  >
+    <item
+        android:drawable="@drawable/roundedcorner"
+        android:state_pressed="false"
+        />
+    <item
+        android:drawable="@android:drawable/list_selector_background"
+        android:state_pressed="true"
+        />
+</selector>

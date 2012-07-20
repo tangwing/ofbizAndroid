@@ -68,10 +68,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/mysharp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="20dp"
             android:paddingTop="3dp"
-            android:paddingRight="10dp"
+            android:paddingRight="15dp"
             android:paddingBottom="3dp"
+            android:minHeight="30dp"
+            android:singleLine="true"
             android:hint="@string/searchHint"
             />
     </LinearLayout>

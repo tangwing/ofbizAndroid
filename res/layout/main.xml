@@ -29,23 +29,38 @@
         <!-- Login part starts -->
         <LinearLayout
             style="@style/MainPanelContainer"
-            android:paddingTop="20dp"
             android:id="@+id/llMainPanelContainer"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_below="@id/header" >
 
-            <Spinner
-                android:id="@+id/spinnerSetting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:orientation="horizontal" >
+                <!-- choose profile -->
+                <Spinner
+                    android:id="@+id/spinnerSetting"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+                <Button android:id="@+id/btnProfileManage"
+                    android:tag="false"
+                    android:onClick="goToProfileActivity"
+                    android:text="Edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    
+                    />
+            </LinearLayout>
             <TextView
                 style="@style/CommonTextView"
                 android:id="@+id/tvUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                
                 android:text="@string/tvUser" />
 
             <EditText

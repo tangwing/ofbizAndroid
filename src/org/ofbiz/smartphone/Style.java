@@ -12,21 +12,14 @@ import org.ofbiz.smartphone.model.ModelMenu;
 import org.ofbiz.smartphone.model.ModelMenuItem;
 import org.ofbiz.smartphone.model.ModelReader;
 import org.ofbiz.smartphone.util.Util;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import android.R.xml;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
-import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,18 +28,25 @@ import android.widget.TextView;
  * Create a list of parameters which can determine a style
  * get the list of styles from ofbiz, show it to users. When selected, get the set of
  * parameters of this style and use it. Store it in local and make it default.
- *
+ *Available style attributes names: 
+ *          backgroundcolor, 
+ *          startcolor, endcolor, orientation,//These are for creating gradient bg
+ *          textcolor, 
+ *          dividercolor.//This is for LISTVIEW
  */
 public class Style {
-    public static Style CURRENTSTYLE = new Style();
+    private static Style CURRENTSTYLE = null ;
+    private static Cursor styleCursor =null;
     public static enum StyleTargets {
         WINDOW,
         CONTAINER_BAR,
         CONTAINER_MAINPANEL,
         BUTTON_TITLEBAR,
         BUTTON_FORM,
-        TEXT,
-        EDITTEXT,
+        TEXT_LABEL,  //label, textview, single form lable
+        TEXT_EDIT,   //edit box
+        TEXT_TITLE,  //title or listitem in the list form
+        TEXT_DESCRIPTION, //description in the list
         LISTVIEW
     }
     
@@ -61,8 +61,10 @@ public class Style {
         styleMap.put(StyleTargets.CONTAINER_MAINPANEL, new Properties());
         styleMap.put(StyleTargets.BUTTON_TITLEBAR, new Properties());
         styleMap.put(StyleTargets.BUTTON_FORM, new Properties());
-        styleMap.put(StyleTargets.TEXT, new Properties());
-        styleMap.put(StyleTargets.EDITTEXT, new Properties());
+        styleMap.put(StyleTargets.TEXT_DESCRIPTION, new Properties());
+        styleMap.put(StyleTargets.TEXT_EDIT, new Properties());
+        styleMap.put(StyleTargets.TEXT_TITLE, new Properties());
+        styleMap.put(StyleTargets.LISTVIEW, new Properties());
     }
     
     public Style(ModelMenu mm) {
@@ -70,6 +72,34 @@ public class Style {
         Style.CURRENTSTYLE = this;
     }
     
+    public static Style getCurrentStyle() {
+        if( CURRENTSTYLE == null ) {
+            if( styleCursor == null ) {
+//                if (ClientOfbizActivity.dbHelper != null) {
+//                    styleCursor = ClientOfbizActivity.dbHelper.queryAllStyle();
+//                } else 
+                {
+                    CURRENTSTYLE = new Style();
+                    return CURRENTSTYLE;
+                }
+            } 
+            //Load style from DB, or create a default one if it doesn't exist
+            int rowcount = styleCursor.getCount();
+            styleCursor.moveToFirst();
+            for (int index = 0; index < rowcount; index++) {
+                if (styleCursor.getInt(styleCursor.getColumnIndex("isdefault")) == 1) {
+                    String styleXml = styleCursor.getString(styleCursor.getColumnIndex("xml"));
+                    updateCurrentStyle(styleXml);
+                    break;
+                }
+            }
+            
+            if( CURRENTSTYLE ==null )
+                CURRENTSTYLE = new Style();
+            
+        }
+        return CURRENTSTYLE;
+    }
     
     /**
      * @param xml A <MenuItem> element which defines a style attribute. It contains
@@ -196,7 +226,9 @@ public class Style {
 //                    break;
 //                case BUTTON_FORM:
 //                    break;
-                case TEXT:   
+                case TEXT_DESCRIPTION:   
+                case TEXT_EDIT:
+                case TEXT_TITLE:
                     TextView tv = (TextView)view;
                     color = styleAttr.getProperty("textcolor","");
                     if(!color.equals("")) {
@@ -231,6 +263,10 @@ public class Style {
         }
     }
     
+    public static String styleToXml(Style s) {
+        String styleXml = "";
+        return styleXml;
+    }
     
     public static final String DEFAULT_STYLE =
     		"<?xml version='1.0' encoding='UTF-8'?><ui>" +

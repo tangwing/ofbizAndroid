@@ -72,7 +72,7 @@ public class ClientOfbizActivity extends Activity {
     private EditText etPwd = null;
     private Spinner spinner = null;
     private ArrayAdapter<String> spinnerAdapter = null;
-    private DatabaseHelper dbHelper = null;
+    public static DatabaseHelper dbHelper = null;
     private Cursor cursor = null;
     public static DefaultHttpClient httpClient = null;
     
@@ -112,23 +112,17 @@ public class ClientOfbizActivity extends Activity {
         // Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        //This must be called before the style setting
+        dbHelper = new DatabaseHelper(this);
+        //current style can be changed here
+        //Style.updategetCurrentStyle()(Style.DEFAULT_STYLE);
         
-        //Style.updateCurrentStyle(Style.DEFAULT_STYLE);
-        
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_MAINPANEL);
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT);
-        Style.CURRENTSTYLE.applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT);
         
         btnLogin = (Button) findViewById(R.id.btnLogin);
-        Style.CURRENTSTYLE.applyStyle(btnLogin, StyleTargets.BUTTON_FORM);
         
         btnLogin.setOnClickListener(btnLoginListener);
         etUser = (EditText) findViewById(R.id.etUser);
         etPwd = (EditText) findViewById(R.id.etPwd);
-        Style.CURRENTSTYLE.applyStyle(etUser, StyleTargets.EDITTEXT);
-        Style.CURRENTSTYLE.applyStyle(etPwd, StyleTargets.EDITTEXT);
         Log.d("TAG", "after set style" + etPwd.getInputType());
         etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
 
@@ -154,7 +148,6 @@ public class ClientOfbizActivity extends Activity {
             }
         });
 
-        dbHelper = new DatabaseHelper(this);
         cursor = dbHelper.queryAll();
         int rowcount = cursor.getCount();
 
@@ -167,6 +160,15 @@ public class ClientOfbizActivity extends Activity {
         } else {
             reloadSpinner();
         }
+        Style.getCurrentStyle().applyStyle(etUser, StyleTargets.TEXT_EDIT);
+        Style.getCurrentStyle().applyStyle(etPwd, StyleTargets.TEXT_EDIT);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_MAINPANEL);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT_LABEL);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT_LABEL);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.btnProfileManage), StyleTargets.BUTTON_FORM);
+        Style.getCurrentStyle().applyStyle(btnLogin, StyleTargets.BUTTON_FORM);
     }
  
     /**
@@ -333,6 +335,17 @@ public class ClientOfbizActivity extends Activity {
     };
 
 
+    public void goToProfileActivity(View view) {
+        Intent intent = new Intent(this, ProfileManagementActivity.class);
+        if("true".equals(view.getTag())){
+            intent.putExtra("isNewProfile", true);
+            
+        } else if("false".equals(view.getTag())){
+            
+            intent.putExtra("isNewProfile", false);
+        }
+        this.startActivityForResult(intent, REQUEST_NEWPROFILE);
+    }
     /**
      * make a full request uri
      * 
@@ -436,12 +449,12 @@ public class ClientOfbizActivity extends Activity {
 
         if(result.get("status").equals("OK")) {
             Intent intent=new Intent(ClientOfbizActivity.this, GeneratorActivity.class);
-            this.runOnUiThread(new Runnable() {         
-                @Override
-                public void run() {
-                    Toast.makeText(ClientOfbizActivity.this, getResources().getString(R.string.loginSucceeds), Toast.LENGTH_SHORT).show();
-                }
-            });
+//            this.runOnUiThread(new Runnable() {         
+//                @Override
+//                public void run() {
+//                    Toast.makeText(ClientOfbizActivity.this, getResources().getString(R.string.loginSucceeds), Toast.LENGTH_SHORT).show();
+//                }
+//            });
             intent.putExtra("target", "main");
             startActivity(intent);
         }else if(result.get("status").equals("NOK")){
@@ -484,26 +497,24 @@ public class ClientOfbizActivity extends Activity {
         return true;
     }
 
+    
     // Menu item selected.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.menuProfile:
-            Intent intent = new Intent(this, ProfileManagementActivity.class);
-            intent.putExtra("isNewProfile", false);
-            this.startActivityForResult(intent, REQUEST_NEWPROFILE);
-            return true;
-
-        case R.id.testGenerator:
-            Intent i = new Intent(this, GeneratorActivity.class);
-            i.putExtra("target", "main.xml");
-            startActivity(i);
-            return true;
+//        case R.id.menuProfile:
+//            Intent intent = new Intent(this, ProfileManagementActivity.class);
+//            intent.putExtra("isNewProfile", false);
+//            this.startActivityForResult(intent, REQUEST_NEWPROFILE);
+//            return true;
+//
+//        case R.id.testGenerator:
+//            Intent i = new Intent(this, GeneratorActivity.class);
+//            i.putExtra("target", "main.xml");
+//            startActivity(i);
+//            return true;
         case R.id.quitter:
-            //finish();
-            i = new Intent(this, TestActivity.class);
-            //i.putExtra("target", "main.xml");
-            startActivity(i);
+            finish();
             return true;
         }
         return false;
