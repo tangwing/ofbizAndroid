@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui>
-    <Menu type="style" > 
-        <MenuItem  name="backgroundcolor" target="BUTTON_FORM" value=""/>
-        <MenuItem  name="textcolor" target="TEXT" value=""/>
-        <MenuItem  name="backgroundcolor" target="CONTAINER_MAINPANEL" value=""/>
-    </Menu>
+
     <Menu type="bar" row-items="3"> 
         <MenuItem cell-width="15" name="logout" target="logout" img="/images/neogia/001_42.png"/>
         <MenuItem cell-width="70" name="logo" target="" img="file://logo.png"/>
@@ -21,9 +17,9 @@
         <MenuItem cell-width="" name="SmarthoneMaiMenuContact" target="contact" img="/images/icons/famfamfam/book_addresses.png"/>
         <MenuItem cell-width="" name="SmarthoneMaiMenuTasks" target="tasks" img="/images/icons/famfamfam/script.png"/>
     </Menu>
-    <form name="login" type="single" target="login">
-        <field name="USERNAME" title="${uiLabelMap.CommonUsername}" />
-        <field name="PASSWORD" title="${uiLabelMap.CommonPassword}" />
-        <field name="submit" title="${uiLabelMap.CommonLogin}" />
-    </form>
+    <menu  type="menu" >
+        <menuitem title="Option1" target="option1"/>
+        <menuitem title="Option2" target="option2"/>
+        <menuitem title="Option3" target="option3"/>
+    </menu>
 </ui>

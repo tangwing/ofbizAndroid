@@ -52,9 +52,8 @@ public class ProfileManagementActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
  
-        
         this.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Intent intent = this.getIntent();
         isNewProfile = intent.getBooleanExtra("isNewProfile", false);
         spinner = (Spinner) findViewById(R.id.spinnerProfiles);
@@ -68,9 +67,7 @@ public class ProfileManagementActivity extends Activity {
         etUser = (EditText) findViewById(R.id.etUser);
         etPwd = (EditText) findViewById(R.id.etPwd);
         etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
-        
         chkIsDefault = (CheckBox) findViewById(R.id.chkIsDefaultProfile);
-
         btnSaveProfile = (Button) findViewById(R.id.btnSaveProfile);
         btnCancelProfile = (Button) findViewById(R.id.btnCancelProfile);
         
@@ -188,6 +185,10 @@ public class ProfileManagementActivity extends Activity {
         Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT_LABEL);
     }
 
+    
+    /**
+     * Load spinner from the DB cursor, and then load related components
+     */
     private void reloadSpinner() {
         if (cursor != null)
             cursor.close();

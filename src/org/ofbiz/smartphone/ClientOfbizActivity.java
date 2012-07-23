@@ -107,8 +107,6 @@ public class ClientOfbizActivity extends Activity {
 //        g.setSize(50, 10);
 //        lTitle.setBackgroundDrawable(g);
         
-        
-        
         // Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -119,14 +117,13 @@ public class ClientOfbizActivity extends Activity {
         
         
         btnLogin = (Button) findViewById(R.id.btnLogin);
-        
-        btnLogin.setOnClickListener(btnLoginListener);
         etUser = (EditText) findViewById(R.id.etUser);
         etPwd = (EditText) findViewById(R.id.etPwd);
-        Log.d("TAG", "after set style" + etPwd.getInputType());
+        spinner = (Spinner) findViewById(R.id.spinnerSetting);
+        
+        btnLogin.setOnClickListener(btnLoginListener);
         etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD );
 
-        spinner = (Spinner) findViewById(R.id.spinnerSetting);
         spinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item);
         spinnerAdapter
@@ -136,7 +133,7 @@ public class ClientOfbizActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                     int arg2, long arg3) {
-                Log.d(TAG, "onItemSelected");
+//                Log.d(TAG, "onItemSelected");
                 loadProfile(spinner.getSelectedItemPosition());
             }
             @Override
@@ -280,6 +277,10 @@ public class ClientOfbizActivity extends Activity {
         }
     };
 
+    /**
+     * A handler for certificate related exception, generated during the 
+     * login https connection.
+     */
     private void certificateRelatedExceptionHandler()
     {
         runOnUiThread(new Runnable() {
@@ -307,6 +308,7 @@ public class ClientOfbizActivity extends Activity {
             }
         });
     }
+    
     /**
      * Establish the connection with the server, ignore the problem of
      * certificate.
@@ -335,6 +337,10 @@ public class ClientOfbizActivity extends Activity {
     };
 
 
+    
+    /**The button listener of 'Edit profile'. Redirect to profile activity.
+     * @param view
+     */
     public void goToProfileActivity(View view) {
         Intent intent = new Intent(this, ProfileManagementActivity.class);
         if("true".equals(view.getTag())){
@@ -346,6 +352,7 @@ public class ClientOfbizActivity extends Activity {
         }
         this.startActivityForResult(intent, REQUEST_NEWPROFILE);
     }
+    
     /**
      * make a full request uri
      * 
@@ -359,6 +366,7 @@ public class ClientOfbizActivity extends Activity {
      *            main, customerList
      * @return the full url
      */
+    
     private String makeFullUrlString(String url, int httpPort, String target) {
         String fullUrl = "";
         if (url == null || target == null)
@@ -375,7 +383,7 @@ public class ClientOfbizActivity extends Activity {
     
     
 
-    /**
+    /**Login operation.
      * @param isAnthentificationEnabled
      *            Choose whether to enable the certificate operation
      * @throws IOException 
@@ -476,7 +484,6 @@ public class ClientOfbizActivity extends Activity {
         cursor.moveToPosition(index);
         etUser.setText(cursor.getString(cursor.getColumnIndex("username")));
         etPwd.setText(cursor.getString(cursor.getColumnIndex("password")));
-        Log.d("TAG", "after loadprofile" + etPwd.getInputType());
     }
 
 
@@ -484,12 +491,14 @@ public class ClientOfbizActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_NEWPROFILE) {
             if (resultCode == RESULT_OK) {
-                Log.d(TAG, "onActivityResult_OK");
                 reloadSpinner();
             }
         }
     }
 
+    /* Show menu items, when user click the menu button
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -498,7 +507,9 @@ public class ClientOfbizActivity extends Activity {
     }
 
     
-    // Menu item selected.
+    /* 
+     * When a menu item is selected.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
