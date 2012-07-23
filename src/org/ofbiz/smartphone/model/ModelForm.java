@@ -43,7 +43,7 @@ public class ModelForm {
                     continue;
                 }
                 Element element = (Element) node;
-                if ("field".equals(element.getTagName())) {
+                if ("field".equals(element.getTagName().toLowerCase())) {
                     singleformfields.add(new ModelFormField(element));
                 }
             }

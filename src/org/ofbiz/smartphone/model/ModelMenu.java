@@ -56,7 +56,7 @@ public class ModelMenu {
                 continue;
             }
             Element element = (Element) node;
-            if ("MenuItem".equals(element.getTagName())) {
+            if ("menuitem".equals(element.getTagName().toLowerCase())) {
 //                if(type.equals("style")) {
 //                    Style.updateCurrentStyle(element);
 //                } else {
