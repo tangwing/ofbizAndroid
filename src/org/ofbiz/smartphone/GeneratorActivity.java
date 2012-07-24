@@ -32,20 +32,20 @@ import org.xml.sax.SAXException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -54,18 +54,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 /**
  * @author Léo SHANG @ néréide
  * This is an Activity which will be inflated during the runtime,
- * according to the related XML description. Most of pages in this application
- * are created dynamically by this activity
+ * according to the related XML description.
  *
  */
 public class GeneratorActivity extends Activity{
@@ -80,7 +80,6 @@ public class GeneratorActivity extends Activity{
     private int listFormViewIndex = 0;
     private int listFormViewSize = 0;
     private LayoutInflater inflater;
-    private ModelMenu menuForMenuButton = null;
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -108,7 +107,12 @@ public class GeneratorActivity extends Activity{
                  getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ArrayList<String> nameValuePairs = (ArrayList<String>) getIntent().getSerializableExtra("params");
         
+        
         lvMain = (ListView)findViewById(R.id.lvMain);
+//        //Add headerView--page selector (not so good)
+//        LinearLayout pageSelector = (LinearLayout)inflater.inflate(
+//        R.layout.list_header_selector, null);
+//        lvMain.addHeaderView(pageSelector);
         //At first there is no item in the list adapter
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
@@ -139,31 +143,33 @@ public class GeneratorActivity extends Activity{
         } catch (IOException e) {
             e.printStackTrace();
         }
-      //>>>>>>>>>>>>>Enable this part to use local xml.>>>>>>>>>>
+      //**********************
 //        if(xmlMap == null) Log.d(TAG, "xmlMap == null");
 //        else if(xmlMap.get("menus")==null) Log.d(TAG, "xmlMap.get(menus)==null");
 //        else if(xmlMap.get("forms")==null) Log.d(TAG, "xmlMap.get(forms)==null");
 //        
-//        xmlMap = null;
 //        try 
 //        {
-//            if(xmlMap == null || 
-//                    (xmlMap.get("menus")==null && 
-//                    xmlMap.get("forms")==null)){
-//                Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+            if(xmlMap == null || 
+                    (xmlMap.get("menus")==null && 
+                    xmlMap.get("forms")==null)){
+                Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+                finish();
+                return;
 //                AssetManager am = getAssets();
 //                InputStream xmlStream;
 //                    xmlStream = am.open("main.xml");
 //                    xmlMap = ModelReader.readModel(Util.readXmlDocument(
 //                            xmlStream));
-//            } 
-//        } catch (Exception e) {
+                } 
+//        }catch (ParserConfigurationException e) {
+//                e.printStackTrace();
+//        } catch (SAXException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        
-        
-        
+
         mmList = (List<ModelMenu>) xmlMap.get("menus");
         mfList = (List<ModelForm>) xmlMap.get("forms");
         
@@ -374,15 +380,6 @@ public class GeneratorActivity extends Activity{
         }
     }
 
-    /**
-     * Deal with menus:
-     * -Set the 'panel' type menu to their position in the listView of current Activity.
-     * -The 'bar' type menu is not in the list but in a linear layout outside. 
-     * -The 'menu' type menu is used to create a menu corresponding the menu button of the smartphone.
-     * -The 'style' type menu is related to the color theme of the application.
-     * @param parentListAdapter The current listView adapter
-     * @param mmList A list of menus, generated from the xml content sent by Ofbiz server side.
-     */
     private void setMenus(LinearLayoutListAdapter parentListAdapter, List<ModelMenu> mmList) {
         if(mmList == null || mmList.isEmpty())
             return;
@@ -391,8 +388,7 @@ public class GeneratorActivity extends Activity{
             ModelMenu mm = mmList.get(index);
             Log.d(TAG, "Menu Type = "+mm.getType());
             if(mm.getType().equals("bar")){
-                setBar(mm);
-                //setTitleBar(mm);
+                setTitleBar(mm);
             }else if(mm.getType().equals("panel")){
                 List<ModelMenuItem> mmiList = mm.getMenuItems();
 //                Log.d(TAG, "mmiList.size= " + mmiList.size());
@@ -488,7 +484,7 @@ public class GeneratorActivity extends Activity{
                 }
                 
                 if(row.getChildCount() > 0 && mmiList.get(mmiList.size()-1).getWeight()==0) {
-                    //This is for the alignment
+                    //This is for the alignement
                     for(int i = row.getChildCount() ; i < mm.getRow_items() ; i++) {
                         LinearLayout ll = (LinearLayout)inflater.inflate(
                                 R.layout.menu_item, null);
@@ -504,79 +500,11 @@ public class GeneratorActivity extends Activity{
                 for (int i = 0; i < mmiList.size() ; i++ ) {
                     Style.updateCurrentStyle(mmiList.get(i));
                 }
-            }  else if(mm.getType().equals("menu")){
-                //Log.d(TAG, "find BUtton  menu ");
-                menuForMenuButton = mm;
-                
             }
         }
         
     }
 
-    
-    /**Add a bar to current activity according to the menu.
-     * @param modelMenu
-     */
-    private void setBar(ModelMenu modelMenu) {
-        List<ModelMenuItem> mmiList = modelMenu.getMenuItems();
-        LinearLayout godFather = (LinearLayout) findViewById(R.id.window);
-        LinearLayout bar = new LinearLayout(this);
-        bar.setGravity(Gravity.CENTER);
-        bar.setPadding(10, 0, 0, 10);
-        Style.getCurrentStyle().applyStyle(bar, StyleTargets.CONTAINER_BAR);
-        godFather.addView(bar, godFather.getChildCount()-3);
-        for(final ModelMenuItem mmi : mmiList) {  
-            System.out.println("Bar Menuitem : name=" + mmi.getName() +"; type = " + mmi.getType());
-            View currentView = null;
-            
-            if( "image".equals(mmi.getType())){
-                ImageView img = null;
-                if(null==mmi.getTarget() || mmi.getTarget().equals("")){
-                    //Simple image
-                    img = new ImageView(this);
-                }else 
-                {
-                    img = new ImageButton(this);
-                    img.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
-                }
-                img.setImageDrawable(mmi.getImgDrawable());
-                img.setScaleType(ScaleType.FIT_CENTER);
-                //img.setAdjustViewBounds(true);
-//                img.setBackgroundColor(R.color.blue);
-                currentView=(img);
-                
-            } else if ( "text".equals(mmi.getType())){
-                TextView tv = null;
-                if(null==mmi.getTarget() || mmi.getTarget().equals("")){
-                    tv = new TextView(this);
-                    Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_LABEL);
-                }else {
-                    tv = new Button(this);
-                    Style.getCurrentStyle().applyStyle(tv, StyleTargets.BUTTON_TITLEBAR);
-                }
-                tv.setText(mmi.getTitle());
-                currentView=(tv);
-            } 
-            if(mmi.getWeight()!=0) {
-                currentView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0, LayoutParams.WRAP_CONTENT, mmi.getWeight()));
-            }else {
-                currentView.setLayoutParams(new LinearLayout.LayoutParams(
-                        0, LayoutParams.WRAP_CONTENT, 1));
-            }
-            Log.d(TAG, "Add a new View to Bar !");
-            bar.addView(currentView);
-            
-        }
-        
-    }
-
-    
-    /**Old implementation of setBar. This version only set the titlebar which
-     * is already defined in the layout xml file. Althought this has less flexibility,
-     * it's more efficient and enough for common use.
-     * @param modelMenu
-     */
     private void setTitleBar(ModelMenu modelMenu) {
         List<ModelMenuItem> mmiList = modelMenu.getMenuItems();
         LinearLayout llTitleBar = (LinearLayout)findViewById(R.id.llTitleBar);
@@ -619,7 +547,6 @@ public class GeneratorActivity extends Activity{
         ibtnTitleBarRight.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
     }
 
-    
     public void goToPage(View view) {
         Button selectPage = (Button)view;
         String tag = (String)selectPage.getTag();
@@ -718,62 +645,4 @@ public class GeneratorActivity extends Activity{
         
         return d;
     }
-    
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_navigation, menu);
-        if(menuForMenuButton != null ) {
-            
-            List<ModelMenuItem> mmiList = menuForMenuButton.getMenuItems();
-            for (int i = 0; i < mmiList.size() ; i++ ) {
-                ModelMenuItem mmi = mmiList.get(i);
-                MenuItem mi = menu.add(mmi.getTitle());
-                Intent intent = new Intent(this, GeneratorActivity.class);
-                intent.putExtra("target", mmi.getTarget());
-                mi.setIntent(intent);
-                mi.setIcon(mmi.getImgDrawable());
-            }
-        }
-        
-
-        // Create an Intent that describes the requirements to fulfill, to be included
-        // in our menu. The offering app must include a category value of Intent.CATEGORY_ALTERNATIVE.
-//        intent.addCategory(Intent.CATEGORY_ALTERNATIVE);
-//
-//        // Search and populate the menu with acceptable offering applications.
-//        menu.addIntentOptions(
-//             0,  // Menu group to which new items will be added
-//             0,      // Unique item ID (none)
-//             0,      // Order for the items (none)
-//             this.getComponentName(),   // The current activity name
-//             null,   // Specific items to place first (none)
-//             intent, // Intent created above that describes our requirements
-//             0,      // Additional flags to control items (none)
-//             null);  // Array of MenuItems that correlate to specific items (none)
-
-        return true;
-    }
-
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//        case R.id.menuProjects:
-//            
-//            return true;
-//        case R.id.menuDevis:
-//            
-//            return true;
-//        case R.id.menuContacts:
-//            finish();
-//            return true;
-//        case R.id.menuCommands:
-//            
-//            return true;
-//        case R.id.menuCommunications:
-//            
-//            return true;
-//        }
-//        return false;
-//    }
-
 }

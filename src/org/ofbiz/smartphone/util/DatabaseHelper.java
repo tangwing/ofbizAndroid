@@ -12,6 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         static final String TAG = "DatabaseHelper";
         static final String DATABASE_NAME = "ofbiz.db";
         static final String TABLE_PROFILE="profile";
+        static final String TABLE_STYLE="style";
         static final int DATABASE_VERSION = 1;
 
         private SQLiteDatabase db=null;
@@ -35,6 +36,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 + "password TEXT,"
                                 + "isdefault INTEGER"
                                 + ");");
+                db.execSQL("CREATE TABLE IF NOT EXISTS "+ TABLE_STYLE
+                        + "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + "name TEXT,"
+                        + "description TEXT,"
+                        + "xml TEXT,"
+                        + "isdefault INTEGER"
+                        + ");");
+                Log.d("Style_DBHelper","I pass here");
         }
         
 
@@ -95,6 +104,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
                 qb.setTables(DatabaseHelper.TABLE_PROFILE);
                 return qb.query(db, null, null, null, null, null, null);
+        }
+        
+        public Cursor queryAllStyle() {
+            Log.d(TAG, "queryAllStyle()");
+            SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+            qb.setTables(DatabaseHelper.TABLE_STYLE);
+            return qb.query(db, null, null, null, null, null, null);
         }
         
 //        public Cursor getMountById(int mount_id) {
