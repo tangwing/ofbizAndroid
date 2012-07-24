@@ -185,8 +185,8 @@ public class GeneratorActivity extends Activity{
                 //Toast.makeText(GeneratorActivity.this, 
                 //        "You have clicked item "+position, Toast.LENGTH_SHORT).show();
                 String action = (String) currentView.getTag();
-                //action="tel:1234";
-                //action="geo:0,0?q=Société Néréide  3b Les Isles 37270 Veretz france";
+                //action="tel:df1234";
+                //action="geo:0,0?q=Société Néréide, 3b Les Isles 37270 Veretz, France";
                 if(action != null ) {
                         if(action.startsWith("tel:")){
                             Intent callIntent = new Intent(Intent.ACTION_DIAL);
@@ -387,6 +387,7 @@ public class GeneratorActivity extends Activity{
                                 row.setTag(action);
                         } else if("text".equals(mff.getType())) {
                             EditText et =(EditText)row.getChildAt(2);
+                            et.setText(mff.getValue());
                             Style.getCurrentStyle().applyStyle(et, StyleTargets.TEXT_DESCRIPTION);
                             et.setVisibility(EditText.VISIBLE);
                         }

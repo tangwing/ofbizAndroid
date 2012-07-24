@@ -1,0 +1,109 @@
+##########The rules of translation from xml to ofbiz client.############
+
+The Android client of ofbiz can handle 2 kinds of xml elements : 'menu' and 'form'. They are under a root tag named 'ui' which is not so meaningful. So we are going to talk about the rules in two main parts :
+
+######################################################
+##############################################1.Menu
+######################################################
+********************1.1 Menu attributs
+*type
+    'bar':A menu bar like title bar, in which each menuitem is represented by <MenuItem>.
+    'panel':A menu panel whose colomn number is specified by row_items.
+    'menu':This type of menu will be used to generate a menu which will be displayed when user touch the menu button of smartphone. Its menuitems need to specify the 'title' and 'target' attributs.
+    'style':The menu aims to set the current ui style. Each item (name/value attributs) represents a property to set, and the 'target' attribut of this <menuitem> means the target of this property (just like the class in css). For now, the targets supported are : WINDOW, CONTAINER_BAR, CONTAINER_MAINPANEL, BUTTON_TITLEBAR, BUTTON_FORM, TEXT_DESCRIPTION, TEXT_EDIT, TEXT_TITLE, LISTVIEW. And the supported properties :backgroundcolor, textcolor, dividercolor(divider between list items),startcolor, endcolor, orientation. The last 3 attributs are interesting: this will generate an color image with gradient. In this image, color changes from 'startcolor' to 'endcolor' in direction of 'orientation'. 'Orientation' can be: BL_TR, BOTTOM_TOP, BR_TL, LEFT_RIGHT,RIGHT_LEFT, TL_BR, TOP_BOTTOM, TR_BL.
+Ex: This will set the background of the window to a color image which changes from top red to bottom green: 
+<menu type="style">
+    <menuitem target="WINDOW" name="startcolor" value="#ff0000" />
+    <menuitem target="WINDOW" name="endcolor" value="#00ff00" />
+    <menuitem target="WINDOW" name="orientation" value="TOP_BOTTOM" />
+</menu>
+
+*row_items
+    when the type of the menu is 'panel', this attribut signifies the count of items in each row.
+
+********************1.2 <MenuItem>
+This is the child element of Menu. It stands for a menu item. 
+
+Attributs:
+*type='text'/'image'
+    At the moment this attribut is not necessary because we can decide the type of current menu item according to the following attributs.
+
+*cell_width='an int'
+    This means the propotion of the item width compare to the free space of his parent. If it's set on an item, all the others should also be set, otherwise the item without this attribut will not have space.
+
+*name/value
+    They are used, for exemple, to set the ui style of the application.
+
+*src
+    The image source of this item. We use this to juge whether this is a text or an image.
+
+*title
+    The image can have a title under it.
+
+*target
+    The target relative url when we click on the current menu item.
+
+
+######################################################
+##############################################2.Form
+######################################################
+Form is used to display the main content sent from the server of ofbiz.
+********************2.1 Form attributs
+*type
+    'single' : Single form is like the common web form. It only has <field> child and it also has a action attribut. 
+    'list' : List form is used to display a list of data sent from server, such as contact list. It has <item> child which means a row in the list, and <item> has <field> as child element. This kind of form needs to have two other attributs : viewIndex and viewSize.
+
+*name/value
+    If the name of the form is 'login', the Android client will redirect to login page.
+
+*action
+    The action of the single form, that means, the action when users click 'submit' button.
+
+*viewIndex
+    Only for list form, means the current page index on server side.
+
+*viewSize
+    Only for list form, means the item count of this page.
+
+********************2.2 <Field>
+*type
+    'display':The purpose of this field is to display a text.
+    'text':The purpose of this field is to let user input something.
+    'password':A text whose content is not visible.(for single form)
+    'submit': A submit button.(for single form)
+    'find-text':This field will show a search bar under the titlebar. This component has already been realized, so this field will just set it to visible.(for single form)
+    'image':The purpose of this field is to show an image.(for list form)
+
+*name/value
+    Name-value pair is used similarly as that in web form. It's used to submit the single form or set the text of an text box.
+
+*src
+    Image source of current image field.
+
+*title
+    In single form, this means the label over the textbox or the text of the submit button.
+
+*description
+    In list form, this means the content to display.
+
+*action
+    The action which will be made when user click on the current item.
+
+######################################################
+####################################3.About the target
+######################################################
+Commonly, the target/action string will be added after "https://serveraddress/smartphone/control/", and the action corresponded is to visit that address and fetch xml.
+Specially, in form, the action can mean to 'make a phone call' or 'View this address in Google map':
+*phone call action
+    The action string needs to start with "tel:" and followed with the phone number. When the user click it, the dialer will be invoked with the phone number filled in.
+
+*map action
+    The action string needs to start with "geo:" and followed with the detailed address. Attention, the address needs to be detailed, from country name to street number, otherwise it's not so clear for google map to find it.
+
+
+
+
+
+
+
+
