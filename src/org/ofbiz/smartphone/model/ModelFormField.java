@@ -15,6 +15,8 @@ public class ModelFormField {
     private String type="display";
 
     private String name="";
+    private String value="";
+
     private String title = "";
     private String description = "";
     private String event="";
@@ -27,6 +29,7 @@ public class ModelFormField {
     public ModelFormField(Element xml) {
         setType(xml.getAttribute("type"));
         setName(xml.getAttribute("name"));
+        setValue(xml.getAttribute("value"));
         setTitle(xml.getAttribute("title"));
         setDescription(xml.getAttribute("description"));
         setEvent(xml.getAttribute("event"));
@@ -112,5 +115,12 @@ public class ModelFormField {
     }
     public void setWeight(int weight) {
         this.cell_width = weight;
+    }
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
