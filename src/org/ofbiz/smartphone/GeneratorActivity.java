@@ -67,7 +67,6 @@ import android.widget.Toast;
  * This is an Activity which will be inflated during the runtime,
  * according to the related XML description. Most of pages in this application
  * are created dynamically by this activity
- *
  */
 public class GeneratorActivity extends Activity{
 
@@ -87,33 +86,11 @@ public class GeneratorActivity extends Activity{
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.masterpage);
-     // Avoid the annoying auto appearance of the keyboard
-        this.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        
-        
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
-//        Style.getCurrentStyle().applyStyle(findViewById(R.id.llTitleBar), StyleTargets.CONTAINER_BAR);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_MAINPANEL);
-        
-//        float outerRadii[] = {11,11,11,11,11,11,11,11 };
-//        RoundRectShape rrs = new RoundRectShape(outerRadii, null, null);
-//        ShapeDrawable sd = new ShapeDrawable(rrs);
-        //findViewById(R.id.llTitleBar).setBackgroundDrawable(sd);
-        
-
         res = getResources();
-         target = getIntent().getStringExtra("target");
-        inflater = (LayoutInflater)
-                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //>>>>>>>Begin to fetch the xml
+        target = getIntent().getStringExtra("target");
         ArrayList<String> nameValuePairs = (ArrayList<String>) getIntent().getSerializableExtra("params");
         
-        lvMain = (ListView)findViewById(R.id.lvMain);
-        //At first there is no item in the list adapter
-        llListAdapter = new LinearLayoutListAdapter(this);
-        lvMain.setAdapter(llListAdapter);
-       
         Map<String, List<?>> xmlMap = null;
         try {            
             if(target != null && !"".equals(target)) {
@@ -140,7 +117,7 @@ public class GeneratorActivity extends Activity{
         } catch (IOException e) {
             e.printStackTrace();
         }
-      //>>>>>>>>>>>>>Enable this part to use local xml.>>>>>>>>>>
+        //>>>>>>>>>>>>>Enable this part to use local xml.>>>>>>>>>>
 //        if(xmlMap == null) Log.d(TAG, "xmlMap == null");
 //        else if(xmlMap.get("menus")==null) Log.d(TAG, "xmlMap.get(menus)==null");
 //        else if(xmlMap.get("forms")==null) Log.d(TAG, "xmlMap.get(forms)==null");
@@ -165,6 +142,21 @@ public class GeneratorActivity extends Activity{
 //        }
         //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         
+     // Avoid the annoying auto appearance of the keyboard
+        this.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_MAINPANEL);
+
+        inflater = (LayoutInflater)
+                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        
+        lvMain = (ListView)findViewById(R.id.lvMain);
+        //At first there is no item in the list adapter
+        llListAdapter = new LinearLayoutListAdapter(this);
+        lvMain.setAdapter(llListAdapter);
+       
         mmList = (List<ModelMenu>) xmlMap.get("menus");
         mfList = (List<ModelForm>) xmlMap.get("forms");
         
@@ -486,6 +478,7 @@ public class GeneratorActivity extends Activity{
                             tv = (TextView)itemContainer.getChildAt(3);
                         }else {
                             tv = (Button)itemContainer.getChildAt(2);
+                            tv.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
                         }
                         tv.setVisibility(View.VISIBLE);
                         Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_LABEL);

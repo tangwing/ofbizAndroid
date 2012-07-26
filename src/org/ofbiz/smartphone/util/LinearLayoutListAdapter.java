@@ -99,12 +99,12 @@ public class LinearLayoutListAdapter extends BaseAdapter {
 
     @Override
     public void registerDataSetObserver(DataSetObserver arg0) {
-
+        super.registerDataSetObserver(arg0);
     }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver arg0) {
-
+        super.unregisterDataSetObserver(arg0);
     }
 
     @Override
