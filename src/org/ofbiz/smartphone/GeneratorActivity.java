@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -144,27 +145,25 @@ public class GeneratorActivity extends Activity{
 //        else if(xmlMap.get("menus")==null) Log.d(TAG, "xmlMap.get(menus)==null");
 //        else if(xmlMap.get("forms")==null) Log.d(TAG, "xmlMap.get(forms)==null");
 //        
-//        xmlMap = null;
+        if(xmlMap == null || 
+                (xmlMap.get("menus")==null && 
+                xmlMap.get("forms")==null)){
+            Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 //        try 
 //        {
-            if(xmlMap == null || 
-                    (xmlMap.get("menus")==null && 
-                    xmlMap.get("forms")==null)){
-                Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
-                finish();
-                return;
 //                AssetManager am = getAssets();
 //                InputStream xmlStream;
 //                    xmlStream = am.open("main.xml");
 //                    xmlMap = ModelReader.readModel(Util.readXmlDocument(
 //                            xmlStream));
-            } 
+//            
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
         //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        
-        
         
         mmList = (List<ModelMenu>) xmlMap.get("menus");
         mfList = (List<ModelForm>) xmlMap.get("forms");
@@ -185,17 +184,39 @@ public class GeneratorActivity extends Activity{
                 //Toast.makeText(GeneratorActivity.this, 
                 //        "You have clicked item "+position, Toast.LENGTH_SHORT).show();
                 String action = (String) currentView.getTag();
+                //action="http://www.baidu.com";
                 //action="tel:df1234";
-                //action="geo:0,0?q=Société Néréide, 3b Les Isles 37270 Veretz, France";
+                //action="sms:12334";
+                //action="mail:leo.shang@nereide.fr";
+                //action="geo:48.849242,2.293024";
+                //action="geo: Société Néréide, 3b Les Isles 37270 Veretz, France";
                 if(action != null ) {
                         if(action.startsWith("tel:")){
                             Intent callIntent = new Intent(Intent.ACTION_DIAL);
                             callIntent.setData(Uri.parse(action));
                             startActivity(callIntent);
-                        } else if (action.startsWith("geo:")){
+                        }else if(action.startsWith("sms:")){ 
+                            Intent callIntent = new Intent(Intent.ACTION_SENDTO);
+                            callIntent.setData(Uri.parse(action));
+                            startActivity(callIntent);
+                        }else if (action.startsWith("mail:")){
+                            Intent emailIntent = new Intent(Intent.ACTION_SEND); 
+//                            emailIntent.setType("text/plain"); 
+                            emailIntent.setType("message/rfc822");
+                            emailIntent.putExtra(Intent.EXTRA_EMAIL,new String[]{action.substring(5)} ); 
+                            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "my subject"); 
+                            emailIntent.putExtra(Intent.EXTRA_TEXT, "body text"); 
+                            try {
+                                startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                            } catch (android.content.ActivityNotFoundException ex) {
+                                Toast.makeText(GeneratorActivity.this, R.string.noEmailClientException, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else if (action.startsWith("geo")){
                             if( !action.startsWith("geo:0,0?q=")) {
                                 action = action.replaceFirst("geo:", "geo:0,0?q=");
                             }
+                            Log.d(TAG, action);
                             Intent geoIntent = new Intent(Intent.ACTION_VIEW);
                             geoIntent.setData(Uri.parse(action));
                             try{startActivity(geoIntent);
@@ -757,6 +778,7 @@ public class GeneratorActivity extends Activity{
                 intent.putExtra("target", mmi.getTarget());
                 mi.setIntent(intent);
                 mi.setIcon(mmi.getImgDrawable());
+                
             }
         }
         

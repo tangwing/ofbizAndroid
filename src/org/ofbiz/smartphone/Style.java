@@ -16,6 +16,8 @@ import org.xml.sax.SAXException;
 
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
@@ -188,7 +190,18 @@ public class Style {
             //About background
             String color = styleAttr.getProperty("backgroundcolor","");
             if(!color.equals("")) {
-                view.setBackgroundColor(Color.parseColor(color));
+                if(color.trim().startsWith("#")) {
+                    //This is a color
+                    view.setBackgroundColor(Color.parseColor(color));
+                }else if(color.contains(".")) {
+                    //This is a background image source
+                    BitmapDrawable bd = (BitmapDrawable) 
+                            GeneratorActivity.getDrawableFromUrl(color, "bgimage");
+                    bd.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.MIRROR);
+                    if(bd!=null) {
+                        view.setBackgroundDrawable(bd);
+                    }
+                }
             }else if(styleAttr.containsKey("startcolor")){
                 int startcolor = Color.parseColor(
                         styleAttr.getProperty("startcolor",""));

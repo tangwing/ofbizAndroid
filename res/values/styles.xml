@@ -2,14 +2,14 @@
 <resources>
     <style name="Window" >
 <!--         <item name="android:background">#22A5D1</item> -->
+        <item name="android:background">@drawable/background_repeat</item>
     </style>
     
-    <style name="BarContainer" parent="@android:style/ButtonBar">
+    <style name="BarContainer" >
 <!--         #50B6BA -->
-        <item name="android:background">@drawable/mainpanel_bg_repeat</item>
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingBottom">7dp</item>
+<!--         <item name="android:paddingBottom">7dp</item> -->
     </style>
 
     <style name="MainPanelContainer" >
@@ -17,7 +17,7 @@
         <item name="android:paddingRight">10dip</item>
 <!--         <item name="android:paddingTop">5dip</item> -->
 <!--         <item name="android:orientation">vertical</item> -->
-        <item name="android:background">@drawable/mainpanel_bg_repeat</item>
+<!--         <item name="android:background">@drawable/mainpanel_bg_repeat</item> -->
     </style>
 
     <style name="TitleBarButton" parent="@android:style/Widget.ImageButton">
