@@ -5,6 +5,7 @@
     <string name="app_name">ClientOfbiz</string>
     <string name="tvUser">Username:</string>
     <string name="tvPwd">Password:</string>
+    <string name="tvTheme">Theme:</string>
     <string name="btnLogin">Login</string>
     <string name="tvProfileName">Profile name</string>
     <string name="btnSaveProfile">Save</string>
@@ -18,6 +19,7 @@
     <string name="btnPreviousPage">&lt;</string>
     <string name="btnNextPage">&gt;</string>
     <string name="btnLastPage">&gt;&gt;</string>
+    <string name="btnLoadMore">More items...</string>
     
     <!-- The Strings from Java code files   -->
     <string name="loginErrorMessage_unknown">The server is not reachable, please check the address.</string>

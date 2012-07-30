@@ -36,14 +36,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 + "password TEXT,"
                                 + "isdefault INTEGER"
                                 + ");");
-                db.execSQL("CREATE TABLE IF NOT EXISTS "+ TABLE_STYLE
-                        + "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "name TEXT,"
-                        + "description TEXT,"
-                        + "xml TEXT,"
-                        + "isdefault INTEGER"
-                        + ");");
-                Log.d("Style_DBHelper","I pass here");
+//                db.execSQL("CREATE TABLE IF NOT EXISTS "+ TABLE_STYLE
+//                        + "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
+//                        + "name TEXT,"
+//                        + "description TEXT,"
+//                        + "xml TEXT,"
+//                        + "isdefault INTEGER"
+//                        + ");");
+                //Log.d("Style_DBHelper","I pass here");
         }
         
 

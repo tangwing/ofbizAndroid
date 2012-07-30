@@ -2,6 +2,7 @@ package org.ofbiz.smartphone;
 
 import org.ofbiz.smartphone.Style.StyleTargets;
 import org.ofbiz.smartphone.util.DatabaseHelper;
+import org.ofbiz.smartphone.util.LinearLayoutListAdapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,25 +12,33 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProfileManagementActivity extends Activity {
     // The Views
     private Spinner spinner = null;
+    private Spinner spinnerTheme = null;
     private EditText etProfileName = null;
     private EditText etServerAddress = null;
     private EditText etPort = null;
@@ -57,6 +66,7 @@ public class ProfileManagementActivity extends Activity {
         Intent intent = this.getIntent();
         isNewProfile = intent.getBooleanExtra("isNewProfile", false);
         spinner = (Spinner) findViewById(R.id.spinnerProfiles);
+        //spinnerTheme= (Spinner) findViewById(R.id.spinnerTheme);
         spinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item);
         tvProfileName = (TextView) findViewById(R.id.tvProfileName);
@@ -106,6 +116,41 @@ public class ProfileManagementActivity extends Activity {
 
             }
         });
+        
+//        Integer[] imageIconDatabase = { R.drawable.ic_launcher,
+//                 R.drawable.ic_launcher,
+//                 R.drawable.ic_launcher};
+//
+//         // stores the image database names
+//        String[] imageNameDatabase = { "ball", "catmouse", "cube"};
+//        
+//        ArrayList<HashMap<String, Object>> spinnerList = 
+//                new ArrayList<HashMap<String, Object>>();
+//        for (int i = 0; i < imageNameDatabase.length; i++) {
+//            HashMap<String, Object> map = new HashMap<String, Object>();
+//            map.put("Name", imageNameDatabase[i]);
+//            map.put("Icon", imageIconDatabase[i]);
+//            spinnerList.add(map);
+//        }
+//        ImageSpinnerAdapter adapter = new ImageSpinnerAdapter(this,
+//                spinnerList, R.layout.image_spinner_item, 
+//                new String[] { "Name","Icon" }, 
+//                new int[] { R.id.tvSpinnerItem,R.id.ibSpinnerItem });
+//       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerTheme.setAdapter(adapter);
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         btnSaveProfile.setOnClickListener(new OnClickListener() {
             @Override
@@ -167,22 +212,22 @@ public class ProfileManagementActivity extends Activity {
                 finish();
             }
         });
-        Style.getCurrentStyle().applyStyle(btnSaveProfile, StyleTargets.BUTTON_FORM);
-        Style.getCurrentStyle().applyStyle(btnCancelProfile, StyleTargets.BUTTON_FORM);
-        Style.getCurrentStyle().applyStyle(chkIsDefault , StyleTargets.TEXT_LABEL);
-        Style.getCurrentStyle().applyStyle(etServerAddress, StyleTargets.TEXT_EDIT);
-        Style.getCurrentStyle().applyStyle(etPort, StyleTargets.TEXT_EDIT);
-        Style.getCurrentStyle().applyStyle(etUser, StyleTargets.TEXT_EDIT);
-        Style.getCurrentStyle().applyStyle(etPwd, StyleTargets.TEXT_EDIT);
-        Style.getCurrentStyle().applyStyle(etProfileName, StyleTargets.TEXT_EDIT);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_MAINPANEL);
-        Style.getCurrentStyle().applyStyle(tvProfileName , StyleTargets.TEXT_LABEL);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvServerAddress), StyleTargets.TEXT_LABEL);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPort), StyleTargets.TEXT_LABEL);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT_LABEL);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(btnSaveProfile, StyleTargets.BUTTON_FORM);
+//        Style.getCurrentStyle().applyStyle(btnCancelProfile, StyleTargets.BUTTON_FORM);
+//        Style.getCurrentStyle().applyStyle(chkIsDefault , StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(etServerAddress, StyleTargets.TEXT_EDIT);
+//        Style.getCurrentStyle().applyStyle(etPort, StyleTargets.TEXT_EDIT);
+//        Style.getCurrentStyle().applyStyle(etUser, StyleTargets.TEXT_EDIT);
+//        Style.getCurrentStyle().applyStyle(etPwd, StyleTargets.TEXT_EDIT);
+//        Style.getCurrentStyle().applyStyle(etProfileName, StyleTargets.TEXT_EDIT);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_PANEL);
+//        Style.getCurrentStyle().applyStyle(tvProfileName , StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvServerAddress), StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPort), StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT_LABEL);
     }
 
     
@@ -206,6 +251,7 @@ public class ProfileManagementActivity extends Activity {
         for (int index = 0; index < rowcount; index++) {
             spinnerAdapter.add(cursor.getString(cursor
                     .getColumnIndex("profilename")));
+            spinnerAdapter.getView(index, null, null).setBackgroundColor(0xffff0000);
             spinner.setSelection(index);
             if (cursor.getInt(cursor.getColumnIndex("isdefault")) == 1) {
                 spinner.setSelection(index);
@@ -282,6 +328,51 @@ public class ProfileManagementActivity extends Activity {
             }
         }
         return true;
+    }
+    
+
+    public void chooseTheme(View view) {
+        //final CharSequence[] items = {"Red", "Green", "Blue"};
+        //LayoutInflater inflater = (LayoutInflater) getSystemService(this.LAYOUT_INFLATER_SERVICE);
+        final LinearLayoutListAdapter items = new LinearLayoutListAdapter(this);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int pixel = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                56, 
+                metrics);
+        LayoutParams lp = new LinearLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, 
+                pixel);
+        int imgId=0;
+
+            String base = "drawable/mainpanel_bg";
+            for (int i = 0; i <=6 ; i++ ) {
+//                bg = R_Drawable.getField(base+i);
+//                imgId = ((Integer)bg.get(null)).intValue();
+                imgId = getResources().getIdentifier(base+i , null, getPackageName());
+
+                LinearLayout item = new LinearLayout(this);
+                ImageButton iv = new ImageButton(this);
+                iv.setLayoutParams(lp);
+                iv.setScaleType(ScaleType.FIT_XY);
+                iv.setImageResource(imgId);
+                item.addView(iv);
+                items.add(item);
+                
+            }
+            
+            
+    
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose a theme...");
+        builder.setAdapter(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Toast.makeText(getApplicationContext(), item+"", Toast.LENGTH_SHORT).show();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

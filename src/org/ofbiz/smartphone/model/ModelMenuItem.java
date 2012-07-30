@@ -4,7 +4,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.ofbiz.smartphone.GeneratorActivity;
-import org.ofbiz.smartphone.util.Util;
 import org.w3c.dom.Element;
 
 import android.graphics.drawable.Drawable;

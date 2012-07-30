@@ -3,14 +3,11 @@ package org.ofbiz.smartphone.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ofbiz.smartphone.Style;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ModelFormItem {
-
-    private String type = "display";// text, image...
 
     private List<ModelFormField> formItemFields = new ArrayList<ModelFormField>();
 

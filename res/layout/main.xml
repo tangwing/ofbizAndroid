@@ -56,12 +56,32 @@
                     
                     />
             </LinearLayout>
+            
+<!--             <RadioGroup  -->
+<!--                 android:orientation="vertical" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 > -->
+<!--                 <RadioButton android:layout_height="30dp" -->
+<!--                     android:layout_width="match_parent" -->
+<!--                     android:gravity="center" -->
+<!--                     android:background="@drawable/mainpanel_bg6" -->
+<!--                     android:text="Style1" -->
+<!--                     android:textColor="@color/red" -->
+<!--                     /> -->
+<!--                 <RadioButton android:layout_height="30dp" -->
+<!--                     android:layout_width="match_parent" -->
+<!--                     android:gravity="center" -->
+<!--                     android:background="@drawable/mainpanel_bg5" -->
+<!--                     android:text="Style2" -->
+<!--                     android:textColor="@color/black" -->
+<!--                     /> -->
+<!--             </RadioGroup> -->
             <TextView
                 style="@style/CommonTextView"
                 android:id="@+id/tvUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                
                 android:text="@string/tvUser" />
 
             <EditText

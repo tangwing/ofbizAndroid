@@ -30,14 +30,17 @@ import org.ofbiz.smartphone.util.Util;
 import org.xml.sax.SAXException;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
@@ -73,25 +76,52 @@ public class GeneratorActivity extends Activity{
     private final String TAG = "GeneratorActivity";
     private ListView lvMain = null;
     private LinearLayoutListAdapter llListAdapter =null;
-    private List<ModelMenu> mmList = null;
-    private List<ModelForm> mfList = null;
+    private List<Object> mmList = null;
+    private List<Object> mfList = null;
     public static Resources res= null;
     private String target="";
     private int listFormViewIndex = 0;
     private int listFormViewSize = 0;
     private LayoutInflater inflater;
     private ModelMenu menuForMenuButton = null;
+    private ProgressDialog pDialog;
+    //>>>>>>>>>>>>>>About search
+    private Handler handler = null;
+    private final long SEARCH_DELAY = 2000;
+    private String searchText="";
+    private String searchAction="defaulttarget";
+    private Runnable searchRunnable = new Runnable() {
+        //A runnable to fetch search result from server
+        public void run() {
+            ArrayList<String> nameValuePairs = new ArrayList<String>();
+            nameValuePairs.add("searchtext");
+            nameValuePairs.add(searchText);
+            Intent intent = new Intent(GeneratorActivity.this, GeneratorActivity.class);
+            intent.putExtra(target, searchAction);
+            startActivity(intent);
+            finish();
+        }
+    };
+    //This is used to implement the instant search
+    //private long lastInputTime = 0;
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    
+    
+    
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.masterpage);
         res = getResources();
+        handler = new Handler();
+        Style.updateCurrentStyleFromTarget("smartphoneAppStyle");
+        Log.d(TAG, "finish update style");
         //>>>>>>>Begin to fetch the xml
         target = getIntent().getStringExtra("target");
         ArrayList<String> nameValuePairs = (ArrayList<String>) getIntent().getSerializableExtra("params");
         
-        Map<String, List<?>> xmlMap = null;
+        Map<String, List<Object>> xmlMap = null;
         try {            
             if(target != null && !"".equals(target)) {
                 target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
@@ -100,7 +130,7 @@ public class GeneratorActivity extends Activity{
                 HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
                 //TODO special string
                 String xmlString = logStream(response.getEntity().getContent());
-                xmlString=xmlString.replace("&", "&#x26;");
+                xmlString = xmlString.replace("&", "&#x26;");
                 Log.d("xml", xmlString);
                 xmlMap = ModelReader.readModel(Util.readXmlDocument(
                         xmlString));
@@ -147,7 +177,7 @@ public class GeneratorActivity extends Activity{
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_MAINPANEL);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_PANEL);
 
         inflater = (LayoutInflater)
                  getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -157,8 +187,8 @@ public class GeneratorActivity extends Activity{
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
        
-        mmList = (List<ModelMenu>) xmlMap.get("menus");
-        mfList = (List<ModelForm>) xmlMap.get("forms");
+        mmList = xmlMap.get("menus");
+        mfList = xmlMap.get("forms");
         
         if(mmList.size()>0) {
             setMenus(llListAdapter, mmList);
@@ -166,7 +196,11 @@ public class GeneratorActivity extends Activity{
         if(mfList.size()>0) {
             setForms(llListAdapter, mfList);
         }
-            
+        String scrollPosition = getIntent().getStringExtra("scrollPosition"); 
+        if(scrollPosition!=null && !"".equals(scrollPosition)) {
+            int p = Integer.parseInt(scrollPosition);
+            lvMain.setSelectionFromTop(p, 0);
+        }
         
         lvMain.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -180,7 +214,7 @@ public class GeneratorActivity extends Activity{
                 //action="tel:df1234";
                 //action="sms:12334";
                 //action="mail:leo.shang@nereide.fr";
-                //action="geo:48.849242,2.293024";
+                //action="geo:48.849242,2.293024"; 
                 //action="geo: Société Néréide, 3b Les Isles 37270 Veretz, France";
                 if(action != null ) {
                         if(action.startsWith("tel:")){
@@ -263,13 +297,13 @@ public class GeneratorActivity extends Activity{
         return sb.toString();
     }
 
-    private void setForms(final LinearLayoutListAdapter parentListAdapter, List<ModelForm> mfList) {
+    private void setForms(final LinearLayoutListAdapter parentListAdapter, List<Object> mfList) {
         if(mfList == null || mfList.isEmpty())
             return;
         
         
         for ( int index = 0; index < mfList.size(); index ++){
-            ModelForm mf = mfList.get(index);
+            ModelForm mf = (ModelForm) mfList.get(index);
             if(mf.getName().toLowerCase().equals("login")) {
                 Intent intent = new Intent(getApplicationContext(), ClientOfbizActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -318,6 +352,7 @@ public class GeneratorActivity extends Activity{
                         btnSubmit.setText(mff.getTitle());
                         btnSubmit.setOnClickListener(new OfbizOnClickListener(this, mf.getTarget(), listUserInput));
                     } else if(mff.getType().equals("text-find")) {
+                        searchAction = mf.getTarget();
                         LinearLayout llSearch = (LinearLayout)findViewById(R.id.llSearchBar);
                         llSearch.setVisibility(View.VISIBLE);
                         Style.getCurrentStyle().applyStyle(llSearch, StyleTargets.CONTAINER_BAR);
@@ -326,26 +361,34 @@ public class GeneratorActivity extends Activity{
                         etSearch.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                                Log.d("TextWatcher", "on:s="+s+";start="+start+";count="+count+";before="+before);
                             }
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count,
                                     int after) {
-//                                Log.d("TextWatcher", "before:s="+s+";start="+start+";count="+count+";after="+after);
                             }
                             
                             @Override
                             public void afterTextChanged(Editable s) {
                                 Log.d("TextWatcher", "after:s="+s);
-                                if(s.length()>0) {
-                                    int result = parentListAdapter.searchOrderedList(s.toString());
-                                    if(result > -1) {
-                                        lvMain.setSelectionFromTop(result, 0);
-                                        Log.d("Search","Set position "+result);
-                                    }
-                                } else {
-                                    lvMain.setSelectionFromTop(0, 0);
-                                }
+//                                if(lastInputTime == 0) {
+//                                    lastInputTime = SystemClock.uptimeMillis();
+//                                }else {
+//                                    if(SystemClock.uptimeMillis())
+//                                }
+                                searchText = s.toString();
+                                //Renew the time of search action every time when receive user input
+                                handler.removeCallbacks(searchRunnable);
+                                handler.postDelayed(searchRunnable, SEARCH_DELAY);
+                                //Older impementation, search in the list, based on prefix match
+//                                if(s.length()>0) {
+//                                    int result = parentListAdapter.searchOrderedList(s.toString());
+//                                    if(result > -1) {
+//                                        lvMain.setSelectionFromTop(result, 0);
+//                                        Log.d("Search","Set position "+result);
+//                                    }
+//                                } else {
+//                                    lvMain.setSelectionFromTop(0, 0);
+//                                }
                             }
                         });
                         row = null;
@@ -360,12 +403,11 @@ public class GeneratorActivity extends Activity{
                 this.listFormViewIndex = mf.getViewIndex();
                 this.listFormViewSize = mf.getViewSize();
                 
-//                //Add headerView
-//                LinearLayout pageSelector = (LinearLayout)lvMain.findViewById(R.id.llPageSelector);
-//                pageSelector.setVisibility(View.VISIBLE);
-//                EditText etPageNum = (EditText)lvMain.findViewById(R.id.etPageNum);
+                LinearLayout footer =  (LinearLayout)inflater.inflate(R.layout.list_footer,null);
+                lvMain.addFooterView(footer);
+                
                 LinearLayout pageSelector = (LinearLayout)findViewById(R.id.llPageSelector);
-                pageSelector.setVisibility(View.VISIBLE);
+              //TODO pageSelector.setVisibility(View.VISIBLE);
                 Style.getCurrentStyle().applyStyle(pageSelector, StyleTargets.CONTAINER_BAR);
                 EditText etPageNum = (EditText)pageSelector.getChildAt(2);
                 Style.getCurrentStyle().applyStyle(etPageNum, StyleTargets.TEXT_EDIT);
@@ -420,12 +462,12 @@ public class GeneratorActivity extends Activity{
      * @param parentListAdapter The current listView adapter
      * @param mmList A list of menus, generated from the xml content sent by Ofbiz server side.
      */
-    private void setMenus(LinearLayoutListAdapter parentListAdapter, List<ModelMenu> mmList) {
+    private void setMenus(LinearLayoutListAdapter parentListAdapter, List<Object> mmList) {
         if(mmList == null || mmList.isEmpty())
             return;
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for ( int index = 0; index < mmList.size(); index ++){
-            ModelMenu mm = mmList.get(index);
+            ModelMenu mm = (ModelMenu) mmList.get(index);
             Log.d(TAG, "Menu Type = "+mm.getType());
             if(mm.getType().equals("bar")){
                 //setBar(mm);
@@ -537,12 +579,7 @@ public class GeneratorActivity extends Activity{
                     parentListAdapter.add(row);
                     Log.d(TAG, "Add last ListItem !");
                 }
-            } else if(mm.getType().equals("style")){
-                List<ModelMenuItem> mmiList = mm.getMenuItems();
-                for (int i = 0; i < mmiList.size() ; i++ ) {
-                    Style.updateCurrentStyle(mmiList.get(i));
-                }
-            }  else if(mm.getType().equals("menu")){
+            } else if(mm.getType().equals("menu")){
                 //Log.d(TAG, "find BUtton  menu ");
                 menuForMenuButton = mm;
                 
@@ -555,7 +592,7 @@ public class GeneratorActivity extends Activity{
     /**Add a bar to current activity according to the menu.
      * @param modelMenu
      */
-    private void setBar(ModelMenu modelMenu) {
+    public void setBar(ModelMenu modelMenu) {
         List<ModelMenuItem> mmiList = modelMenu.getMenuItems();
         LinearLayout godFather = (LinearLayout) findViewById(R.id.window);
         LinearLayout bar = new LinearLayout(this);
@@ -590,7 +627,7 @@ public class GeneratorActivity extends Activity{
                     Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_LABEL);
                 }else {
                     tv = new Button(this);
-                    Style.getCurrentStyle().applyStyle(tv, StyleTargets.BUTTON_TITLEBAR);
+                    Style.getCurrentStyle().applyStyle(tv, StyleTargets.BUTTON_BAR);
                 }
                 tv.setText(mmi.getTitle());
                 currentView=(tv);
@@ -626,8 +663,8 @@ public class GeneratorActivity extends Activity{
         ImageView ivLogo = (ImageView)findViewById(R.id.ivLogo);
         ImageButton ibtnTitleBarRight = (ImageButton)findViewById(R.id.ibtnTitleBarRight);
         Style.getCurrentStyle().applyStyle(ibtnTitleBarLeft, StyleTargets.CONTAINER_BAR);
-        Style.getCurrentStyle().applyStyle(ibtnTitleBarLeft, StyleTargets.BUTTON_TITLEBAR);
-        Style.getCurrentStyle().applyStyle(ibtnTitleBarRight, StyleTargets.BUTTON_TITLEBAR);
+        Style.getCurrentStyle().applyStyle(ibtnTitleBarLeft, StyleTargets.BUTTON_BAR);
+        Style.getCurrentStyle().applyStyle(ibtnTitleBarRight, StyleTargets.BUTTON_BAR);
         
         ModelMenuItem mmi = mmiList.get(0);
         if(mmi.getWeight()!=0) {
@@ -656,8 +693,10 @@ public class GeneratorActivity extends Activity{
         //ibtnTitleBarRight.setScaleType(ImageView.ScaleType.FIT_XY);
         ibtnTitleBarRight.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
     }
-
     
+    /** OnClick listener of the page selector
+     * @param view
+     */
     public void goToPage(View view) {
         Button selectPage = (Button)view;
         String tag = (String)selectPage.getTag();
@@ -681,7 +720,6 @@ public class GeneratorActivity extends Activity{
                 nameValuePairs.add(String.valueOf(listFormViewIndex-1));
                 nameValuePairs.add("viewSize");
                 nameValuePairs.add(listFormViewSize+"");
-            
             } else if(tag.equals("nextpage")) {
               //TODO page number unknown
                 nameValuePairs.add("viewIndex");
@@ -697,8 +735,14 @@ public class GeneratorActivity extends Activity{
                 startActivity(intent);
                 finish();
             }
-
         return;
+    }
+    
+    /** The onClick listener of the listfooter : load more content
+     * @param view
+     */
+    public void loadMore(View view) {
+        new ListLoader().execute((Void)null) ;
     }
     
     public List<ModelMenuItem> getModelMenuListExample()
@@ -814,5 +858,49 @@ public class GeneratorActivity extends Activity{
 //        }
 //        return false;
 //    }
+    
+    
+    
+    /** 
+     * reference : http://www.androidhive.info/2012/03/android-listview-with-load-more-button/
+     * Async Task that send a request to url
+     * Gets new list view data
+     * Appends to list view
+     * */
+    private class ListLoader extends AsyncTask<Void, Void, Void> {
+     
+        protected void onPreExecute() {
+            // Showing progress dialog before sending http request
+            pDialog = new ProgressDialog(
+                    GeneratorActivity.this);
+            pDialog.setMessage("Please wait..");
+            pDialog.setIndeterminate(true);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+     
+        protected Void doInBackground(Void... unused) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Intent intent = getIntent();
+                    intent.putExtra("scrollPosition", lvMain.getFirstVisiblePosition());
+                    ArrayList<String> nameValuePairs = new ArrayList<String>();
+                    nameValuePairs.add("viewIndex");
+                    nameValuePairs.add((listFormViewIndex)+"");
+                    nameValuePairs.add("viewSize");
+                    nameValuePairs.add((listFormViewSize*2)+"");
+                    intent.putExtra("params", nameValuePairs);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+            return null;
+        }      
+     
+        protected void onPostExecute(Void unused) {
+            // closing progress dialog
+            pDialog.dismiss();
+        }
+    }
 
 }

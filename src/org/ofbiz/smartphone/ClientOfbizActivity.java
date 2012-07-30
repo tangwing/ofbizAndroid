@@ -10,11 +10,9 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
@@ -23,7 +21,6 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -39,11 +36,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,8 +50,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -157,17 +150,17 @@ public class ClientOfbizActivity extends Activity {
         } else {
             reloadSpinner();
         }
-        Style.getCurrentStyle().applyStyle(etUser, StyleTargets.TEXT_EDIT);
-        Style.getCurrentStyle().applyStyle(etPwd, StyleTargets.TEXT_EDIT);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_MAINPANEL);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT_LABEL);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT_LABEL);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.btnProfileManage), StyleTargets.BUTTON_FORM);
-        Style.getCurrentStyle().applyStyle(btnLogin, StyleTargets.BUTTON_FORM);
+//        Style.getCurrentStyle().applyStyle(etUser, StyleTargets.TEXT_EDIT);
+//        Style.getCurrentStyle().applyStyle(etPwd, StyleTargets.TEXT_EDIT);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.header), StyleTargets.CONTAINER_BAR);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanelContainer), StyleTargets.CONTAINER_PANEL);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvUser), StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.tvPwd), StyleTargets.TEXT_LABEL);
+//        Style.getCurrentStyle().applyStyle(findViewById(R.id.btnProfileManage), StyleTargets.BUTTON_FORM);
+//        Style.getCurrentStyle().applyStyle(btnLogin, StyleTargets.BUTTON_FORM);
     }
- 
+
     /**
      * Reload the spinner and then other components
      */

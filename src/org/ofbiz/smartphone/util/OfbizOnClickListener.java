@@ -2,7 +2,6 @@ package org.ofbiz.smartphone.util;
 
 import java.util.ArrayList;
 
-import org.apache.http.NameValuePair;
 import org.ofbiz.smartphone.GeneratorActivity;
 import org.ofbiz.smartphone.R;
 

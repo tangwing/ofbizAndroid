@@ -9,24 +9,18 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Hashtable;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
 import org.json.JSONObject;
-import org.ofbiz.smartphone.ClientOfbizActivity;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import android.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -92,39 +86,6 @@ public class Util {
         return bm;
     }
 
-    public void resizeImage() {
-        Bitmap bitmapOrg = null;//BitmapFactory.decodeResource(null,      R.drawable.a);
-
-        int width = bitmapOrg.getWidth();
-        int height = bitmapOrg.getHeight();
-        int newWidth = 200;
-        int newHeight = 200;
-
-        // calculate the scale - in this case = 0.4f
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-
-        // createa matrix for the manipulation
-        Matrix matrix = new Matrix();
-        // resize the bit map
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // recreate the new Bitmap
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOrg, 0, 0, width,
-                height, matrix, true);
-
-        // make a Drawable from Bitmap to allow to set the BitMap
-        // to the ImageView, ImageButton or what ever
-        @SuppressWarnings("unused")
-        BitmapDrawable bmd = new BitmapDrawable(resizedBitmap);
-
-        //ImageView imageView = null;// = new ImageView(this);
-
-        // set the Drawable on the ImageView
-        //imageView.setImageDrawable(bmd);
-
-    }
-    
     public static Document readXmlDocument(InputStream is) throws 
         ParserConfigurationException, SAXException, IOException{
         if (is == null) {

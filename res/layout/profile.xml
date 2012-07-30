@@ -64,6 +64,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                
                 android:orientation="horizontal" >
 
                 <EditText
@@ -124,6 +125,28 @@
                 android:hint="........"
                 android:inputType="textPassword"/>
 
+            <!--  Theme  -->
+            <TextView
+                style="@style/CommonTextView"
+                android:id="@+id/tvTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:text="@string/tvTheme" />
+<!--             <Spinner -->
+<!--                 android:id="@+id/spinnerTheme" -->
+<!--                 android:layout_width="match_parent" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:clipToPadding="true"  -->
+<!--                 /> -->
+<!--             <ImageButton  -->
+<!--                 android:layout_width="match_parent" -->
+<!--                 android:layout_height="40dp" -->
+<!--                 android:padding="5dp" -->
+<!--                 android:background="@drawable/mainpanel_bg5" -->
+<!--                 android:onClick="chooseTheme" -->
+<!--                 /> -->
+            
             <CheckBox
                 style="@style/CommonTextView"
                 android:id="@+id/chkIsDefaultProfile"
