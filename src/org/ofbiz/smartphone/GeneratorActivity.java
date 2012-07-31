@@ -40,7 +40,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
@@ -75,6 +74,7 @@ public class GeneratorActivity extends Activity{
 
     private final String TAG = "GeneratorActivity";
     private ListView lvMain = null;
+    private LinearLayout footer = null;
     private LinearLayoutListAdapter llListAdapter =null;
     private List<Object> mmList = null;
     private List<Object> mfList = null;
@@ -183,10 +183,15 @@ public class GeneratorActivity extends Activity{
                  getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         
         lvMain = (ListView)findViewById(R.id.lvMain);
+        footer = (LinearLayout)inflater.inflate(R.layout.list_footer,null);
+        footer.setTag(R.id.itemType, "footer");
+        
         //At first there is no item in the list adapter
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
-       
+        SideBar indexBar = (SideBar) findViewById(R.id.sideBar);  
+        indexBar.setListView(lvMain); 
+        
         mmList = xmlMap.get("menus");
         mfList = xmlMap.get("forms");
         
@@ -196,6 +201,9 @@ public class GeneratorActivity extends Activity{
         if(mfList.size()>0) {
             setForms(llListAdapter, mfList);
         }
+        //Add a footer view : Load more content
+        llListAdapter.add(footer);
+        
         String scrollPosition = getIntent().getStringExtra("scrollPosition"); 
         if(scrollPosition!=null && !"".equals(scrollPosition)) {
             int p = Integer.parseInt(scrollPosition);
@@ -321,32 +329,32 @@ public class GeneratorActivity extends Activity{
                             inflater.inflate(R.layout.form_single_field, null);
                     if(mff.getType().toLowerCase().equals("display")){
                         
-                        TextView tvTitle = (TextView)row.getChildAt(0);
+                        TextView tvTitle = (TextView)row.findViewById(R.id.tvFieldTitle);
                         Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_DESCRIPTION);
                         tvTitle.setText(mff.getDescription());
                         
                     } else if(mff.getType().equals("text")) {
-                        TextView tvTitle = (TextView)row.getChildAt(0);
+                        TextView tvTitle = (TextView)row.findViewById(R.id.tvFieldTitle);
                         Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_LABEL);
                         tvTitle.setText(mff.getTitle());
                         
-                        EditText etField = (EditText)row.getChildAt(1);
+                        EditText etField = (EditText)row.findViewById(R.id.etField);
                         etField.setText(mff.getValue());
                         etField.setTag(R.id.userInputName, mff.getName());
                         listUserInput.add(etField);
                         etField.setVisibility(EditText.VISIBLE);
                         Style.getCurrentStyle().applyStyle(etField, StyleTargets.TEXT_EDIT);
                     } else if(mff.getType().equals("password")) {
-                        TextView tvTitle = (TextView)row.getChildAt(0);
+                        TextView tvTitle = (TextView)row.findViewById(R.id.tvFieldTitle);
                         Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_LABEL);
                         
                         tvTitle.setText(mff.getTitle());
-                        EditText etField = (EditText)row.getChildAt(1);
+                        EditText etField = (EditText)row.findViewById(R.id.etField);
                         etField.setVisibility(View.VISIBLE);
                         Style.getCurrentStyle().applyStyle(etField, StyleTargets.TEXT_EDIT);
                         etField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     } else if(mff.getType().equals("submit")) {
-                        Button btnSubmit = (Button)row.getChildAt(2);//new Button(this);
+                        Button btnSubmit = (Button)row.findViewById(R.id.btnSubmit);//new Button(this);
                         btnSubmit.setVisibility(View.VISIBLE);
                         Style.getCurrentStyle().applyStyle(btnSubmit, StyleTargets.BUTTON_FORM);
                         btnSubmit.setText(mff.getTitle());
@@ -393,7 +401,10 @@ public class GeneratorActivity extends Activity{
                         });
                         row = null;
                     }
-                    parentListAdapter.add(row);
+                    if(row != null ) {
+                        row.setTag(R.id.itemType, "single");
+                        parentListAdapter.add(row);
+                    }
                 }
                 
             }
@@ -403,13 +414,13 @@ public class GeneratorActivity extends Activity{
                 this.listFormViewIndex = mf.getViewIndex();
                 this.listFormViewSize = mf.getViewSize();
                 
-                LinearLayout footer =  (LinearLayout)inflater.inflate(R.layout.list_footer,null);
-                lvMain.addFooterView(footer);
+                
+                footer.setVisibility(View.VISIBLE);
                 
                 LinearLayout pageSelector = (LinearLayout)findViewById(R.id.llPageSelector);
               //TODO pageSelector.setVisibility(View.VISIBLE);
                 Style.getCurrentStyle().applyStyle(pageSelector, StyleTargets.CONTAINER_BAR);
-                EditText etPageNum = (EditText)pageSelector.getChildAt(2);
+                EditText etPageNum = (EditText)pageSelector.findViewById(R.id.etPageNum);
                 Style.getCurrentStyle().applyStyle(etPageNum, StyleTargets.TEXT_EDIT);
                 etPageNum.setText(listFormViewIndex+1+"");
                 
@@ -421,14 +432,14 @@ public class GeneratorActivity extends Activity{
                     //All the fields in this list is in a single row
                     for(final ModelFormField mff : mffList) { 
                         if("image".equals(mff.getType())) {
-                            ImageView iv = (ImageView)row.getChildAt(0);
+                            ImageView iv = (ImageView)row.findViewById(R.id.ivListFormField);
                             iv.setVisibility(ImageView.VISIBLE);
                             iv.setImageDrawable(mff.getImgDrawable());
                             String action = mff.getAction();
                             if(!"".equals(action))
                                 row.setTag(action);
                         } else if("display".equals(mff.getType())) {
-                            TextView tv = (TextView)row.getChildAt(1);
+                            TextView tv = (TextView)row.findViewById(R.id.tvListFormField);
                             Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_TITLE);
                             tv.setVisibility(TextView.VISIBLE);
                             tv.setText(mff.getDescription());
@@ -441,12 +452,13 @@ public class GeneratorActivity extends Activity{
                             if(!"".equals(action)) 
                                 row.setTag(action);
                         } else if("text".equals(mff.getType())) {
-                            EditText et =(EditText)row.getChildAt(2);
+                            EditText et =(EditText)row.findViewById(R.id.etListFormField);
                             et.setText(mff.getValue());
                             Style.getCurrentStyle().applyStyle(et, StyleTargets.TEXT_DESCRIPTION);
                             et.setVisibility(EditText.VISIBLE);
                         }
                     }
+                    row.setTag(R.id.itemType, "list");
                     parentListAdapter.add(row);
                 }
             }
@@ -494,9 +506,9 @@ public class GeneratorActivity extends Activity{
                         ImageView img = null;
                         if(null==mmi.getTarget() || mmi.getTarget().equals("")){
                             //Simple image
-                            img = (ImageView) itemContainer.getChildAt(1);
+                            img = (ImageView) itemContainer.findViewById(R.id.ivListItem);
                         }else {
-                            img = (ImageButton) itemContainer.getChildAt(0);
+                            img = (ImageButton) itemContainer.findViewById(R.id.ibtnListItem);
                             //img.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xFF22A5D1));
 //                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.DARKEN);
 //                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.XOR);
@@ -506,7 +518,7 @@ public class GeneratorActivity extends Activity{
                         img.setImageDrawable(mmi.getImgDrawable());
                         if(!mmi.getTitle().equals("")) {
                             //Add the caption
-                            TextView caption = (TextView)itemContainer.getChildAt(3);
+                            TextView caption = (TextView)itemContainer.findViewById(R.id.tvListItem);
                             caption.setVisibility(View.VISIBLE);
                             Style.getCurrentStyle().applyStyle(caption, StyleTargets.TEXT_LABEL);
                             caption.setText(""+mmi.getTitle());
@@ -517,9 +529,9 @@ public class GeneratorActivity extends Activity{
                     } else if ( "text".equals(mmi.getType())){
                         TextView tv = null;
                         if(null==mmi.getTarget() || mmi.getTarget().equals("")){
-                            tv = (TextView)itemContainer.getChildAt(3);
+                            tv = (TextView)itemContainer.findViewById(R.id.tvListItem);
                         }else {
-                            tv = (Button)itemContainer.getChildAt(2);
+                            tv = (Button)itemContainer.findViewById(R.id.btnListItem);
                             tv.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
                         }
                         tv.setVisibility(View.VISIBLE);
@@ -561,6 +573,7 @@ public class GeneratorActivity extends Activity{
                     currentColNum ++;
                     if(currentColNum == mm.getRow_items()) {
                         currentColNum = 0;
+                        row.setTag(R.id.itemType, "panel");
                         parentListAdapter.add(row);
                         Log.d(TAG, "Add a new ListItem to list! getRow_items=" + mm.getRow_items());
                         row = new LinearLayout(this);
@@ -576,6 +589,7 @@ public class GeneratorActivity extends Activity{
                                 0, LayoutParams.WRAP_CONTENT, 1));
                         row.addView(ll);
                     }
+                    row.setTag(R.id.itemType, "panel");
                     parentListAdapter.add(row);
                     Log.d(TAG, "Add last ListItem !");
                 }
@@ -882,20 +896,60 @@ public class GeneratorActivity extends Activity{
         protected Void doInBackground(Void... unused) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    Intent intent = getIntent();
-                    intent.putExtra("scrollPosition", lvMain.getFirstVisiblePosition());
-                    ArrayList<String> nameValuePairs = new ArrayList<String>();
-                    nameValuePairs.add("viewIndex");
-                    nameValuePairs.add((listFormViewIndex)+"");
-                    nameValuePairs.add("viewSize");
-                    nameValuePairs.add((listFormViewSize*2)+"");
-                    intent.putExtra("params", nameValuePairs);
-                    startActivity(intent);
-                    finish();
+                    int p = lvMain.getFirstVisiblePosition();
+                    llListAdapter.remove(footer);
+//                    Intent intent = getIntent();
+//                    intent.putExtra("scrollPosition", lvMain.getFirstVisiblePosition());
+//                    ArrayList<String> nameValuePairs = new ArrayList<String>();
+//                    nameValuePairs.add("viewIndex");
+//                    nameValuePairs.add((listFormViewIndex)+"");
+//                    nameValuePairs.add("viewSize");
+//                    nameValuePairs.add((listFormViewSize*2)+"");
+//                    intent.putExtra("params", nameValuePairs);
+//                    startActivity(intent);
+//                    finish();
+                    loadDirectly();
+                    llListAdapter.add(footer);
+                    llListAdapter.notifyDataSetChanged();
+                    //lvMain.setSelection(p+1);
                 }
             });
             return null;
-        }      
+        }
+        
+        private void loadDirectly() {
+            target = getIntent().getStringExtra("target");
+            List<NameValuePair> nvPairs = new ArrayList<NameValuePair>();
+            nvPairs.add(new BasicNameValuePair("viewIndex", listFormViewIndex+1+""));
+            nvPairs.add(new BasicNameValuePair("viewSize", listFormViewSize+""));
+            
+            Map<String, List<Object>> xmlMap = null;
+            try {            
+                    target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
+                    HttpPost hp = new HttpPost(target);
+                    hp.setEntity(new UrlEncodedFormEntity(nvPairs));
+                    Log.d(TAG,"target : "+target);
+                    HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
+                    //TODO special string
+                    String xmlString = logStream(response.getEntity().getContent());
+                    xmlString = xmlString.replace("&", "&#x26;");
+                    Log.d("xml", xmlString);
+                    xmlMap = ModelReader.readModel(Util.readXmlDocument(
+                            xmlString));
+                    List<Object> formList = xmlMap.get("forms");
+                    if(null != formList && formList.size() > 0) {
+                        setForms(llListAdapter, formList);
+                    }
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
      
         protected void onPostExecute(Void unused) {
             // closing progress dialog

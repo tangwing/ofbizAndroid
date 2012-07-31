@@ -2,16 +2,20 @@ package org.ofbiz.smartphone.util;
 
 import java.util.ArrayList;
 
+import org.ofbiz.smartphone.R;
+
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-public class LinearLayoutListAdapter extends BaseAdapter {
+public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndexer{
 
     private Context context;
     private ArrayList<LinearLayout> lll = null;
@@ -25,16 +29,32 @@ public class LinearLayoutListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        if(convertView!=null){
-//            return (LinearLayout)convertView;
-//        }else{
-//        if(position == 0) {
-//            TextView tv = (TextView)lll.get(0).getChildAt(0);
-//            Log.d("ListAdapter", "Item 000"+tv.getText().toString());
-//        }
-        
-            return lll.get(position);
-//        }
+        LinearLayout ll = lll.get(position);
+        if(ll.getTag(R.id.itemType).equals("list")) {
+            TextView tv = (TextView)ll.findViewById(R.id.tvListFormField);
+            TextView section = (TextView)ll.findViewById(R.id.section);
+            //TODO souci : vide string
+            if(tv.getText().length()>0) {
+                
+                char firstChar = tv.getText().toString().toUpperCase().charAt(0);
+                if (position == 0) {
+                    section.setVisibility(View.VISIBLE);
+                    section.setText(firstChar+"");
+                } else {
+                    LinearLayout preRow = (LinearLayout) lll.get(position - 1);
+                    if(preRow.getTag(R.id.itemType).equals("list")) {
+                        
+                        TextView preTv = (TextView)(preRow.findViewById(R.id.tvListFormField));
+                        char preFirstChar = preTv.getText().toString().toUpperCase().charAt(0);
+                        if (firstChar != preFirstChar) { 
+                            section.setVisibility(View.VISIBLE);
+                            section.setText(firstChar+"");
+                        }
+                    }
+                }  
+            }
+        }
+        return ll;
     }
     
     public int searchOrderedList(String target) {
@@ -42,7 +62,7 @@ public class LinearLayoutListAdapter extends BaseAdapter {
             target=target.toLowerCase();
             for(int positioin = 0; positioin<lll.size(); positioin++) {
                 LinearLayout ll = lll.get(positioin);
-                TextView tv = (TextView)ll.getChildAt(1);
+                TextView tv = (TextView)ll.findViewById(R.id.tvListFormField);
                 String itemText = tv.getText().toString().toLowerCase();
                 //Log.d("searchOrderedList","item="+itemText+"; p="+positioin+"target="+target);
                 if(itemText.startsWith(target)) {
@@ -65,6 +85,17 @@ public class LinearLayoutListAdapter extends BaseAdapter {
         {
             lll.add(ll);
         }
+    }
+    
+    public LinearLayout remove(int pos) {
+        return lll.remove(pos);
+    }
+    
+    public LinearLayout remove(LinearLayout row) {
+        if(row != null) {
+            lll.remove(row);
+        }
+        return row;
     }
     @Override
     public Object getItem(int arg0) {
@@ -116,6 +147,38 @@ public class LinearLayoutListAdapter extends BaseAdapter {
     @Override
     public boolean isEnabled(int arg0) {
         return true;
+    }
+
+
+    @Override
+    public int getPositionForSection(int section) {
+        if (section == '#') {  
+            return 0;  
+        }  
+        for (int i = 0; i < lll.size(); i++) {  
+            LinearLayout ll = lll.get(i);  
+            if( ll.getTag(R.id.itemType).equals("list")) {
+                TextView tv = (TextView)ll.findViewById(R.id.tvListFormField);
+                if(section == tv.getText().toString().toUpperCase().charAt(0)) {
+                    return i;  
+                }
+            }
+        }  
+        return 0;
+    }
+
+
+    @Override
+    public int getSectionForPosition(int position) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+    @Override
+    public Object[] getSections() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
