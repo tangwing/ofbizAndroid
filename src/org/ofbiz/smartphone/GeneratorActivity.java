@@ -185,7 +185,7 @@ public class GeneratorActivity extends Activity{
         lvMain = (ListView)findViewById(R.id.lvMain);
         footer = (LinearLayout)inflater.inflate(R.layout.list_footer,null);
         footer.setTag(R.id.itemType, "footer");
-        
+        Style.getCurrentStyle().applyStyle(footer.findViewById(R.id.btnLoadMore), StyleTargets.BUTTON_FORM);
         //At first there is no item in the list adapter
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
@@ -442,7 +442,7 @@ public class GeneratorActivity extends Activity{
                                 row.setTag(action);
                         } else if("display".equals(mff.getType())) {
                             TextView tv = (TextView)row.findViewById(R.id.tvListFormField);
-                            Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_TITLE);
+                            Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_DESCRIPTION);
                             tv.setVisibility(TextView.VISIBLE);
                             tv.setText(mff.getDescription());
                             tv.setText(Html.fromHtml("<b>"+mff.getDescription()+"</b>"));
@@ -456,7 +456,7 @@ public class GeneratorActivity extends Activity{
                         } else if("text".equals(mff.getType())) {
                             EditText et =(EditText)row.findViewById(R.id.etListFormField);
                             et.setText(mff.getValue());
-                            Style.getCurrentStyle().applyStyle(et, StyleTargets.TEXT_DESCRIPTION);
+                            Style.getCurrentStyle().applyStyle(et, StyleTargets.TEXT_EDIT);
                             et.setVisibility(EditText.VISIBLE);
                         }
                     }
