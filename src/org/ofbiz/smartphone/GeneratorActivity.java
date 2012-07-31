@@ -189,8 +189,6 @@ public class GeneratorActivity extends Activity{
         //At first there is no item in the list adapter
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
-        SideBar indexBar = (SideBar) findViewById(R.id.sideBar);  
-        indexBar.setListView(lvMain); 
         
         mmList = xmlMap.get("menus");
         mfList = xmlMap.get("forms");
@@ -199,10 +197,14 @@ public class GeneratorActivity extends Activity{
             setMenus(llListAdapter, mmList);
         }
         if(mfList.size()>0) {
+            SideBar indexBar = (SideBar) findViewById(R.id.sideBar);  
+            indexBar.setVisibility(View.VISIBLE);
+            indexBar.setListView(lvMain); 
             setForms(llListAdapter, mfList);
+        }else {
+            lvMain.setDividerHeight(0);
         }
-        //Add a footer view : Load more content
-        llListAdapter.add(footer);
+        
         
         String scrollPosition = getIntent().getStringExtra("scrollPosition"); 
         if(scrollPosition!=null && !"".equals(scrollPosition)) {
@@ -415,7 +417,7 @@ public class GeneratorActivity extends Activity{
                 this.listFormViewSize = mf.getViewSize();
                 
                 
-                footer.setVisibility(View.VISIBLE);
+                //footer.setVisibility(View.VISIBLE);
                 
                 LinearLayout pageSelector = (LinearLayout)findViewById(R.id.llPageSelector);
               //TODO pageSelector.setVisibility(View.VISIBLE);
@@ -461,6 +463,8 @@ public class GeneratorActivity extends Activity{
                     row.setTag(R.id.itemType, "list");
                     parentListAdapter.add(row);
                 }
+              //Add a footer view : Load more content
+                llListAdapter.add(footer);
             }
         }
     }
@@ -508,11 +512,10 @@ public class GeneratorActivity extends Activity{
                             //Simple image
                             img = (ImageView) itemContainer.findViewById(R.id.ivListItem);
                         }else {
-                            img = (ImageButton) itemContainer.findViewById(R.id.ibtnListItem);
-                            //img.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xFF22A5D1));
-//                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.DARKEN);
-//                            img.setColorFilter(Color.parseColor("#22A5D1"),PorterDuff.Mode.XOR);
-                            img.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
+                            //img = (ImageButton) itemContainer.findViewById(R.id.ibtnListItem);
+                            img = (ImageView) itemContainer.findViewById(R.id.ivListItem);
+                            itemContainer.setOnClickListener(new OfbizOnClickListener(this, mmi.getTarget()));
+                            itemContainer.setBackgroundResource(R.drawable.btn_default);
                         }
                         img.setVisibility(ImageView.VISIBLE);
                         img.setImageDrawable(mmi.getImgDrawable());
@@ -537,7 +540,7 @@ public class GeneratorActivity extends Activity{
                         tv.setVisibility(View.VISIBLE);
                         Style.getCurrentStyle().applyStyle(tv, StyleTargets.TEXT_LABEL);
                         tv.setText(mmi.getTitle());
-                        Log.d(TAG, "Text Style : "+mmi.getStyle());
+//                        Log.d(TAG, "Text Style : "+mmi.getStyle());
 //                        if((mmi.getStyle()).contains("bold")) {
 //                            Log.d(TAG, "A bold text!");
 //                            tv.setTypeface(null, Typeface.BOLD);
@@ -896,7 +899,7 @@ public class GeneratorActivity extends Activity{
         protected Void doInBackground(Void... unused) {
             runOnUiThread(new Runnable() {
                 public void run() {
-                    int p = lvMain.getFirstVisiblePosition();
+                    //int p = lvMain.getFirstVisiblePosition();
                     llListAdapter.remove(footer);
 //                    Intent intent = getIntent();
 //                    intent.putExtra("scrollPosition", lvMain.getFirstVisiblePosition());
@@ -909,7 +912,7 @@ public class GeneratorActivity extends Activity{
 //                    startActivity(intent);
 //                    finish();
                     loadDirectly();
-                    llListAdapter.add(footer);
+                    //llListAdapter.add(footer);
                     llListAdapter.notifyDataSetChanged();
                     //lvMain.setSelection(p+1);
                 }

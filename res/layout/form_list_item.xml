@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:background="@drawable/listitem_selector"
     android:orientation="vertical" >
+<!--     android:background="@drawable/listitem_selector" -->
     
     <TextView 
         android:id="@+id/section"  

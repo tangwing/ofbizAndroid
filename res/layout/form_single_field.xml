@@ -6,8 +6,8 @@
     android:minHeight="48dp"
     android:padding="10dp"
     android:gravity="center_vertical"
-    android:background="@drawable/roundedcorner"
     android:orientation="vertical" >
+<!--     android:background="@drawable/roundedcorner" -->
     <TextView 
         android:id="@+id/tvFieldTitle"
         android:layout_width="wrap_content"
@@ -24,7 +24,9 @@
         android:id="@+id/btnSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:visibility="gone">
     </Button>
 </LinearLayout>

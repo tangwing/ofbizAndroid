@@ -164,7 +164,7 @@ public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndex
                 }
             }
         }  
-        return 0;
+        return -1;//This section doesn't exist, do nothing
     }
 
 

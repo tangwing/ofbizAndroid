@@ -162,6 +162,7 @@ public class Style {
                 view.setBackgroundColor(Color.parseColor(color));
             }
             String imgSrc = styleAttr.getProperty("backgroundImg","");
+            Log.d("Style", "targt="+st.toString()+";color="+color+"; img="+imgSrc);
             if(!imgSrc.equals("")) {
                 //This is a background image source
                 BitmapDrawable bd = (BitmapDrawable) 
