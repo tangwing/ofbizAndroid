@@ -15,6 +15,8 @@ public class SideBar extends View {
     private SectionIndexer sectionIndexter = null;  
     private ListView list;  
     private final int m_nItemHeight = 29;  
+    private static int textColor = 0xFFA6A9AA;
+    
     public SideBar(Context context) {  
         super(context);  
         init();  
@@ -44,7 +46,7 @@ public class SideBar extends View {
             idx = l.length - 1;  
         } else if (idx < 0) {  
             idx = 0;  
-        }  
+        }
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {  
             if (sectionIndexter == null) {  
                 sectionIndexter = (SectionIndexer) list.getAdapter();  
@@ -60,7 +62,7 @@ public class SideBar extends View {
     }  
     protected void onDraw(Canvas canvas) {  
         Paint paint = new Paint();  
-        paint.setColor(0xFFA6A9AA);  
+        paint.setColor(textColor);  
         paint.setTextSize(30);  
         paint.setTextAlign(Paint.Align.CENTER);  
         float widthCenter = getMeasuredWidth() / 2;  
@@ -69,4 +71,8 @@ public class SideBar extends View {
         }  
         super.onDraw(canvas);  
     }  
+    
+    public static void setTextColor(int color) {
+        textColor = color;
+    }
 }  

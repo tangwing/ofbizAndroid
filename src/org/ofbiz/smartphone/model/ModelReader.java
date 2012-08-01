@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.smartphone.Style;
-import org.ofbiz.smartphone.Style.StyleTargets;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

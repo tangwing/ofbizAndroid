@@ -106,8 +106,6 @@ public class GeneratorActivity extends Activity{
     //private long lastInputTime = 0;
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     
-    
-    
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -115,7 +113,7 @@ public class GeneratorActivity extends Activity{
         setContentView(R.layout.masterpage);
         res = getResources();
         handler = new Handler();
-        Style.updateCurrentStyleFromTarget("smartphoneAppStyle");
+        
         Log.d(TAG, "finish update style");
         //>>>>>>>Begin to fetch the xml
         target = getIntent().getStringExtra("target");
@@ -176,6 +174,7 @@ public class GeneratorActivity extends Activity{
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
+        Style.getCurrentStyle().applyStyle(findViewById(R.id.llTitleBar), StyleTargets.CONTAINER_BAR);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_PANEL);
 
@@ -185,7 +184,7 @@ public class GeneratorActivity extends Activity{
         lvMain = (ListView)findViewById(R.id.lvMain);
         footer = (LinearLayout)inflater.inflate(R.layout.list_footer,null);
         footer.setTag(R.id.itemType, "footer");
-        Style.getCurrentStyle().applyStyle(footer.findViewById(R.id.btnLoadMore), StyleTargets.BUTTON_FORM);
+        Style.getCurrentStyle().applyStyle(footer.findViewById(R.id.btnLoadMore), StyleTargets.BUTTON_PANEL);
         //At first there is no item in the list adapter
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
@@ -197,12 +196,12 @@ public class GeneratorActivity extends Activity{
             setMenus(llListAdapter, mmList);
         }
         if(mfList.size()>0) {
-            SideBar indexBar = (SideBar) findViewById(R.id.sideBar);  
-            indexBar.setVisibility(View.VISIBLE);
-            indexBar.setListView(lvMain); 
+            
             setForms(llListAdapter, mfList);
         }else {
             lvMain.setDividerHeight(0);
+            //lvMain.setBackgroundColor(android.R.color.transparent);
+            lvMain.setSelector(android.R.color.transparent);
         }
         
         
@@ -358,7 +357,7 @@ public class GeneratorActivity extends Activity{
                     } else if(mff.getType().equals("submit")) {
                         Button btnSubmit = (Button)row.findViewById(R.id.btnSubmit);//new Button(this);
                         btnSubmit.setVisibility(View.VISIBLE);
-                        Style.getCurrentStyle().applyStyle(btnSubmit, StyleTargets.BUTTON_FORM);
+                        Style.getCurrentStyle().applyStyle(btnSubmit, StyleTargets.BUTTON_PANEL);
                         btnSubmit.setText(mff.getTitle());
                         btnSubmit.setOnClickListener(new OfbizOnClickListener(this, mf.getTarget(), listUserInput));
                     } else if(mff.getType().equals("text-find")) {
@@ -415,12 +414,12 @@ public class GeneratorActivity extends Activity{
                 List<ModelFormItem> mfiList = mf.getListFormItems();
                 this.listFormViewIndex = mf.getViewIndex();
                 this.listFormViewSize = mf.getViewSize();
-                
-                
-                //footer.setVisibility(View.VISIBLE);
-                
+                //Side bar indexer
+                SideBar indexBar = (SideBar) findViewById(R.id.sideBar);  
+                indexBar.setVisibility(View.VISIBLE);
+                indexBar.setListView(lvMain); 
+                //Hidden pageSelector. 
                 LinearLayout pageSelector = (LinearLayout)findViewById(R.id.llPageSelector);
-              //TODO pageSelector.setVisibility(View.VISIBLE);
                 Style.getCurrentStyle().applyStyle(pageSelector, StyleTargets.CONTAINER_BAR);
                 EditText etPageNum = (EditText)pageSelector.findViewById(R.id.etPageNum);
                 Style.getCurrentStyle().applyStyle(etPageNum, StyleTargets.TEXT_EDIT);
@@ -463,8 +462,10 @@ public class GeneratorActivity extends Activity{
                     row.setTag(R.id.itemType, "list");
                     parentListAdapter.add(row);
                 }
-              //Add a footer view : Load more content
-                llListAdapter.add(footer);
+                if(mfiList.size()==mf.getViewSize()) {
+                    //Add a footer view : Load more content
+                    llListAdapter.add(footer);
+                }
             }
         }
     }
@@ -589,8 +590,9 @@ public class GeneratorActivity extends Activity{
                         LinearLayout ll = (LinearLayout)inflater.inflate(
                                 R.layout.menu_item, null);
                         ll.setLayoutParams(new LinearLayout.LayoutParams(
-                                0, LayoutParams.WRAP_CONTENT, 1));
+                                0, LayoutParams.MATCH_PARENT, 1));
                         row.addView(ll);
+                        Log.d(TAG, "Add a empty item");
                     }
                     row.setTag(R.id.itemType, "panel");
                     parentListAdapter.add(row);
@@ -759,7 +761,9 @@ public class GeneratorActivity extends Activity{
      * @param view
      */
     public void loadMore(View view) {
+        Log.d(TAG, "in loadmore before "+ Thread.currentThread().getName());
         new ListLoader().execute((Void)null) ;
+        Log.d(TAG, "in loadmore after "+ Thread.currentThread().getName());
     }
     
     public List<ModelMenuItem> getModelMenuListExample()
@@ -887,40 +891,44 @@ public class GeneratorActivity extends Activity{
     private class ListLoader extends AsyncTask<Void, Void, Void> {
      
         protected void onPreExecute() {
-            // Showing progress dialog before sending http request
-            pDialog = new ProgressDialog(
-                    GeneratorActivity.this);
-            pDialog.setMessage("Please wait..");
-            pDialog.setIndeterminate(true);
-            pDialog.setCancelable(false);
-            pDialog.show();
+             Log.d(TAG, "in preexcute "+ Thread.currentThread().getName());
+             // Showing progress dialog before sending http request
+             pDialog = new ProgressDialog(
+                     GeneratorActivity.this);
+             pDialog.setMessage(res.getString(R.string.loading));
+             pDialog.setIndeterminate(true);
+             pDialog.setCancelable(false);
+             pDialog.show();
         }
      
         protected Void doInBackground(Void... unused) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    //int p = lvMain.getFirstVisiblePosition();
-                    llListAdapter.remove(footer);
-//                    Intent intent = getIntent();
-//                    intent.putExtra("scrollPosition", lvMain.getFirstVisiblePosition());
-//                    ArrayList<String> nameValuePairs = new ArrayList<String>();
-//                    nameValuePairs.add("viewIndex");
-//                    nameValuePairs.add((listFormViewIndex)+"");
-//                    nameValuePairs.add("viewSize");
-//                    nameValuePairs.add((listFormViewSize*2)+"");
-//                    intent.putExtra("params", nameValuePairs);
-//                    startActivity(intent);
-//                    finish();
-                    loadDirectly();
-                    //llListAdapter.add(footer);
-                    llListAdapter.notifyDataSetChanged();
-                    //lvMain.setSelection(p+1);
-                }
-            });
+            Log.d(TAG, "in bg "+ Thread.currentThread().getName());
+            final List<Object> formList = getNextForms();
+            if(null != formList && formList.size() > 0) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        //int p = lvMain.getFirstVisiblePosition();
+    //                    Intent intent = getIntent();
+    //                    intent.putExtra("scrollPosition", lvMain.getFirstVisiblePosition());
+    //                    ArrayList<String> nameValuePairs = new ArrayList<String>();
+    //                    nameValuePairs.add("viewIndex");
+    //                    nameValuePairs.add((listFormViewIndex)+"");
+    //                    nameValuePairs.add("viewSize");
+    //                    nameValuePairs.add((listFormViewSize*2)+"");
+    //                    intent.putExtra("params", nameValuePairs);
+    //                    startActivity(intent);
+    //                    finish();
+                        llListAdapter.remove(footer);
+                        setForms(llListAdapter, formList);
+                        Log.d(TAG, "after loadDirectly "+ Thread.currentThread().getName());
+                        llListAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
             return null;
         }
         
-        private void loadDirectly() {
+        private List<Object> getNextForms() {
             target = getIntent().getStringExtra("target");
             List<NameValuePair> nvPairs = new ArrayList<NameValuePair>();
             nvPairs.add(new BasicNameValuePair("viewIndex", listFormViewIndex+1+""));
@@ -939,10 +947,7 @@ public class GeneratorActivity extends Activity{
                     Log.d("xml", xmlString);
                     xmlMap = ModelReader.readModel(Util.readXmlDocument(
                             xmlString));
-                    List<Object> formList = xmlMap.get("forms");
-                    if(null != formList && formList.size() > 0) {
-                        setForms(llListAdapter, formList);
-                    }
+                    
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             } catch (SAXException e) {
@@ -952,10 +957,14 @@ public class GeneratorActivity extends Activity{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if(xmlMap != null)
+                return xmlMap.get("forms");
+            else return null;
         }
      
         protected void onPostExecute(Void unused) {
-            // closing progress dialog
+            Log.d(TAG, "in onpost "+ Thread.currentThread().getName());
+          //closing progress dialog
             pDialog.dismiss();
         }
     }

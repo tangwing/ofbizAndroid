@@ -2,16 +2,12 @@ package org.ofbiz.smartphone;
 
 import java.io.IOException;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.ofbiz.smartphone.model.ModelMenu;
-import org.ofbiz.smartphone.model.ModelMenuItem;
 import org.ofbiz.smartphone.model.ModelReader;
 import org.ofbiz.smartphone.util.Util;
 import org.w3c.dom.Element;
@@ -22,7 +18,6 @@ import android.graphics.Color;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -46,11 +41,12 @@ public class Style {
         CONTAINER_BAR,
         CONTAINER_PANEL,
         BUTTON_BAR,
-        BUTTON_FORM,
+        BUTTON_PANEL,
         TEXT_LABEL,  //label, textview, single form lable
         TEXT_EDIT,   //edit box
         TEXT_TITLE,  //title or listitem in the list form
         TEXT_DESCRIPTION, //description in the list
+        TEXT_SECTIONHEADER,//The section header of list view
         LISTVIEW
     }
     
@@ -63,7 +59,7 @@ public class Style {
         styleMap.put(StyleTargets.CONTAINER_BAR, new Properties());
         styleMap.put(StyleTargets.CONTAINER_PANEL, new Properties());
         styleMap.put(StyleTargets.BUTTON_BAR, new Properties());
-        styleMap.put(StyleTargets.BUTTON_FORM, new Properties());
+        styleMap.put(StyleTargets.BUTTON_PANEL, new Properties());
         styleMap.put(StyleTargets.TEXT_DESCRIPTION, new Properties());
         styleMap.put(StyleTargets.TEXT_EDIT, new Properties());
         styleMap.put(StyleTargets.TEXT_TITLE, new Properties());
@@ -175,23 +171,28 @@ public class Style {
             
             switch (st) {
                 //case BUTTON_BAR:
-                case BUTTON_FORM:
+                case BUTTON_PANEL:
                 case TEXT_LABEL:
                 case TEXT_DESCRIPTION:   
                 case TEXT_EDIT:
                 case TEXT_TITLE:
+                case TEXT_SECTIONHEADER:
                     TextView tv = (TextView)view;
                     color = styleAttr.getProperty("textColor","");
                     if(!color.equals("")) {
                         tv.setTextColor(Color.parseColor(color));
                     }
-                    tv.setPadding(10, 0, 10, 0);
+                    //tv.setPadding(10, 0, 10, 0);
                     break;
                 case LISTVIEW:
                     ListView lv = (ListView)view;
                     color = styleAttr.getProperty("dividerColor","");
                     if(!color.equals("")) {
                         lv.setDivider(new ColorDrawable(Color.parseColor(color)));
+                    }
+                    color = styleAttr.getProperty("indexerTextColor","");
+                    if(!color.equals("")) {
+                        SideBar.setTextColor(Color.parseColor(color));
                     }
                     break;
                 default : 
@@ -246,9 +247,11 @@ TEXT_TITLE //Ça correspond l'attribut 'title'
 
 TEXT_DESCRIPTION //Ça correspond l'attribut 'description'
     textColor
-
+TEXT_SECTIONHEADER
+    textColor
 LISTVIEW
     dividerColor
+    indexerTextColor
 
 Supported color formats are: #RRGGBB #AARRGGBB 'red', 'blue', 'green', 'black', 'white', 'gray', 'cyan', 'magenta', 'yellow', 'lightgray', 'darkgray'.
 

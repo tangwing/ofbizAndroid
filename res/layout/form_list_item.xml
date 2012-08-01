@@ -6,7 +6,6 @@
     android:gravity="center_vertical"
     android:orientation="vertical" >
 <!--     android:background="@drawable/listitem_selector" -->
-    
     <TextView 
         android:id="@+id/section"  
         android:layout_width="fill_parent"  

@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:visibility="gone" >
+        android:visibility="gone" 
+        >
         
         <ImageButton 
             style="@style/TitleBarButton"
@@ -85,7 +86,6 @@
         <LinearLayout
             style="@style/MainPanelContainer"
             android:id="@+id/llMainPanel"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -94,10 +94,10 @@
             <ListView
                 android:id="@+id/lvMain"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:divider="@drawable/listitem_divider"
-                android:dividerHeight="1px"
+                android:dividerHeight="1dp"
                 android:cacheColorHint="#00000000"
                 />
             <include layout="@layout/list_header_selector" />

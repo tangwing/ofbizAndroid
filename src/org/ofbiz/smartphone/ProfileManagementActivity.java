@@ -1,6 +1,5 @@
 package org.ofbiz.smartphone;
 
-import org.ofbiz.smartphone.Style.StyleTargets;
 import org.ofbiz.smartphone.util.DatabaseHelper;
 import org.ofbiz.smartphone.util.LinearLayoutListAdapter;
 

@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:visibility="gone">
     </Button>
 </LinearLayout>

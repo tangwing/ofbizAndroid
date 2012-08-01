@@ -25,7 +25,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.ofbiz.smartphone.Style.StyleTargets;
 import org.ofbiz.smartphone.util.DatabaseHelper;
 import org.ofbiz.smartphone.util.MySSLSocketFactory;
 import org.ofbiz.smartphone.util.Util;
@@ -457,6 +456,8 @@ public class ClientOfbizActivity extends Activity {
 //                }
 //            });
             intent.putExtra("target", "main");
+            //set theme
+            Style.updateCurrentStyleFromTarget("smartphoneAppStyle");
             startActivity(intent);
         }else if(result.get("status").equals("NOK")){
             runOnUiThread(new Runnable() {
@@ -479,7 +480,36 @@ public class ClientOfbizActivity extends Activity {
         etPwd.setText(cursor.getString(cursor.getColumnIndex("password")));
     }
 
+    @Override
+    public void onBackPressed() {
+        //confirm quit
+        AlertDialog ad = new AlertDialog.Builder(
+                ClientOfbizActivity.this)
+                .create();
+        ad.setMessage(getResources().getString(
+                R.string.quitConfirmation));
+        ad.setButton(
+                AlertDialog.BUTTON_POSITIVE,
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        return;
+                    }
+                });
+        ad.setButton(AlertDialog.BUTTON_NEGATIVE,"No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(
+                            DialogInterface dialog,
+                            int which) {
+                        return;
+                    }
+                });
+        ad.show();
 
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_NEWPROFILE) {

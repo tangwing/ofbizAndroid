@@ -26,6 +26,7 @@
     <string name="loginWarning_certificate">The certificate is invalide, continue?</string>
     <string name="loading">Loading...</string>
     <string name="loginSucceeds">Login Succeeds !</string>
+    <string name="quitConfirmation">Do you want to quit ?</string>
     <string name="noMapException">You need to install Google Map to view this address in map.</string>
     <string name="noEmailClientException">You need to have a email client for this operation.</string>
     

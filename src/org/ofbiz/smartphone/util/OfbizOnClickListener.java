@@ -41,6 +41,12 @@ public class OfbizOnClickListener implements View.OnClickListener{
     
     @Override
     public void onClick(View v) {
+//        ProgressDialog pDialog = new ProgressDialog(
+//                c);
+//        pDialog.setMessage(GeneratorActivity.res.getString(R.string.loading));
+////        pDialog.setIndeterminate(true);
+////        pDialog.setCancelable(false);
+//        pDialog.show();
         //Redirect to the target
         Intent intent = new Intent(c, GeneratorActivity.class);
         intent.putExtra ("target", target);
