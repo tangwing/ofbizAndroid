@@ -11,20 +11,24 @@
     <LinearLayout
         
         style="@style/BarContainer"
+        android:padding="0dp"
         android:id="@+id/llTitleBar"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:visibility="gone" 
         >
         
+<!--             style="@style/TitleBarButton" -->
         <ImageButton 
-            style="@style/TitleBarButton"
             android:id="@+id/ibtnTitleBarLeft"
             android:layout_gravity="left"
+            android:padding="5dp"
             android:contentDescription="@string/ibtnTitleBarLeftContentDes"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="fitCenter"
             />
 <!--             android:background="@drawable/roundedcorner" -->
 
@@ -43,8 +47,10 @@
             android:id="@+id/ibtnTitleBarRight"
             android:contentDescription="@string/ibtnTitleBarRightContentDes"
             android:layout_gravity="right" 
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="fitCenter"
              />
     </LinearLayout>
     
@@ -108,6 +114,17 @@
             android:layout_width="22dp"  
             android:layout_alignParentRight="true"  
             android:visibility="gone"
+            android:background="0x44FFFFFF"
         />  
+        <TextView 
+            android:layout_toLeftOf="@id/sideBar"
+            android:id="@+id/tvIndex"
+              android:layout_width="48dp"
+              android:layout_height="48dp"
+              android:textSize="30sp"
+              android:visibility="gone"
+              android:gravity="center"
+              android:textColor="#FFF"
+              />
     </RelativeLayout>
 </LinearLayout>

@@ -16,9 +16,10 @@ public class SideBar extends View {
     private ListView list;  
     private final int m_nItemHeight = 29;  
     private static int textColor = 0xFFA6A9AA;
-    
+    private Context context = null;
     public SideBar(Context context) {  
         super(context);  
+        this.context = context;
         init();  
     }  
     public SideBar(Context context, AttributeSet attrs) {  
@@ -28,7 +29,6 @@ public class SideBar extends View {
     private void init() {  
         l = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',  
                 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#' };  
-        setBackgroundColor(0x44FFFFFF);  
     }  
     public SideBar(Context context, AttributeSet attrs, int defStyle) {  
         super(context, attrs, defStyle);  
@@ -47,17 +47,25 @@ public class SideBar extends View {
         } else if (idx < 0) {  
             idx = 0;  
         }
+        //Show index box
+        GeneratorActivity.tvIndex.setText(l[idx]+"");
+        GeneratorActivity.tvIndex.setVisibility(View.VISIBLE);
+        
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {  
             if (sectionIndexter == null) {  
                 sectionIndexter = (SectionIndexer) list.getAdapter();  
             }  
+            
             int position = sectionIndexter.getPositionForSection(l[idx]);  
             if (position == -1) {  
                 return true;  
             }
             Log.d("Sidebar", "setSelection : "+position);
             list.setSelection(position);  
-        }  
+        } else if(event.getAction() == MotionEvent.ACTION_UP) {
+            GeneratorActivity.tvIndex.setVisibility(View.GONE);
+        }
+        Log.d("SideBar", event.getAction()+"");
         return true;
     }  
     protected void onDraw(Canvas canvas) {  

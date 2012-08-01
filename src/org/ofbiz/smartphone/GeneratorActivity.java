@@ -50,6 +50,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -82,9 +83,10 @@ public class GeneratorActivity extends Activity{
     private String target="";
     private int listFormViewIndex = 0;
     private int listFormViewSize = 0;
-    private LayoutInflater inflater;
+    private static LayoutInflater inflater;
     private ModelMenu menuForMenuButton = null;
     private ProgressDialog pDialog;
+    public static TextView tvIndex = null;
     //>>>>>>>>>>>>>>About search
     private Handler handler = null;
     private final long SEARCH_DELAY = 2000;
@@ -169,13 +171,13 @@ public class GeneratorActivity extends Activity{
 //            e.printStackTrace();
 //        }
         //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        
+        tvIndex = (TextView) findViewById(R.id.tvIndex);
+        Style.getCurrentStyle().applyStyle(tvIndex, StyleTargets.TEXT_LABEL);
      // Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.llTitleBar), StyleTargets.CONTAINER_BAR);
-        Style.getCurrentStyle().applyStyle(findViewById(R.id.llSearchBar), StyleTargets.CONTAINER_BAR);
         Style.getCurrentStyle().applyStyle(findViewById(R.id.llMainPanel), StyleTargets.CONTAINER_PANEL);
 
         inflater = (LayoutInflater)
@@ -364,7 +366,6 @@ public class GeneratorActivity extends Activity{
                         searchAction = mf.getTarget();
                         LinearLayout llSearch = (LinearLayout)findViewById(R.id.llSearchBar);
                         llSearch.setVisibility(View.VISIBLE);
-                        Style.getCurrentStyle().applyStyle(llSearch, StyleTargets.CONTAINER_BAR);
                         EditText etSearch = (EditText)findViewById(R.id.etSearch);
                         Style.getCurrentStyle().applyStyle(etSearch, StyleTargets.TEXT_EDIT);
                         etSearch.addTextChangedListener(new TextWatcher() {
@@ -681,14 +682,14 @@ public class GeneratorActivity extends Activity{
         ImageButton ibtnTitleBarLeft = (ImageButton)findViewById(R.id.ibtnTitleBarLeft);
         ImageView ivLogo = (ImageView)findViewById(R.id.ivLogo);
         ImageButton ibtnTitleBarRight = (ImageButton)findViewById(R.id.ibtnTitleBarRight);
-        Style.getCurrentStyle().applyStyle(ibtnTitleBarLeft, StyleTargets.CONTAINER_BAR);
+        Style.getCurrentStyle().applyStyle(llTitleBar, StyleTargets.CONTAINER_BAR);
         Style.getCurrentStyle().applyStyle(ibtnTitleBarLeft, StyleTargets.BUTTON_BAR);
         Style.getCurrentStyle().applyStyle(ibtnTitleBarRight, StyleTargets.BUTTON_BAR);
         
         ModelMenuItem mmi = mmiList.get(0);
         if(mmi.getWeight()!=0) {
             ibtnTitleBarLeft.setLayoutParams(new LinearLayout.LayoutParams(
-                    0, LayoutParams.WRAP_CONTENT, mmi.getWeight()));
+                    0, LayoutParams.MATCH_PARENT, mmi.getWeight()));
         }
         ibtnTitleBarLeft.setImageDrawable(mmi.getImgDrawable());
         //ibtnTitleBarLeft.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -706,7 +707,7 @@ public class GeneratorActivity extends Activity{
         mmi = mmiList.get(2);
         if(mmi.getWeight()!=0) {
             ibtnTitleBarRight.setLayoutParams(new LinearLayout.LayoutParams(
-                    0, LayoutParams.WRAP_CONTENT, mmi.getWeight()));
+                    0, LayoutParams.MATCH_PARENT, mmi.getWeight()));
         }
         ibtnTitleBarRight.setImageDrawable(mmi.getImgDrawable());
         //ibtnTitleBarRight.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -968,5 +969,5 @@ public class GeneratorActivity extends Activity{
             pDialog.dismiss();
         }
     }
-
+    
 }
