@@ -124,7 +124,8 @@
               android:textSize="30sp"
               android:visibility="gone"
               android:gravity="center"
-              android:textColor="#FFF"
+              android:textColor="#000"
+              android:background="#44FFFFFF"
               />
     </RelativeLayout>
 </LinearLayout>

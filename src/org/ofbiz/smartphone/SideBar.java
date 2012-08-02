@@ -1,5 +1,6 @@
 package org.ofbiz.smartphone;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -9,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
+import android.widget.TextView;
 
 public class SideBar extends View {
     private char[] l;  
@@ -16,16 +18,16 @@ public class SideBar extends View {
     private ListView list;  
     private final int m_nItemHeight = 29;  
     private static int textColor = 0xFFA6A9AA;
-    //private Context context = null;
+    private TextView tvIndex = null;
     public SideBar(Context context) {  
         super(context);  
-        //this.context = context;
         init();  
     }  
-    public SideBar(Context context, AttributeSet attrs) {  
-        super(context, attrs);  
+    public SideBar(Context context, AttributeSet as) {  
+        super(context, as);  
         init();  
     }  
+    
     private void init() {  
         l = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',  
                 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '#' };  
@@ -47,11 +49,16 @@ public class SideBar extends View {
         } else if (idx < 0) {  
             idx = 0;  
         }
-        //Show index box
-        GeneratorActivity.tvIndex.setText(l[idx]+"");
-        GeneratorActivity.tvIndex.setVisibility(View.VISIBLE);
+        //Show indicator box
+        if( tvIndex != null ) {
+            //Style.getCurrentStyle().applyStyle(tvIndex, StyleTargets.TEXT_LABEL);
+            tvIndex.setText(l[idx]+"");
+            tvIndex.setVisibility(View.VISIBLE);
+        }
+        Log.d("Sidebar", "event.getAction()  : "+event.getAction()+ "is shown? "+tvIndex.isShown() );
         
-        if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {  
+        if (event.getAction() == MotionEvent.ACTION_DOWN || 
+                event.getAction() == MotionEvent.ACTION_MOVE) {  
             if (sectionIndexter == null) {  
                 sectionIndexter = (SectionIndexer) list.getAdapter();  
             }  
@@ -60,12 +67,12 @@ public class SideBar extends View {
             if (position == -1) {  
                 return true;  
             }
-            Log.d("Sidebar", "setSelection : "+position);
+            
             list.setSelection(position);  
         } else if(event.getAction() == MotionEvent.ACTION_UP) {
-            GeneratorActivity.tvIndex.setVisibility(View.GONE);
+            tvIndex.setVisibility(View.GONE);
         }
-        Log.d("SideBar", event.getAction()+"");
+        
         return true;
     }  
     protected void onDraw(Canvas canvas) {  
@@ -82,5 +89,8 @@ public class SideBar extends View {
     
     public static void setTextColor(int color) {
         textColor = color;
+    }
+    public void setIndicator(View findViewById) {
+        tvIndex = (TextView) findViewById;
     }
 }  

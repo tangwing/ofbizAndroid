@@ -85,22 +85,25 @@ public class GeneratorActivity extends Activity{
     private static LayoutInflater inflater;
     private ModelMenu menuForMenuButton = null;
     private ProgressDialog pDialog;
-    public static TextView tvIndex = null;
+    //public static TextView tvIndex = null;
     //>>>>>>>>>>>>>>About search
     private Handler handler = null;
     private final long SEARCH_DELAY = 2000;
+    private String searchName = "";
     private String searchText="";
     private String searchAction="defaulttarget";
     private Runnable searchRunnable = new Runnable() {
         //A runnable to fetch search result from server
         public void run() {
             ArrayList<String> nameValuePairs = new ArrayList<String>();
-            nameValuePairs.add("searchtext");
+            nameValuePairs.add("name");
+            nameValuePairs.add(searchName);
+            nameValuePairs.add("value");
             nameValuePairs.add(searchText);
             Intent intent = new Intent(GeneratorActivity.this, GeneratorActivity.class);
-            intent.putExtra(target, searchAction);
+            intent.putExtra("target", searchAction);
             startActivity(intent);
-            finish();
+            //finish();
         }
     };
     //This is used to implement the instant search
@@ -170,8 +173,7 @@ public class GeneratorActivity extends Activity{
 //            e.printStackTrace();
 //        }
         //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        tvIndex = (TextView) findViewById(R.id.tvIndex);
-        Style.getCurrentStyle().applyStyle(tvIndex, StyleTargets.TEXT_LABEL);
+        
      // Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -362,7 +364,13 @@ public class GeneratorActivity extends Activity{
                         btnSubmit.setText(mff.getTitle());
                         btnSubmit.setOnClickListener(new OfbizOnClickListener(this, mf.getTarget(), listUserInput));
                     } else if(mff.getType().equals("text-find")) {
-                        searchAction = mf.getTarget();
+                        if(!"".equals(mf.getTarget())) {
+                            
+                            searchAction = mf.getTarget();
+                        }
+                        //Log.d(TAG, "search action = "+searchAction);
+                        searchName = mff.getName();
+                        
                         LinearLayout llSearch = (LinearLayout)findViewById(R.id.llSearchBar);
                         llSearch.setVisibility(View.VISIBLE);
                         EditText etSearch = (EditText)findViewById(R.id.etSearch);
@@ -415,7 +423,8 @@ public class GeneratorActivity extends Activity{
                 this.listFormViewIndex = mf.getViewIndex();
                 this.listFormViewSize = mf.getViewSize();
                 //Side bar indexer
-                SideBar indexBar = (SideBar) findViewById(R.id.sideBar);  
+                SideBar indexBar = (SideBar) findViewById(R.id.sideBar); 
+                indexBar.setIndicator(findViewById(R.id.tvIndex));
                 indexBar.setVisibility(View.VISIBLE);
                 indexBar.setListView(lvMain); 
                 //Hidden pageSelector. 
@@ -859,28 +868,7 @@ public class GeneratorActivity extends Activity{
         return true;
     }
 
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//        case R.id.menuProjects:
-//            
-//            return true;
-//        case R.id.menuDevis:
-//            
-//            return true;
-//        case R.id.menuContacts:
-//            finish();
-//            return true;
-//        case R.id.menuCommands:
-//            
-//            return true;
-//        case R.id.menuCommunications:
-//            
-//            return true;
-//        }
-//        return false;
-//    }
-    
-    
+   
     
     /** 
      * reference : http://www.androidhive.info/2012/03/android-listview-with-load-more-button/
