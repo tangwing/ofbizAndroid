@@ -56,7 +56,6 @@ import android.widget.Toast;
  * @author Léo SHANG@Néréid
  * 
  */
-
 public class ClientOfbizActivity extends Activity {
 
     private Button btnLogin = null;
@@ -84,29 +83,11 @@ public class ClientOfbizActivity extends Activity {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-//        Properties p = new Properties();
-//        p.put("name", "old");
-//        Hashtable<String, Properties> h =new Hashtable<String, Properties>();
-//        h.put("key", p);
-//        h.get("key").put("name", "new");
-//        Log.d("test", h.get("key").getProperty("name"));
-        
-//        int colors[] = { 0xffA8BCC0 , 0xff60778D };
-//        GradientDrawable g = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
-//        g.setShape(GradientDrawable.RECTANGLE);
-//        LinearLayout lTitle = (LinearLayout)findViewById(R.id.header);
-//        g.setSize(50, 10);
-//        lTitle.setBackgroundDrawable(g);
-        
         // Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        //This must be called before the style setting
-        dbHelper = new DatabaseHelper(this);
-        //current style can be changed here
-        //Style.updategetCurrentStyle()(Style.DEFAULT_STYLE);
         
+        dbHelper = new DatabaseHelper(this);
         
         btnLogin = (Button) findViewById(R.id.btnLogin);
         etUser = (EditText) findViewById(R.id.etUser);
@@ -125,7 +106,6 @@ public class ClientOfbizActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                     int arg2, long arg3) {
-//                Log.d(TAG, "onItemSelected");
                 loadProfile(spinner.getSelectedItemPosition());
             }
             @Override
@@ -149,6 +129,7 @@ public class ClientOfbizActivity extends Activity {
         } else {
             reloadSpinner();
         }
+        //No needs to manage the style of login page.
 //        Style.getCurrentStyle().applyStyle(etUser, StyleTargets.TEXT_EDIT);
 //        Style.getCurrentStyle().applyStyle(etPwd, StyleTargets.TEXT_EDIT);
 //        Style.getCurrentStyle().applyStyle(findViewById(R.id.window), StyleTargets.WINDOW);
@@ -265,7 +246,6 @@ public class ClientOfbizActivity extends Activity {
                 };
                 connect.start();
             }
-
         }
     };
 
@@ -472,6 +452,11 @@ public class ClientOfbizActivity extends Activity {
         etPwd.setText(cursor.getString(cursor.getColumnIndex("password")));
     }
 
+    
+    /* (non-Javadoc)
+     * @see android.app.Activity#onBackPressed()
+     * The back button action.
+     */
     @Override
     public void onBackPressed() {
         //confirm quit
@@ -528,17 +513,6 @@ public class ClientOfbizActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//        case R.id.menuProfile:
-//            Intent intent = new Intent(this, ProfileManagementActivity.class);
-//            intent.putExtra("isNewProfile", false);
-//            this.startActivityForResult(intent, REQUEST_NEWPROFILE);
-//            return true;
-//
-//        case R.id.testGenerator:
-//            Intent i = new Intent(this, GeneratorActivity.class);
-//            i.putExtra("target", "main.xml");
-//            startActivity(i);
-//            return true;
         case R.id.quitter:
             finish();
             return true;

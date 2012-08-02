@@ -49,6 +49,10 @@ public class Util {
     public static final int ACTION_MODIFY = 0;
     public static final int ACTION_VIEW = 0;
 
+    /**Get status code from the given http response
+     * @param rp The given http response
+     * @return The set of result, contains status and msg.
+     */
     public static Hashtable<String, String> getStatusCode(HttpResponse rp) {
         Hashtable<String, String> result = new Hashtable<String, String>();
         BufferedReader br;
@@ -73,6 +77,10 @@ public class Util {
         return result;
     }
 
+    /**Get image drawable from an url.
+     * @param url 
+     * @return
+     */
     public static Drawable LoadImageFromWebOperations(String url) {
         try {
             InputStream is = (InputStream) new URL(url).getContent();
@@ -83,6 +91,10 @@ public class Util {
         }
     }
 
+    /**Get bitmap from an url
+     * @param url
+     * @return
+     */
     @SuppressWarnings("unused")
     private Bitmap getImageBitmap(String url) {
         Bitmap bm = null;
@@ -101,6 +113,13 @@ public class Util {
         return bm;
     }
 
+    /**Parse xml content
+     * @param is The xml stream
+     * @return A Document object
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     */
     public static Document readXmlDocument(InputStream is) throws 
         ParserConfigurationException, SAXException, IOException{
         if (is == null) {
@@ -114,11 +133,23 @@ public class Util {
         return document;
     }
     
+    /**Parse xml content
+     * @param is The xml string
+     * @return A Document object
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     */
     public static Document readXmlDocument(String s) throws 
     ParserConfigurationException, SAXException, IOException{
         return readXmlDocument(new ByteArrayInputStream(s.getBytes()));
     }
     
+    /**Create http post object from target url and parameters
+     * @param target The target url.(relative)
+     * @param params
+     * @return
+     */
     public static HttpPost getHttpPost(String target, ArrayList<String> params) {
         HttpPost hp = new HttpPost(target);
         List<NameValuePair> nvPairs = new ArrayList<NameValuePair>();
@@ -138,6 +169,10 @@ public class Util {
         return hp;
     }
 
+    /**Translate the xml stream to xml String, and log them.
+     * @param content
+     * @return
+     */
     public static String logStream(InputStream content) {
         BufferedReader br = new BufferedReader( new InputStreamReader(content));
         String line = "";
@@ -153,8 +188,15 @@ public class Util {
         return sb.toString();
     }
     
+    /**Make a full url
+     * @param serverRoot
+     * @param addSmartphoneDomain Whether add the smartphone domain. For 
+     * some url like that of images, the smartphone domain is not necessary.
+     * @param target
+     * @return
+     */
     public static String makeFullUrlString(String serverRoot, boolean addSmartphoneDomain, String target)
-    {
+    {     
         if(target.startsWith("/") ) {
             target = target.replaceFirst("/", "");
         }
@@ -173,6 +215,11 @@ public class Util {
         }
     }
     
+    /**get Xml Element Map FromTarget
+     * @param target Target url
+     * @param params Params
+     * @return
+     */
     public static Map<String, ArrayList<Object>> getXmlElementMapFromTarget(
             String target, ArrayList<String> params) {
 
@@ -205,15 +252,21 @@ public class Util {
         return xmlMap;
     }
     
-    public static boolean startNewActivity(Context c, String target, ArrayList<String> params) {
-
+    /** Start a new activity after fetching the xml content from target.
+     * @param c Current activity context
+     * @param target 
+     * @param params
+     * @return
+     */
+    public static boolean startNewActivity(Context c, String target, 
+            ArrayList<String> params) {
         Map<String, ArrayList<Object>> xmlMap = getXmlElementMapFromTarget(
                 target,
                 params);
         if(xmlMap == null || 
                 (xmlMap.get("menus")==null && 
                 xmlMap.get("forms")==null)){
-            Toast.makeText(c, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+            Toast.makeText(c, "Target is not available, target = "+target, Toast.LENGTH_SHORT).show();
             return false;
         } else {
             Intent intent = new Intent(c, GeneratorActivity.class);

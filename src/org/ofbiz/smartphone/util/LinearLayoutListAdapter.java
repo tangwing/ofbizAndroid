@@ -13,17 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+/**This Adapter is used by ListView to provide content.
+ * @author Léo @ Néréide
+ *
+ */
 public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndexer{
 
-    //private Context context;
     private ArrayList<LinearLayout> lll = null;
     public LinearLayoutListAdapter(Context c)
     {
         super();
-        //context=c;
         lll = new ArrayList<LinearLayout>();
     }
-    
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -31,7 +32,6 @@ public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndex
         if(ll.getTag(R.id.itemType).equals("list")) {
             TextView tv = (TextView)ll.findViewById(R.id.tvListFormField);
             TextView section = (TextView)ll.findViewById(R.id.section);
-            //TODO souci : vide string
             if(tv.getText().length()>0) {
                 
                 char firstChar = tv.getText().toString().toUpperCase().charAt(0);
@@ -55,6 +55,11 @@ public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndex
         return ll;
     }
     
+    /**This was used to search in the ordered list,
+     * use the simplest prefix match strategy.
+     * @param target The prefix to search
+     * @return The position of the item found in list
+     */
     public int searchOrderedList(String target) {
         if(target != null && target.length()>0) {
             target=target.toLowerCase();
@@ -62,9 +67,7 @@ public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndex
                 LinearLayout ll = lll.get(positioin);
                 TextView tv = (TextView)ll.findViewById(R.id.tvListFormField);
                 String itemText = tv.getText().toString().toLowerCase();
-                //Log.d("searchOrderedList","item="+itemText+"; p="+positioin+"target="+target);
                 if(itemText.startsWith(target)) {
-                    
                     return positioin;
                 }
                 

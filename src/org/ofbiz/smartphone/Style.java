@@ -23,17 +23,52 @@ import android.widget.ListView;
 import android.widget.TextView;
 /**
  * @author administrateur
- * Create a list of parameters which can determine a style
- * get the list of styles from ofbiz, show it to users. When selected, get the set of
- * parameters of this style and use it. Store it in local and make it default.
  *Available style attributes names: 
- *          backgroundcolor, 
- *          //startcolor, endcolor, orientation,//These are for creating gradient bg
- *          textcolor, 
- *          dividercolor.//This is for LISTVIEW
- */
+ /*
+ * 
+WINDOW
+    backgroundImg
+    backgroundColor
+
+CONTAINER_BAR
+    backgroundImg
+    backgroundColor
+
+CONTAINER_PANEL
+    backgroundImg
+    backgroundColor
+
+BUTTON_BAR
+    backgroundColor
+
+BUTTON_PANEL
+    textColor
+    backgroundImg
+    backgroundColor
+
+TEXT_LABEL //Pour tous les labels indicatifs
+    textColor
+
+TEXT_EDIT //Ça correspond l'attribut 'text' et 'text-find'
+    textColor
+
+TEXT_TITLE //Ça correspond l'attribut 'title'
+    textColor
+
+TEXT_DESCRIPTION //Ça correspond l'attribut 'description'
+    textColor
+TEXT_SECTIONHEADER
+    textColor
+LISTVIEW
+    dividerColor
+    indexerTextColor
+
+Supported color formats are: #RRGGBB #AARRGGBB 'red', 'blue', 'green', 'black', 'white', 'gray', 'cyan', 'magenta', 'yellow', 'lightgray', 'darkgray'.
+
+**/
 public class Style {
     private static Style CURRENTSTYLE = new Style() ;
+    //For db use.
     //private static Cursor styleCursor =null;
     public static enum StyleTargets {
         WINDOW,
@@ -200,59 +235,18 @@ public class Style {
         }
     }
 
+//    //This is 
+//    public static final String DEFAULT_STYLE =
+//    		"<?xml version='1.0' encoding='UTF-8'?><ui>" +
+//    		"<Menu type='style' > " +
+//    		"<MenuItem  target='CONTAINER_BAR' name='startcolor' value='#ffA8BCC0'/>" +
+//    		"<MenuItem  target='CONTAINER_BAR' name='endcolor' value='#ff60778D'/>" +
+////    		"<MenuItem  target='BUTTON_TITLEBAR' name='backgroundcolor' value='#5F7DA5'/>" +
+//    		"<MenuItem  target='BUTTON_FORM' name='' value=''/>" +
+//    		"<MenuItem  target='BUTTON_FORM' name='' value=''/>" +
+//    		"<MenuItem  target='BUTTON_FORM' name='' value=''/>" +
+//    		"<MenuItem  target='TEXT' name='' value=''/>" +
+//    		"<MenuItem  target='CONTAINER_MAINPANEL' name='backgroundcolor' value='#000000'/>" +
+//    		"</Menu></ui>"; 
 
-    public static final String DEFAULT_STYLE =
-    		"<?xml version='1.0' encoding='UTF-8'?><ui>" +
-    		"<Menu type='style' > " +
-    		"<MenuItem  target='CONTAINER_BAR' name='startcolor' value='#ffA8BCC0'/>" +
-    		"<MenuItem  target='CONTAINER_BAR' name='endcolor' value='#ff60778D'/>" +
-//    		"<MenuItem  target='BUTTON_TITLEBAR' name='backgroundcolor' value='#5F7DA5'/>" +
-    		"<MenuItem  target='BUTTON_FORM' name='' value=''/>" +
-    		"<MenuItem  target='BUTTON_FORM' name='' value=''/>" +
-    		"<MenuItem  target='BUTTON_FORM' name='' value=''/>" +
-    		"<MenuItem  target='TEXT' name='' value=''/>" +
-    		"<MenuItem  target='CONTAINER_MAINPANEL' name='backgroundcolor' value='#000000'/>" +
-    		"</Menu></ui>"; 
-/*
- * 
-WINDOW
-    backgroundImg
-    backgroundColor
-
-CONTAINER_BAR
-    backgroundImg
-    backgroundColor
-
-CONTAINER_PANEL
-    backgroundImg
-    backgroundColor
-
-BUTTON_BAR
-    backgroundColor
-
-BUTTON_PANEL
-    textColor
-    backgroundImg
-    backgroundColor
-
-TEXT_LABEL //Pour tous les labels indicatifs
-    textColor
-
-TEXT_EDIT //Ça correspond l'attribut 'text' et 'text-find'
-    textColor
-
-TEXT_TITLE //Ça correspond l'attribut 'title'
-    textColor
-
-TEXT_DESCRIPTION //Ça correspond l'attribut 'description'
-    textColor
-TEXT_SECTIONHEADER
-    textColor
-LISTVIEW
-    dividerColor
-    indexerTextColor
-
-Supported color formats are: #RRGGBB #AARRGGBB 'red', 'blue', 'green', 'black', 'white', 'gray', 'cyan', 'magenta', 'yellow', 'lightgray', 'darkgray'.
-
-**/
 }

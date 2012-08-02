@@ -116,6 +116,7 @@ public class ProfileManagementActivity extends Activity {
             }
         });
         
+        //This was for create a menu for users to choos theme, not used yet.
 //        Integer[] imageIconDatabase = { R.drawable.ic_launcher,
 //                 R.drawable.ic_launcher,
 //                 R.drawable.ic_launcher};
@@ -319,6 +320,10 @@ public class ProfileManagementActivity extends Activity {
     }
     
 
+    /**This is a onclick listener, which was created for choosing theme.
+     * Not used.
+     * @param view
+     */
     public void chooseTheme(View view) {
         //final CharSequence[] items = {"Red", "Green", "Blue"};
         //LayoutInflater inflater = (LayoutInflater) getSystemService(this.LAYOUT_INFLATER_SERVICE);
@@ -348,10 +353,6 @@ public class ProfileManagementActivity extends Activity {
                 items.add(item);
                 
             }
-            
-            
-    
-        
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose a theme...");
         builder.setAdapter(items, new DialogInterface.OnClickListener() {
@@ -363,12 +364,19 @@ public class ProfileManagementActivity extends Activity {
         alert.show();
     }
 
+    /* Called when user click the menu button
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_profile, menu);
         return true;
     }
 
+    
+    /* Called when user choose a menu item
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.menuAddProfile:

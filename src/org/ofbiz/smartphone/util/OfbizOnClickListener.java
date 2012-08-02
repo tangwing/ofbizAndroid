@@ -1,7 +1,6 @@
 package org.ofbiz.smartphone.util;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.smartphone.GeneratorActivity;
@@ -13,7 +12,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-/**
+/**This is a special onclicklistener whose action is to 
+ * visit the specified target.
  * @author administrateur
  *
  */
@@ -27,7 +27,6 @@ public class OfbizOnClickListener implements View.OnClickListener{
         this.c = c;
         this.target = target;
     }
-    
     
     /**This constructor is used for submit a form.
      * @param c
