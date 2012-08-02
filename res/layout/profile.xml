@@ -51,7 +51,7 @@
                 android:id="@+id/etProfileName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter profile name..."  />
+                android:hint="@string/tvHintProfileName"  />
 
             <!-- server address -->
             <TextView
@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.83"
-                    android:hint="Enter server address..."  />
+                    android:hint="@string/tvServerAddr"  />
 
                 <TextView
                     style="@style/CommonTextView"
@@ -89,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.12"
-                    android:hint="Port..."  />
+                    android:hint="@string/tvHintPort"  />
             </LinearLayout>
             <!-- username -->
 
@@ -105,7 +105,7 @@
                 android:id="@+id/etUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter your username..."  >
+                android:hint="@string/tvHintUsername"  >
             </EditText>
 
             <!-- password -->
@@ -153,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="       Set as default profile" />
+                android:text="@string/tvDefault" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

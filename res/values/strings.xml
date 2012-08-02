@@ -14,20 +14,26 @@
     <string name="ibtnTitleBarLeftContentDes">Left</string>
     <string name="ivLogoContentDes">Logo</string>
     <string name="ibtnTitleBarRightContentDes">Right</string>
-    <string name="searchHint">Search...</string>
+    <string name="searchHint">Search…</string>
     <string name="btnFirstPage">&lt;&lt;</string>
     <string name="btnPreviousPage">&lt;</string>
     <string name="btnNextPage">&gt;</string>
     <string name="btnLastPage">&gt;&gt;</string>
-    <string name="btnLoadMore">More items...</string>
+    <string name="btnLoadMore">More items…</string>
+    <string name="tvDefault">"       Set as default profile"</string>
+    <string name="tvServerAddr">Enter server address...</string>
+    <string name="tvHintProfileName">Enter profile name...</string>
+    <string name="tvHintUsername">Enter your username...</string>
+    <string name="tvHintPort">Port...</string>
     
     <!-- The Strings from Java code files   -->
     <string name="loginErrorMessage_unknown">The server is not reachable, please check the address.</string>
     <string name="loginWarning_certificate">The certificate is invalide, continue?</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="loginSucceeds">Login Succeeds !</string>
-    <string name="quitConfirmation">Do you want to quit ?</string>
+    <string name="quitConfirmation">Do you really want to quit ?</string>
     <string name="noMapException">You need to install Google Map to view this address in map.</string>
     <string name="noEmailClientException">You need to have a email client for this operation.</string>
+    <string name="ivContentDesPhoto">photo</string>
     
 </resources>

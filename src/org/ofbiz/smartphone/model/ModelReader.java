@@ -62,7 +62,7 @@ public class ModelReader{
         return model;
     }
 
-    private static void setTheme(Element element) {
+    public static void setTheme(Element element) {
         NodeList childs = element.getChildNodes();
         for (int index = 0; index < childs.getLength(); index++) {
             Node node = (Node) childs.item(index);

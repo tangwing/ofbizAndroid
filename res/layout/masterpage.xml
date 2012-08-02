@@ -24,7 +24,7 @@
         <ImageButton 
             android:id="@+id/ibtnTitleBarLeft"
             android:layout_gravity="left"
-            android:padding="5dp"
+            android:padding="10dp"
             android:contentDescription="@string/ibtnTitleBarLeftContentDes"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -47,7 +47,7 @@
             android:id="@+id/ibtnTitleBarRight"
             android:contentDescription="@string/ibtnTitleBarRightContentDes"
             android:layout_gravity="right" 
-            android:padding="5dp"
+            android:padding="10dp"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="fitCenter"
@@ -114,7 +114,7 @@
             android:layout_width="22dp"  
             android:layout_alignParentRight="true"  
             android:visibility="gone"
-            android:background="0x44FFFFFF"
+            android:background="#44FFFFFF"
         />  
         <TextView 
             android:layout_toLeftOf="@id/sideBar"

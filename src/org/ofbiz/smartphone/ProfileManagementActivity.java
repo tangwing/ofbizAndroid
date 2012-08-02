@@ -37,7 +37,7 @@ import android.widget.Toast;
 public class ProfileManagementActivity extends Activity {
     // The Views
     private Spinner spinner = null;
-    private Spinner spinnerTheme = null;
+    //private Spinner spinnerTheme = null;
     private EditText etProfileName = null;
     private EditText etServerAddress = null;
     private EditText etPort = null;
@@ -138,17 +138,6 @@ public class ProfileManagementActivity extends Activity {
 //       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //        spinnerTheme.setAdapter(adapter);
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
 
         btnSaveProfile.setOnClickListener(new OnClickListener() {

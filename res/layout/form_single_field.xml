@@ -17,6 +17,7 @@
         android:id="@+id/etField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="text"
         android:singleLine="true" 
         android:visibility="gone">
     </EditText>

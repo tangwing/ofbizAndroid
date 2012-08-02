@@ -15,12 +15,12 @@ import android.widget.TextView;
 
 public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndexer{
 
-    private Context context;
+    //private Context context;
     private ArrayList<LinearLayout> lll = null;
     public LinearLayoutListAdapter(Context c)
     {
         super();
-        context=c;
+        //context=c;
         lll = new ArrayList<LinearLayout>();
     }
     
@@ -168,14 +168,12 @@ public class LinearLayoutListAdapter extends BaseAdapter implements SectionIndex
 
     @Override
     public int getSectionForPosition(int position) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
 
     @Override
     public Object[] getSections() {
-        // TODO Auto-generated method stub
         return null;
     }
 

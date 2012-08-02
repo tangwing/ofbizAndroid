@@ -13,7 +13,6 @@ import org.ofbiz.smartphone.util.Util;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,7 +34,7 @@ import android.widget.TextView;
  */
 public class Style {
     private static Style CURRENTSTYLE = new Style() ;
-    private static Cursor styleCursor =null;
+    //private static Cursor styleCursor =null;
     public static enum StyleTargets {
         WINDOW,
         CONTAINER_BAR,

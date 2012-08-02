@@ -2,13 +2,13 @@
 <themes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/app-themes.xsd">
     <theme name="default">
         <theme-style class="WINDOW" attribute="backgroundColor" value="#EEF1F3"/>
-        <theme-style class="CONTAINER_BAR" attribute="backgroundColor" value="#2093D5"/>
+        <theme-style class="CONTAINER_BAR" attribute="backgroundColor" value=""/>
         <theme-style class="CONTAINER_PANEL" attribute="backgroundColor" value=""/>
-        <theme-style class="BUTTON_BAR" attribute="backgroundColor" value="#89C9EF"/>
+        <theme-style class="BUTTON_BAR" attribute="backgroundColor" value="#EEF1F3"/>
         <theme-style class="BUTTON_PANEL" attribute="backgroundColor" value=""/>
         
         <theme-style class="TEXT_TITLE" attribute="backgroundColor" value=""/>
-        <theme-style class="TEXT_LABEL" attribute="textColor" value="gray"/>
+        <theme-style class="TEXT_LABEL" attribute="textColor" value="black"/>
         <theme-style class="TEXT_DESCRIPTION" attribute="textColor" value=""/>
         
         <theme-style class="TEXT_SECTIONHEADER" attribute="backgroundColor" value="#ffaabbcc"/>

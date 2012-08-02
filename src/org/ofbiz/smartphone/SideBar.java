@@ -16,10 +16,10 @@ public class SideBar extends View {
     private ListView list;  
     private final int m_nItemHeight = 29;  
     private static int textColor = 0xFFA6A9AA;
-    private Context context = null;
+    //private Context context = null;
     public SideBar(Context context) {  
         super(context);  
-        this.context = context;
+        //this.context = context;
         init();  
     }  
     public SideBar(Context context, AttributeSet attrs) {  
