@@ -1,5 +1,6 @@
 package org.ofbiz.smartphone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ModelFormItem {
+public class ModelFormItem implements Serializable{
 
     private List<ModelFormField> formItemFields = new ArrayList<ModelFormField>();
 

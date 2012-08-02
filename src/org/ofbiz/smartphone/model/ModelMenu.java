@@ -1,5 +1,6 @@
 package org.ofbiz.smartphone.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +8,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class ModelMenu {
+public class ModelMenu implements Serializable{
 
+    /**
+     * 
+     */
     private String type = "panel";// bar, panel, style
     private int row_items = 1;
 

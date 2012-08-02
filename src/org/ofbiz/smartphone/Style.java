@@ -161,7 +161,7 @@ public class Style {
             if(!imgSrc.equals("")) {
                 //This is a background image source
                 BitmapDrawable bd = (BitmapDrawable) 
-                        GeneratorActivity.getDrawableFromUrl(imgSrc, "bgimage");
+                        Util.getDrawableFromUrl(imgSrc, "bgimage");
                 bd.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.MIRROR);
                 if(bd!=null) {
                     view.setBackgroundDrawable(bd);

@@ -1,15 +1,17 @@
 package org.ofbiz.smartphone.model;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Map;
 
 import org.ofbiz.smartphone.GeneratorActivity;
+import org.ofbiz.smartphone.util.Util;
 import org.w3c.dom.Element;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-public class ModelMenuItem {
+public class ModelMenuItem implements Serializable {
     public static Map<String, Drawable> images = new Hashtable<String, Drawable>();
     //The 'type' can be : image, text
     private String type="image";
@@ -111,9 +113,15 @@ public class ModelMenuItem {
         this.imgSrc=img;
         if( !img.equals("") && !images.containsKey(name)) {
            
-            Drawable d = GeneratorActivity.getDrawableFromUrl(img, name);
-            Log.d("Drawable", "Drawable name = "+name+"; url="+img);
-            images.put(name, d);
+            Drawable d = Util.getDrawableFromUrl(img, name);
+            if(d==null) {
+                Log.d("MMI", "Drawable doesn't exist.name = "+name+"; url="+img);
+                setType("text");
+            } else {
+                
+                Log.d("MMI", "Drawable name = "+name+"; url="+img);
+                images.put(name, d);
+            }
         }
     }
 

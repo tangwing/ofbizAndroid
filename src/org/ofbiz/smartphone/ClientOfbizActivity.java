@@ -448,17 +448,9 @@ public class ClientOfbizActivity extends Activity {
         final Hashtable<String, String> result = Util.getStatusCode(response);
 
         if(result.get("status").equals("OK")) {
-            Intent intent=new Intent(ClientOfbizActivity.this, GeneratorActivity.class);
-//            this.runOnUiThread(new Runnable() {         
-//                @Override
-//                public void run() {
-//                    Toast.makeText(ClientOfbizActivity.this, getResources().getString(R.string.loginSucceeds), Toast.LENGTH_SHORT).show();
-//                }
-//            });
-            intent.putExtra("target", "main");
             //set theme
             Style.updateCurrentStyleFromTarget("smartphoneAppStyle");
-            startActivity(intent);
+            Util.startNewActivity(this, "main", null);
         }else if(result.get("status").equals("NOK")){
             runOnUiThread(new Runnable() {
 

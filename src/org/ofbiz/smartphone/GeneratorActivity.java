@@ -100,10 +100,13 @@ public class GeneratorActivity extends Activity{
             nameValuePairs.add(searchName);
             nameValuePairs.add("value");
             nameValuePairs.add(searchText);
-            Intent intent = new Intent(GeneratorActivity.this, GeneratorActivity.class);
-            intent.putExtra("target", searchAction);
-            startActivity(intent);
-            //finish();
+//            Intent intent = new Intent(GeneratorActivity.this, GeneratorActivity.class);
+//            intent.putExtra("target", searchAction);
+//            startActivity(intent);
+            boolean result = Util.startNewActivity( 
+                    GeneratorActivity.this, searchAction, nameValuePairs);
+            if (result == true)
+                finish();
         }
     };
     //This is used to implement the instant search
@@ -117,50 +120,21 @@ public class GeneratorActivity extends Activity{
         setContentView(R.layout.masterpage);
         res = getResources();
         handler = new Handler();
-        
+        Intent intent = getIntent();
         Log.d(TAG, "finish update style");
         //>>>>>>>Begin to fetch the xml
-        target = getIntent().getStringExtra("target");
-        ArrayList<String> nameValuePairs = (ArrayList<String>) getIntent().getSerializableExtra("params");
-        
-        Map<String, List<Object>> xmlMap = null;
-        try {            
-            if(target != null && !"".equals(target)) {
-                target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
-                HttpPost hp = getHttpPost(target, nameValuePairs);
-                Log.d(TAG,"target : "+target);
-                HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
-                //TODO special string
-                String xmlString = logStream(response.getEntity().getContent());
-                xmlString = xmlString.replace("&", "&#x26;");
-                Log.d("xml", xmlString);
-                xmlMap = ModelReader.readModel(Util.readXmlDocument(
-                        xmlString));
-//                xmlMap = ModelReader.readModel(Util.readXmlDocument(
-//                        response.getEntity().getContent()));
-            }
-            
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //>>>>>>>>>>>>>Enable this part to use local xml.>>>>>>>>>>
-//        if(xmlMap == null) Log.d(TAG, "xmlMap == null");
-//        else if(xmlMap.get("menus")==null) Log.d(TAG, "xmlMap.get(menus)==null");
-//        else if(xmlMap.get("forms")==null) Log.d(TAG, "xmlMap.get(forms)==null");
+//        target = getIntent().getStringExtra("target");
+//        ArrayList<String> nameValuePairs = (ArrayList<String>) getIntent().getSerializableExtra("params");
 //        
-        if(xmlMap == null || 
-                (xmlMap.get("menus")==null && 
-                xmlMap.get("forms")==null)){
-            Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
+//        Map<String, ArrayList<Object>> xmlMap = Util.getXmlElementMapFromTarget(target, nameValuePairs);
+//        if(xmlMap == null || 
+//                (xmlMap.get("menus")==null && 
+//                xmlMap.get("forms")==null)){
+//            Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+//            finish();
+//            return;
+//        }
+        //Intent i = null; i.putExtra("", (ArrayList<Object>)xmlMap.get(""));
 //        try 
 //        {
 //                AssetManager am = getAssets();
@@ -192,8 +166,8 @@ public class GeneratorActivity extends Activity{
         llListAdapter = new LinearLayoutListAdapter(this);
         lvMain.setAdapter(llListAdapter);
         
-        mmList = xmlMap.get("menus");
-        mfList = xmlMap.get("forms");
+        mmList = (List<Object>) intent.getSerializableExtra("menus");
+        mfList = (List<Object>) intent.getSerializableExtra("forms");
         
         if(mmList.size()>0) {
             setMenus(llListAdapter, mmList);
@@ -203,7 +177,6 @@ public class GeneratorActivity extends Activity{
             setForms(llListAdapter, mfList);
         }else {
             lvMain.setDividerHeight(0);
-            //lvMain.setBackgroundColor(android.R.color.transparent);
             lvMain.setSelector(android.R.color.transparent);
         }
         
@@ -263,51 +236,14 @@ public class GeneratorActivity extends Activity{
                                         R.string.noMapException, Toast.LENGTH_SHORT).show();
                             }
                         }else {
-                            
-                            Intent intent = new Intent(GeneratorActivity.this, GeneratorActivity.class);
-                            intent.putExtra("target", action);
-                            startActivity(intent);
+                            Util.startNewActivity(GeneratorActivity.this, action, null);
                         }
                 }
             }
         });
-        
-        
     }
     
-    private HttpPost getHttpPost(String target, ArrayList<String> params) {
-        HttpPost hp = new HttpPost(target);
-        List<NameValuePair> nvPairs = new ArrayList<NameValuePair>();
-        if(params != null && params.size() > 1) {
-            for(int index = 0; index <= params.size()/2 ; index++) {
-                nvPairs.add(new BasicNameValuePair(
-                        params.get(index), 
-                        params.get(index+1)));
-                try {
-                    hp.setEntity(new UrlEncodedFormEntity(nvPairs));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        
-        return hp;
-    }
-
-    private String logStream(InputStream content) {
-        BufferedReader br = new BufferedReader( new InputStreamReader(content));
-        String line = "";
-        StringBuffer sb = new StringBuffer(); 
-        try {
-            while( (line = br.readLine()) != null) {
-                sb.append(line);
-                Log.d("StreamLog", line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sb.toString();
-    }
+    
 
     private void setForms(final LinearLayoutListAdapter parentListAdapter, List<Object> mfList) {
         if(mfList == null || mfList.isEmpty())
@@ -757,11 +693,10 @@ public class GeneratorActivity extends Activity{
             } 
             
             if(nameValuePairs.isEmpty() == false ) {
-                
-                intent.putExtra("target", getIntent().getStringExtra("target"));
-                intent.putExtra("params", nameValuePairs);
-                startActivity(intent);
-                finish();
+                boolean result = Util.startNewActivity(this, 
+                        getIntent().getStringExtra("target"), 
+                        nameValuePairs);
+                if( result==true )finish();
             }
         return;
     }
@@ -786,50 +721,7 @@ public class GeneratorActivity extends Activity{
         mmiList.add(mmi);
         return mmiList;
     }
-    /**
-     * @param targetUrl the url of the image to get. Without server root part.
-     * @param srcName
-     * @return
-     */
-    public static Drawable getDrawableFromUrl(String targetUrl, String srcName)
-    {
-        Drawable d = null;
-        Log.d("getDrawableFromUrl", "new demande");
-        if(targetUrl == null || "".equals(targetUrl)) {
-            d = res.getDrawable(R.drawable.ic_launcher);
-            Log.d("getDrawableFromUrl", "Default image, target : "+targetUrl+"; drawablewidth: "+d.getIntrinsicWidth());
-        }else if(targetUrl.startsWith("file://")) {
-            Log.d("getDrawableFromUrl", "Local file : " + targetUrl);
-            try {
-                d = Drawable.createFromStream(res.getAssets().open(targetUrl.substring(7)), srcName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else {
 
-            String fullUrl = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, false, targetUrl);
-            HttpPost httpPost = new HttpPost(fullUrl );
-            HttpResponse response;
-            Log.d("getDrawableFromTarget", fullUrl);
-            try {
-                response = ClientOfbizActivity.httpClient.execute(httpPost);
-                d = Drawable.createFromStream(response.getEntity().getContent(), srcName);
-                if(d == null)
-                {
-                    Log.d("getDrawableFromTarget", "NULL drawable, return a default image");
-                    d = getDrawableFromUrl("", srcName);
-                }else{
-                    Log.d("getDrawableFromTarget", "Create image successfully from :"+ fullUrl);
-                }                
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        
-        return d;
-    }
     
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -841,8 +733,21 @@ public class GeneratorActivity extends Activity{
             for (int i = 0; i < mmiList.size() ; i++ ) {
                 ModelMenuItem mmi = mmiList.get(i);
                 MenuItem mi = menu.add(mmi.getTitle());
-                Intent intent = new Intent(this, GeneratorActivity.class);
-                intent.putExtra("target", mmi.getTarget());
+                Intent intent = null;
+                Map<String, ArrayList<Object>> xmlMap = Util.getXmlElementMapFromTarget(
+                        mmi.getTarget(),
+                        null);
+                if(xmlMap == null || 
+                        (xmlMap.get("menus")==null && 
+                        xmlMap.get("forms")==null)){
+                    Toast.makeText(this, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+                } else {
+                    intent = new Intent(this, GeneratorActivity.class);
+                    intent.putExtra("target", mmi.getTarget());
+                    intent.putExtra ("menulist", xmlMap.get("menus"));
+                    intent.putExtra ("formlist", xmlMap.get("forms"));
+                }
+                
                 mi.setIntent(intent);
                 mi.setIcon(mmi.getImgDrawable());
                 
@@ -918,33 +823,12 @@ public class GeneratorActivity extends Activity{
         
         private List<Object> getNextForms() {
             target = getIntent().getStringExtra("target");
-            List<NameValuePair> nvPairs = new ArrayList<NameValuePair>();
-            nvPairs.add(new BasicNameValuePair("viewIndex", listFormViewIndex+1+""));
-            nvPairs.add(new BasicNameValuePair("viewSize", listFormViewSize+""));
-            
-            Map<String, List<Object>> xmlMap = null;
-            try {            
-                    target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
-                    HttpPost hp = new HttpPost(target);
-                    hp.setEntity(new UrlEncodedFormEntity(nvPairs));
-                    Log.d(TAG,"target : "+target);
-                    HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
-                    //TODO special string
-                    String xmlString = logStream(response.getEntity().getContent());
-                    xmlString = xmlString.replace("&", "&#x26;");
-                    Log.d("xml", xmlString);
-                    xmlMap = ModelReader.readModel(Util.readXmlDocument(
-                            xmlString));
-                    
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ArrayList<String> params = new ArrayList<String>();
+            params.add("viewIndex");
+            params.add(listFormViewIndex+1+"");
+            params.add("viewSize");
+            params.add(listFormViewSize+"");
+            Map<String, ArrayList<Object>> xmlMap = Util.getXmlElementMapFromTarget(target, params);
             if(xmlMap != null)
                 return xmlMap.get("forms");
             else return null;

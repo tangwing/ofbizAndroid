@@ -1,6 +1,8 @@
 package org.ofbiz.smartphone.util;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.smartphone.GeneratorActivity;
 import org.ofbiz.smartphone.R;
@@ -9,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * @author administrateur
@@ -41,25 +44,28 @@ public class OfbizOnClickListener implements View.OnClickListener{
     
     @Override
     public void onClick(View v) {
-//        ProgressDialog pDialog = new ProgressDialog(
-//                c);
-//        pDialog.setMessage(GeneratorActivity.res.getString(R.string.loading));
-////        pDialog.setIndeterminate(true);
-////        pDialog.setCancelable(false);
-//        pDialog.show();
         //Redirect to the target
-        Intent intent = new Intent(c, GeneratorActivity.class);
-        intent.putExtra ("target", target);
+        ArrayList<String> nameValuePairs = new ArrayList<String>();
         if(params != null && params.size()>0) {
-            ArrayList<String> nameValuePairs = new ArrayList<String>();
             for( int i = 0; i < params.size(); i++) {
                 EditText et = params.get(i);
                 nameValuePairs.add((String) et.getTag(R.id.userInputName));
                 nameValuePairs.add(et.getText().toString());
             }
-            intent.putExtra("params", nameValuePairs);
         }
-        c.startActivity(intent);
+        Map<String, ArrayList<Object>> xmlMap = Util.getXmlElementMapFromTarget(target, nameValuePairs);
+        if(xmlMap == null || 
+                (xmlMap.get("menus")==null && 
+                xmlMap.get("forms")==null)){
+            Toast.makeText(c, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            Intent intent = new Intent(c, GeneratorActivity.class);
+            intent.putExtra("target", target);
+            intent.putExtra ("menus", xmlMap.get("menus"));
+            intent.putExtra ("forms", xmlMap.get("forms"));
+            c.startActivity(intent);
+        }
     }
     
 }

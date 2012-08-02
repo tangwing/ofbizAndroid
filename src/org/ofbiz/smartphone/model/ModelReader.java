@@ -21,11 +21,11 @@ public class ModelReader{
      * @param doc
      * @return a map of the models. form and/or menu
      */
-    public static Map<String, List<Object>> readModel(Document doc) {
+    public static Map<String, ArrayList<Object>> readModel(Document doc) {
         Log.d(TAG, "I'm enter readModel");
-        Map<String, List<Object>> model = new HashMap<String, List<Object>>();//FastMap.newInstance();
-        List<Object> forms = new ArrayList<Object>();//.newInstance();
-        List<Object> menus =  new ArrayList<Object>();
+        Map<String, ArrayList<Object>> model = new HashMap<String, ArrayList<Object>>();//FastMap.newInstance();
+        ArrayList<Object> forms = new ArrayList<Object>();//.newInstance();
+        ArrayList<Object> menus =  new ArrayList<Object>();
         //NodeList childs =  doc.getDocumentElement().getChildNodes();
         //---------------
         NodeList childs = doc.getDocumentElement().getChildNodes();

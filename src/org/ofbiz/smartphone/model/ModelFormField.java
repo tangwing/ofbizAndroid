@@ -1,15 +1,17 @@
 package org.ofbiz.smartphone.model;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Map;
 
 import org.ofbiz.smartphone.GeneratorActivity;
+import org.ofbiz.smartphone.util.Util;
 import org.w3c.dom.Element;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-public class ModelFormField {
+public class ModelFormField implements Serializable{
     
     public static Map<String, Drawable> images = new Hashtable<String, Drawable>();
     private String type="display";
@@ -58,9 +60,15 @@ public class ModelFormField {
         this.imgSrc=img;
         if( !img.equals("") && !images.containsKey(name)) {
            
-            Drawable d = GeneratorActivity.getDrawableFromUrl(img, name);
-            Log.d("Drawable", "Drawable name = "+name+"; url="+img);
-            images.put(name, d);
+            Drawable d = Util.getDrawableFromUrl(img, name);
+            if(d==null) {
+                Log.d("MMF", "Drawable doesn't exist.name = "+name+"; url="+img);
+                setType("display");
+            } else {
+                
+                Log.d("MMF", "Drawable name = "+name+"; url="+img);
+                images.put(name, d);
+            }
         }
     }
     

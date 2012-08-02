@@ -6,23 +6,38 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
+import org.ofbiz.smartphone.ClientOfbizActivity;
+import org.ofbiz.smartphone.GeneratorActivity;
+import org.ofbiz.smartphone.model.ModelReader;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.Toast;
 
 public class Util {
 
@@ -104,6 +119,40 @@ public class Util {
         return readXmlDocument(new ByteArrayInputStream(s.getBytes()));
     }
     
+    public static HttpPost getHttpPost(String target, ArrayList<String> params) {
+        HttpPost hp = new HttpPost(target);
+        List<NameValuePair> nvPairs = new ArrayList<NameValuePair>();
+        if(params != null && params.size() > 1) {
+            for(int index = 0; index <= params.size()/2 ; index++) {
+                nvPairs.add(new BasicNameValuePair(
+                        params.get(index), 
+                        params.get(index+1)));
+                try {
+                    hp.setEntity(new UrlEncodedFormEntity(nvPairs));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        return hp;
+    }
+
+    public static String logStream(InputStream content) {
+        BufferedReader br = new BufferedReader( new InputStreamReader(content));
+        String line = "";
+        StringBuffer sb = new StringBuffer(); 
+        try {
+            while( (line = br.readLine()) != null) {
+                sb.append(line);
+                Log.d("StreamLog", line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+    
     public static String makeFullUrlString(String serverRoot, boolean addSmartphoneDomain, String target)
     {
         if(target.startsWith("/") ) {
@@ -124,14 +173,100 @@ public class Util {
         }
     }
     
+    public static Map<String, ArrayList<Object>> getXmlElementMapFromTarget(
+            String target, ArrayList<String> params) {
+
+        Map<String, ArrayList<Object>> xmlMap = null;
+        try {            
+            if(target != null && !"".equals(target)) {
+                target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
+                HttpPost hp = getHttpPost(target, params);
+                Log.d("getXmlElementMapFromTarget","target : "+target);
+                HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
+                //TODO special string
+                String xmlString = logStream(response.getEntity().getContent());
+                xmlString = xmlString.replace("&", "&#x26;");
+                Log.d("xml", xmlString);
+                xmlMap = ModelReader.readModel(Util.readXmlDocument(
+                        xmlString));
+//                xmlMap = ModelReader.readModel(Util.readXmlDocument(
+//                        response.getEntity().getContent()));
+            }
+            
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return xmlMap;
+    }
+    
+    public static boolean startNewActivity(Context c, String target, ArrayList<String> params) {
+
+        Map<String, ArrayList<Object>> xmlMap = getXmlElementMapFromTarget(
+                target,
+                params);
+        if(xmlMap == null || 
+                (xmlMap.get("menus")==null && 
+                xmlMap.get("forms")==null)){
+            Toast.makeText(c, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
+            return false;
+        } else {
+            Intent intent = new Intent(c, GeneratorActivity.class);
+            intent.putExtra("target", target);
+            intent.putExtra ("menus", (ArrayList<Object>)xmlMap.get("menus"));
+            intent.putExtra ("forms", (ArrayList<Object>)xmlMap.get("forms"));
+            c.startActivity(intent);
+        }
+        return true;
+    }
+    
     /**
-     * This dosen't work for now private BufferedReader
-     * connectWithHttpsUrlConnection()throws Exception { url=new
-     * URL("https://192.168.0.158:8443/smartphone/control/login/"); httpsUrlConn
-     * = (HttpsURLConnection)url.openConnection();
-     * httpsUrlConn.setHostnameVerifier
-     * (SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER); BufferedReader br = new
-     * BufferedReader( new InputStreamReader(httpsUrlConn.getInputStream()));
-     * return br; }
+     * @param targetUrl the url of the image to get. Without server root part.
+     * @param srcName
+     * @return
      */
+    public static Drawable getDrawableFromUrl(String targetUrl, String srcName)
+    {
+        Drawable d = null;
+        Log.d("getDrawableFromUrl", "new demande");
+        if(targetUrl == null || "".equals(targetUrl)) {
+            Log.d("getDrawableFromUrl", "targetUrl == null || ''.equals(targetUrl)");
+//            d = res.getDrawable(R.drawable.ic_launcher);
+//        }else if(targetUrl.startsWith("file://")) {
+//            Log.d("getDrawableFromUrl", "Local file : " + targetUrl);
+//            try {
+//                d = Drawable.createFromStream(res.getAssets().open(targetUrl.substring(7)), srcName);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }else {
+
+            String fullUrl = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, false, targetUrl);
+            HttpPost httpPost = new HttpPost(fullUrl );
+            HttpResponse response;
+            Log.d("getDrawableFromTarget", fullUrl);
+            try {
+                response = ClientOfbizActivity.httpClient.execute(httpPost);
+                d = Drawable.createFromStream(response.getEntity().getContent(), srcName);
+                if(d == null)
+                {
+                    Log.d("getDrawableFromTarget", "NULL drawable");
+                    d = getDrawableFromUrl("", srcName);
+                }else{
+                    Log.d("getDrawableFromTarget", "Create image successfully from :"+ fullUrl);
+                }                
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        return d;
+    }
 }
