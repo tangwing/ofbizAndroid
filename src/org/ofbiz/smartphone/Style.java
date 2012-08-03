@@ -17,7 +17,6 @@ import android.graphics.Color;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -142,7 +141,7 @@ public class Style {
      */
     public static void updateCurrentStyleFromTarget(String target){
         try {
-            Log.d("Style", "in updateCurrentStyle, target="+target);
+//            Log.d("Style", "in updateCurrentStyle, target="+target);
             if(target != null && !"".equals(target)) {
                 target = Util.makeFullUrlString(ClientOfbizActivity.SERVER_ROOT, true, target);
                 HttpPost hp = new HttpPost(target);
@@ -166,7 +165,7 @@ public class Style {
      * @param value
      */
     public void setProperty(StyleTargets st, String name, String value) {
-        Log.d("Style", "set Property: target="+st.toString()+";name="+name+";value="+value);
+//        Log.d("Style", "set Property: target="+st.toString()+";name="+name+";value="+value);
         Properties p = styleMap.get(st);
         if( p == null ) {
             p = new Properties();
@@ -192,7 +191,7 @@ public class Style {
                 view.setBackgroundColor(Color.parseColor(color));
             }
             String imgSrc = styleAttr.getProperty("backgroundImg","");
-            Log.d("Style", "targt="+st.toString()+";color="+color+"; img="+imgSrc);
+//            Log.d("Style", "targt="+st.toString()+";color="+color+"; img="+imgSrc);
             if(!imgSrc.equals("")) {
                 //This is a background image source
                 BitmapDrawable bd = (BitmapDrawable) 

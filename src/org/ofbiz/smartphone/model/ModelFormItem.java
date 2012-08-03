@@ -10,6 +10,10 @@ import org.w3c.dom.NodeList;
 
 public class ModelFormItem implements Serializable{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1902361218577804127L;
     private List<ModelFormField> formItemFields = new ArrayList<ModelFormField>();
 
     public ModelFormItem(Element xml) {

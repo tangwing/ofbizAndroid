@@ -52,19 +52,7 @@ public class OfbizOnClickListener implements View.OnClickListener{
                 nameValuePairs.add(et.getText().toString());
             }
         }
-        Map<String, ArrayList<Object>> xmlMap = Util.getXmlElementMapFromTarget(target, nameValuePairs);
-        if(xmlMap == null || 
-                (xmlMap.get("menus")==null && 
-                xmlMap.get("forms")==null)){
-            Toast.makeText(c, "Target is not available, target = "+target, Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            Intent intent = new Intent(c, GeneratorActivity.class);
-            intent.putExtra("target", target);
-            intent.putExtra ("menus", xmlMap.get("menus"));
-            intent.putExtra ("forms", xmlMap.get("forms"));
-            c.startActivity(intent);
-        }
+        Util.startNewActivity(c, target, nameValuePairs);
     }
     
 }

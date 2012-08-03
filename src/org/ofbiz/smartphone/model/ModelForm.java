@@ -13,6 +13,10 @@ public class ModelForm implements Serializable{
     /**
      * 
      */
+    private static final long serialVersionUID = -8249968123979732438L;
+    /**
+     * 
+     */
     private String type = "single";
     private String target = "";
     private String name = "";

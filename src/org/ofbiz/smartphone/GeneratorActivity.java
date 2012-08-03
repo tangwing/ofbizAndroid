@@ -29,6 +29,8 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -145,6 +148,7 @@ public class GeneratorActivity extends Activity{
                     long rowid) {
                 Log.d(TAG, "List item clicked "+"You have clicked item "+position);
                 String action = (String) currentView.getTag();
+                Log.d(TAG, "action = "+action);
                 //action="http://www.baidu.com";
                 //action="tel:df1234";
                 //action="sms:12334";
@@ -165,13 +169,14 @@ public class GeneratorActivity extends Activity{
 //                            emailIntent.setType("text/plain"); 
                             emailIntent.setType("message/rfc822");
                             emailIntent.putExtra(Intent.EXTRA_EMAIL,new String[]{action.substring(5)} ); 
-                            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "my subject"); 
-                            emailIntent.putExtra(Intent.EXTRA_TEXT, "body text"); 
+                            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "subject"); 
+                            emailIntent.putExtra(Intent.EXTRA_TEXT, "content"); 
                             try {
                                 startActivity(Intent.createChooser(emailIntent, "Send mail..."));
                             } catch (android.content.ActivityNotFoundException ex) {
                                 Toast.makeText(GeneratorActivity.this, R.string.noEmailClientException, Toast.LENGTH_SHORT).show();
                             }
+                            
                         }
                         else if (action.startsWith("geo")){
                             if( !action.startsWith("geo:0,0?q=")) {
@@ -223,11 +228,15 @@ public class GeneratorActivity extends Activity{
                     LinearLayout row = (LinearLayout)
                             inflater.inflate(R.layout.form_single_field, null);
                     if(mff.getType().toLowerCase().equals("display")){
-                        
                         TextView tvTitle = (TextView)row.findViewById(R.id.tvFieldTitle);
+                        //TODO test context menu
+                        //registerForContextMenu(row);
                         Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_DESCRIPTION);
                         tvTitle.setText(mff.getDescription());
-                        
+                        String action = mff.getAction();
+                        //TODO 'display' field with action?
+                        if(!"".equals(action))
+                            row.setTag(action);
                     } else if(mff.getType().equals("text")) {
                         TextView tvTitle = (TextView)row.findViewById(R.id.tvFieldTitle);
                         Style.getCurrentStyle().applyStyle(tvTitle, StyleTargets.TEXT_LABEL);
@@ -645,6 +654,37 @@ public class GeneratorActivity extends Activity{
     }
 
    
+    /* For creating a context menu (on long click).
+     * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
+     */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.context_menu, menu);
+        menu.add("Context Menu 1");
+        menu.add("Context Menu 2");
+        menu.add("Context Menu 3");
+        
+    }
+    
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+//            case R.id.edit:
+//                editNote(info.id);
+//                return true;
+//            case R.id.delete:
+//                deleteNote(info.id);
+//                return true;
+//            default:
+//                return super.onContextItemSelected(item);
+        }
+        Toast.makeText(this, String.valueOf(null==info), Toast.LENGTH_SHORT).show();
+        return true;
+    }
     
     /** 
      * reference : http://www.androidhive.info/2012/03/android-listview-with-load-more-button/

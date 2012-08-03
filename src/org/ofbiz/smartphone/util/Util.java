@@ -142,7 +142,7 @@ public class Util {
      */
     public static Document readXmlDocument(String s) throws 
     ParserConfigurationException, SAXException, IOException{
-        return readXmlDocument(new ByteArrayInputStream(s.getBytes()));
+        return readXmlDocument(new ByteArrayInputStream(s.getBytes("UTF-8")));
     }
     
     /**Create http post object from target url and parameters
@@ -232,8 +232,7 @@ public class Util {
                 HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
                 //TODO special string
                 String xmlString = logStream(response.getEntity().getContent());
-                xmlString = xmlString.replace("&", "&#x26;");
-                Log.d("xml", xmlString);
+                //xmlString = xmlString.replace("&", "&#x26;");
                 xmlMap = ModelReader.readModel(Util.readXmlDocument(
                         xmlString));
 //                xmlMap = ModelReader.readModel(Util.readXmlDocument(

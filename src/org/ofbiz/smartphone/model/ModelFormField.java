@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.ofbiz.smartphone.GeneratorActivity;
 import org.ofbiz.smartphone.util.Util;
 import org.w3c.dom.Element;
 
@@ -13,6 +12,7 @@ import android.util.Log;
 
 public class ModelFormField implements Serializable{
     
+    private static final long serialVersionUID = -5556488825468219919L;
     public static Map<String, Drawable> images = new Hashtable<String, Drawable>();
     private String type="display";
 

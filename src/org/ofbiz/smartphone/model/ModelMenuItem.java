@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.ofbiz.smartphone.GeneratorActivity;
 import org.ofbiz.smartphone.util.Util;
 import org.w3c.dom.Element;
 
@@ -12,6 +11,10 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 public class ModelMenuItem implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5065920794847620123L;
     public static Map<String, Drawable> images = new Hashtable<String, Drawable>();
     //The 'type' can be : image, text
     private String type="image";

@@ -10,12 +10,9 @@ import org.w3c.dom.NodeList;
 
 public class ModelMenu implements Serializable{
 
-    /**
-     * 
-     */
+    private static final long serialVersionUID = 2860060957607330854L;
     private String type = "panel";// bar, panel, style
     private int row_items = 1;
-
     
     public int getRow_items() {
         return row_items;
