@@ -1,16 +1,12 @@
 package org.ofbiz.smartphone.util;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import org.ofbiz.smartphone.GeneratorActivity;
 import org.ofbiz.smartphone.R;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 /**This is a special onclicklistener whose action is to 
  * visit the specified target.

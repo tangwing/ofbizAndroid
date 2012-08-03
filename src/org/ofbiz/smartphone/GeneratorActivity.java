@@ -103,7 +103,7 @@ public class GeneratorActivity extends Activity{
         res = getResources();
         handler = new Handler();
         Intent intent = getIntent();
-        Log.d(TAG, "finish update style");
+//        setAlertDialog();
         //Avoid the annoying auto appearance of the keyboard
         this.getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -739,4 +739,30 @@ public class GeneratorActivity extends Activity{
         }
     }
     
+//    public static Handler msgHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            if(msg.what == -1) {
+//                ad.show();
+//            }
+//        }
+//    };
+//    
+//    public void setAlertDialog() {
+//                ad = new AlertDialog.Builder(
+//                        this) .create();
+//                ad.setMessage(getResources().getString(
+//                        R.string.loginErrorMessage_unknown));
+//                ad.setButton(
+//                        AlertDialog.BUTTON_NEGATIVE,
+//                        "OK",
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(
+//                                    DialogInterface dialog,
+//                                    int which) {
+//                                return;
+//                            }
+//                        });
+//    }
 }

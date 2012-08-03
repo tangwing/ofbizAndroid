@@ -232,7 +232,7 @@ public class Util {
                 HttpResponse response= ClientOfbizActivity.httpClient.execute(hp);
                 //TODO special string
                 String xmlString = logStream(response.getEntity().getContent());
-                //xmlString = xmlString.replace("&", "&#x26;");
+                xmlString = xmlString.replace("&", "&#x26;");
                 xmlMap = ModelReader.readModel(Util.readXmlDocument(
                         xmlString));
 //                xmlMap = ModelReader.readModel(Util.readXmlDocument(
@@ -247,6 +247,12 @@ public class Util {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }// Other Exceptions
+        catch ( Exception e) {
+            e.printStackTrace();
+//            Message err = new Message();
+//            err.what = -1;
+//            GeneratorActivity.msgHandler.sendMessage(err);
         }
         return xmlMap;
     }
@@ -265,7 +271,7 @@ public class Util {
         if(xmlMap == null || 
                 (xmlMap.get("menus")==null && 
                 xmlMap.get("forms")==null)){
-            Toast.makeText(c, "Target is not available, target = "+target, Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, "Target is not available, please check your connection. \nTarget = "+target, Toast.LENGTH_SHORT).show();
             return false;
         } else {
             Intent intent = new Intent(c, GeneratorActivity.class);

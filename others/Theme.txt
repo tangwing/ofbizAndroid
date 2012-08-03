@@ -1,0 +1,45 @@
+[class name]
+    [attribut name]
+
+WINDOW
+    backgroundImg
+    backgroundColor
+
+CONTAINER_BAR
+    backgroundImg
+    backgroundColor
+
+CONTAINER_PANEL
+    backgroundImg
+    backgroundColor
+
+BUTTON_BAR
+    backgroundColor
+
+BUTTON_PANEL
+    textColor
+    backgroundImg
+    backgroundColor
+
+TEXT_LABEL //Pour tous les labels indicatifs
+    textColor
+
+TEXT_EDIT //Ça correspond l'attribut 'text' et 'text-find'
+    textColor
+
+TEXT_TITLE //Ça correspond l'attribut 'title'
+    textColor
+
+TEXT_DESCRIPTION //Ça correspond l'attribut 'description'
+    textColor
+
+TEXT_SECTIONHEADER //Header d'alphabet dans la list
+    backgroundColor
+    textColor
+
+LISTVIEW 
+    dividerColor
+    indexerTextColor //Couleur de la barre de navigation (A-Z)
+
+Supported color formats are: #RRGGBB #AARRGGBB 'red', 'blue', 'green', 'black', 'white', 'gray', 'cyan', 'magenta', 'yellow', 'lightgray', 'darkgray'.
+

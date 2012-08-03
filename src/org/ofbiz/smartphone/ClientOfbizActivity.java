@@ -70,8 +70,8 @@ public class ClientOfbizActivity extends Activity {
     private final String TAG = "LOGIN_PAGE";
     private final int REQUEST_NEWPROFILE = 1;
     private final int PORT_NULL = -1;
-    private final int CONNECTION_TIMEOUT = 10000;
-    private final int SOCKET_TIMEOUT = 10000;
+    private final int CONNECTION_TIMEOUT = 4500;
+    private final int SOCKET_TIMEOUT = 4500;
 
     public static String SERVER_ROOT;
 

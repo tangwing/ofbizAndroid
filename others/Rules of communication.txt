@@ -9,15 +9,8 @@ The Android client of ofbiz can handle 2 kinds of xml elements : 'menu' and 'for
 *type
     'bar':A menu bar like title bar, in which each menuitem is represented by <MenuItem>.
     'panel':A menu panel whose colomn number is specified by row_items.
-    'menu':This type of menu will be used to generate a menu which will be displayed when user touch the menu button of smartphone. Its menuitems need to specify the 'title' and 'target' attributs.
-    'style':The menu aims to set the current ui style. Each item (name/value attributs) represents a property to set, and the 'target' attribut of this <menuitem> means the target of this property (just like the class in css). For now, the targets supported are : WINDOW, CONTAINER_BAR, CONTAINER_MAINPANEL, BUTTON_TITLEBAR, BUTTON_FORM, TEXT_DESCRIPTION, TEXT_EDIT, TEXT_TITLE, LISTVIEW. And the supported properties :backgroundcolor, textcolor, dividercolor(divider between list items),startcolor, endcolor, orientation. The last 3 attributs are interesting: this will generate an color image with gradient. In this image, color changes from 'startcolor' to 'endcolor' in direction of 'orientation'. 'Orientation' can be: BL_TR, BOTTOM_TOP, BR_TL, LEFT_RIGHT,RIGHT_LEFT, TL_BR, TOP_BOTTOM, TR_BL.
-Ex: This will set the background of the window to a color image which changes from top red to bottom green: 
-<menu type="style">
-    <menuitem target="WINDOW" name="startcolor" value="#ff0000" />
-    <menuitem target="WINDOW" name="endcolor" value="#00ff00" />
-    <menuitem target="WINDOW" name="orientation" value="TOP_BOTTOM" />
-</menu>
-
+    'menu':This type of menu will be used to generate a menu which will be displayed when user touch the menu button of smartphone. Its menuitems need to specify the 'title' and 'target' attributs. The 'img' attribut is optional, which means the icon of the option.
+    
 *row_items
     when the type of the menu is 'panel', this attribut signifies the count of items in each row.
 
@@ -34,7 +27,7 @@ Attributs:
 *name/value
     They are used, for exemple, to set the ui style of the application.
 
-*src
+*img
     The image source of this item. We use this to juge whether this is a text or an image.
 
 *title
@@ -100,7 +93,11 @@ Specially, in form, the action can mean to 'make a phone call' or 'View this add
 *map action
     The action string needs to start with "geo:" and followed with the detailed address. Attention, the address needs to be detailed, from country name to street number, otherwise it's not so clear for google map to find it.
 
+*mail action
+    The action string needs to start with "mail:" and followed with the email address to send to.
 
+*sms action
+    The action string needs to start with "sms:" and followed with the phone number to send to.
 
 
 
