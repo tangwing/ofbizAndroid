@@ -1,0 +1,7 @@
+This is the Android client of the famous Apache open ERP project ofbiz(Open for Business).
+
+During my 6 weeks internship in a open source company (N¨¦r¨¦ide), I've performed this task. The main idea is to allow our clients to use their Android phones as an interface of the ERP system of their company. So the main bussiness of this application is to communicate with the ofbiz server, translate the received XML stream to a graphic interface. All the user actions, the layout of interfacc, and the communication are based on XML. The server can change the layout of this application whenever it wants, and the content is also dynamic.
+
+You can find the rules of communicaiton in the doc folder where there are also some other documents, including my final report in French.
+
+To run this application, you need to install a right version of ofbiz server side.
